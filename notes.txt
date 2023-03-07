@@ -1,0 +1,42 @@
+BizNet Project
+
+El proposito de este projecto es crear una pagina fullstacked similar a de empresas grandes como DoitCenter y Yoytec. 
+
+####
+FUNCIONALIDADES
+####
+1. Pagina dinamica con informacion basica de la empresa.
+2. Visualizacion de catalogo
+    *Catalogo con visualizacion cuadriculada o en lista.
+    *Cada articulo del catalogo debe de contener una imagen "thumbnail", nombre del producto, mostrar parte de la descripcion, y precio.
+    *Cada producto debe tener un [Attribute] con la funcionalidad de "descuento"
+    *Cada prodcuto debe contener dos o mas imagenes con la capacidad de visualizacion manual y automatica (img sliding).
+    *El catalogo debe tener funcionalidad de busqueda, filtros y ordenamiento (nombre alfabeticamente / precio).
+    *El catalogo debe poder mostrar [n] cantidad de items y separalos por paginas.
+
+3. Login
+    *PARA CLIENTES
+        *Crear usuario utilizando correo electronico
+        *Mantener opcion de reegistro por password o confirmation email.
+        *Dependiendo de la opcion de registro, el usuario debe ser capaz de ingresar utilizando su metodo elegido.
+            *POR PASSWORD
+                *Debe ser guardado de manera encriptada en MongoDB
+                *Debe cumplir con minimo de seguridad (Para esta maqueta, mantener un 'toggle' para activar este feature por tema de simplicidad)
+            *POR CONFIRMATION EMAIL
+                *Debe enviar un correo con un token para ingresar sesion. La sesion se debera mantener activa siempre y cuando se ingrese desde el mismo navegador atravez del mismo IP
+                *_EN CONSIDERACION_ tener un tiempo limite de mantener la session (quizas 7 dias). Ingresos posteriores a este limite enviara nuevamente el correo
+                *Usuarios tendran el control para administras sus secciones. (I.E. desactivar tokens de otros navegadores)
+
+
+
+
+###
+PACKAGES
+###
+passport
+bcrypt
+express 
+mongoose
+mocha
+chai
+pug
