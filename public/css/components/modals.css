@@ -1,0 +1,13 @@
+.login-modal {
+    height: 25rem;
+    width: 33rem;
+    background-color: hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.8);
+}
+
+
+#login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-top: 0.5rem;
+}

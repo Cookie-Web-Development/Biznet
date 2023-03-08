@@ -2,10 +2,14 @@ BizNet Project
 
 El proposito de este projecto es crear una pagina fullstacked similar a de empresas grandes como DoitCenter y Yoytec. 
 
+Antes de todo, debe de haber un modal advirtiendo al usuario sobre el proposito principal de eesta pagina con un boton dee confirmacion
+
 ####
 FUNCIONALIDADES
 ####
-1. Pagina dinamica con informacion basica de la empresa.
+1. Pagina dinamica con informacion basica de la empresa. (HOME)
+    *Carrusel donde circula algunos items deentro de la cateegoria dee descuento
+    *Lista de items "mas veendidos" o "destacados"
 2. Visualizacion de catalogo
     *Catalogo con visualizacion cuadriculada o en lista.
     *Cada articulo del catalogo debe de contener una imagen "thumbnail", nombre del producto, mostrar parte de la descripcion, y precio.

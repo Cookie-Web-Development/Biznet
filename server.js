@@ -7,7 +7,7 @@ app.set('views', './views');
 app.use('/public', express.static(process.cwd() + '/public'));
 
 app.route('/').get((req, res) => {
-    res.render('index')
+    res.render('home')
 });
 
 const PORT = process.env.PORT || 3000;

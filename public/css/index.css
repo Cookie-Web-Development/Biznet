@@ -12,7 +12,9 @@ COMPONENTS:
 Visible apperances such as [sizes] and [color] for individual components.
 */
 @import './components/buttons.css'; 
+@import './components/input-box.css';
 @import './components/logo.css'; 
+@import './components/modals.css'; 
 @import './components/navbar.css';
 @import './components/search-bar.css'; 
 

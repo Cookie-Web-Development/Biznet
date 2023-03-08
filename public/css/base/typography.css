@@ -1,4 +1,4 @@
-body, .searchbar > *, .login > * {
+* {
     font-family: var(--font-family);
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-dark-l));
     font-size: 16px;
@@ -6,4 +6,8 @@ body, .searchbar > *, .login > * {
 
 .navbar {
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
+}
+
+.login-text { /*From .login-modal*/
+    font-size: 2rem;
 }
