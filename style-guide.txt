@@ -1,0 +1,115 @@
+
+# BizNet Style Guide
+
+## Colors
+
+### Primary Colors
+
+### Secondary Colors
+
+## Typography
+
+### Headings
+
+Font family:  
+
+Font weight:  
+
+Letter spacing:  
+
+Line height:  
+
+### Body Text
+
+Font family:   
+
+Font weight:   
+
+Letter spacing:   
+
+Line height:   
+
+## Buttons
+
+### Primary Button
+
+Background color:   
+
+Text color:   
+
+Font family:    
+
+Font weight:    
+
+Border:    
+
+Border radius:    
+
+Padding:    
+
+### Secondary Button
+
+Background color:    
+
+Text color:    
+
+Font family:    
+
+Font weight:     
+
+Border:    
+
+Border radius:    
+
+Padding:     
+
+## Icons
+
+### Social Media Icons
+
+Font family:     
+
+Font size:     
+
+Color:     
+
+## Images
+
+### Logo   
+
+File type: SVG   
+
+Dimensions:   
+
+Background: Transparent   
+
+## Forms
+
+### Input Fields
+
+Font family:    
+
+Font size:    
+
+Border:     
+
+Border radius:     
+
+Padding:    
+
+### Submit Button
+
+Background color:   
+
+Text color:    
+
+Font family:     
+
+Font weight:     
+
+Border:     
+
+Border radius:    
+
+Padding:    
+

@@ -1,0 +1,25 @@
+.header-top,
+.header-bot,
+.navbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.header-top {
+    justify-content: space-evenly;
+    padding: 1rem;
+}
+
+.searchbar, .login {
+    align-self: flex-end;
+}
+
+.header-bot {
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.navbar {
+    justify-content: space-around;
+}

@@ -1,0 +1,26 @@
+.navbar {
+    width: 65%; 
+    padding: 1rem 1.5rem;
+    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    position: relative;
+}
+
+.navbar::before {
+    content: '';
+    width: 100px;
+    position: absolute;
+    border-right: 100px solid transparent;
+    border-top: 50px solid hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
+    left: 0;
+    top: 0;
+}
+
+.navbar::after {
+    content: '';
+    width: 100px;
+    position: absolute;
+    border-top: 50px solid transparent;
+    border-right: 100px solid hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
+    right: 0;
+    top: 0;
+}

@@ -1,13 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;500;900&display=swap');
 
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-}
-
 :root { 
-    font-size: 16px;
 /*VARIABLES*/
     /*TEXT*/
     --font-family: 'Roboto', sans-serif;
@@ -22,10 +15,14 @@
     --color-main-h: 238;
     --color-main-s: 100%;
     --color-main-l: 10%;
-    /*## dark grey ##*/
+    /*## light grey ##*/
     --color-grey-h: 360;
-    --color-grey-s: 10%;
-    --color-grey-l: 10%;
+    --color-grey-s: 0%;
+    --color-grey-l: 35%;
+    /*## light blue ##*/
+    --color-lightblue-h: 238;
+    --color-lightblue-s: 83%;
+    --color-lightblue-l: 62%;    
     /*## white ##*/
     --color-bg-h: 360;
     --color-bg-s: 100%;
@@ -33,7 +30,11 @@
     /*## text color ##*/
     --color-text-main-h: 238;
     --color-text-main-s: 100%;
-    --color-text-main-l: 10%;
+    --color-text-dark-l: 10%;
+    --color-text-light-l: 100%;
     /*SPACING*/
 }
 
+body {
+    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l))
+}
