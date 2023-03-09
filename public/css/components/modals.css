@@ -1,7 +1,13 @@
-.login-modal {
+#login-modal {
     height: 25rem;
     width: 33rem;
+    padding: 1rem 2rem;
     background-color: hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.8);
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0px 0px 40px 20px rgba(89, 89, 89, 0.75);
+    -webkit-box-shadow: 0px 0px 40px 20px rgba(89, 89, 89, 0.75);
+    -moz-box-shadow: 0px 0px 40px 20px rgba(89, 89, 89, 0.75);
 }
 
 
@@ -10,4 +16,17 @@
     flex-direction: column;
     gap: 0.5rem;
     padding-top: 0.5rem;
+}
+
+#show-password-checkbox {
+    display: none;
+}
+
+.show-password-icon {
+    display: none;
+    padding-right: 1rem;
+}
+
+.show-password-icon.active {
+    display: inline;
 }

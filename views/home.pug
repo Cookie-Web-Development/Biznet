@@ -4,8 +4,10 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        link(rel="stylesheet", href="/public/css/index.css")
+        link(rel="shortcut icon", href="/public/img/icon.ico", type="image/x-icon")
         link(rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.2/css/all.css")
+        link(rel="stylesheet", href="/public/css/index.css")
+        script(src="/public/js/scripts.js" defer) 
         title BizNet Technology
     body
         header.header
@@ -28,31 +30,31 @@ html(lang="en")
                         path(d="M10 103.5V99H36.5V103.5H10Z")
                         path(d="M10 111V107.5H36.5V111H10Z") 
                 form(class='searchbar', action='')
-                    input(type='text', placeholder='buscar/search')
+                    input(type='text', placeholder='buscar/search' autocomplete="off")
                     button(type='submit') 
                         i(class="fa-solid fa-magnifying-glass")
                 div.login
-                    button.button LOGIN
+                    button.button#login-modal-btn LOGIN
             nav.header-bot
                 ul.navbar
                     li Home
                     li Catalog
                     li Deals
-        dialog(class='login-modal' open)
+        dialog(id='login-modal' )
             span.login-text Login
             form(action="" id='login-form')
                 label(for="username") Username
-                input(class='input-box' id='username' type='text')
+                input(class='input-box' id='username' type='text' autocomplete="off")
                 label(for='password') Password 
                 div(class='input-div password')
-                    input(id='password' type='password')
+                    input(id='password' type='password' autocomplete="off")
                     label(class='show-password' for='show-password-checkbox')
-                        input(type='checkbox' id='show-password-checkbox')
-                        i(class="fa-solid fa-eye-slash fa-lg")
-                        i(class="fa-sharp fa-solid fa-eye fa-lg")
-                button Forgot password
+                        input(type='checkbox' id='show-password-checkbox' checked=false autocomplete="off")
+                        i(id='show-password-off' class="fa-solid fa-eye-slash fa-lg show-password-icon active")
+                        i(id='show-password-on' class="fa-sharp fa-solid fa-eye fa-lg show-password-icon")
+                button Forgot password  
                 button(type='submit') Login 
                 button Register 
-                button Cancel
+                button(class='' id='login-modal-close') Cancel
         main 
             div(style='size: 20rem; color: red') THIS IS BODY

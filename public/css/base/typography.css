@@ -1,10 +1,10 @@
 * {
     font-family: var(--font-family);
-    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-dark-l));
     font-size: 16px;
+    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-dark-l));
 }
 
-.navbar {
+.navbar > li {
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
 }
 
