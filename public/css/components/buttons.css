@@ -1,13 +1,32 @@
-.button {
+
+
+.button, .button-modal {
     height: 3rem;
-    width: 6rem;
     background-color: transparent;
     border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
     border-radius: 10px;
 }
 
-.button:hover {
+.button {
+    width: 6rem;
+}
+
+.button-modal {
+    width: 100%;
+}
+
+.button:hover, .button-modal:hover {
     cursor: pointer;
     background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
+}
+
+.button-forgot-password {
+    background-color: transparent;
+    border: none;   
+    align-self: flex-start;
+}
+
+.button-forgot-password:hover {
+    cursor: pointer;
 }

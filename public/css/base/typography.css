@@ -11,3 +11,8 @@
 .login-text { /*From .login-modal*/
     font-size: 2rem;
 }
+
+.button-forgot-password {
+    text-decoration: underline;
+    font-size: var(--fs-note);
+}

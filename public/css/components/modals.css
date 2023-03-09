@@ -1,15 +1,30 @@
 #login-modal {
-    height: 25rem;
-    width: 33rem;
-    padding: 1rem 2rem;
+    height: 28rem;
+    width: 38rem;
+    padding: 1.5rem 2rem;
     background-color: hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.8);
     border: none;
     border-radius: 15px;
     box-shadow: 0px 0px 40px 20px rgba(89, 89, 89, 0.75);
     -webkit-box-shadow: 0px 0px 40px 20px rgba(89, 89, 89, 0.75);
     -moz-box-shadow: 0px 0px 40px 20px rgba(89, 89, 89, 0.75);
+    position: relative;
 }
 
+.button-modal-close {
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    top: 0.5rem;
+    right: 0.5rem;
+    padding: 0.5rem;
+    background-color: transparent;
+    border: none;
+}
+
+.button-modal-close:hover {
+cursor: pointer;
+}
 
 #login-form {
     display: flex;

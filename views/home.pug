@@ -40,7 +40,7 @@ html(lang="en")
                     li Home
                     li Catalog
                     li Deals
-        dialog(id='login-modal' )
+        dialog(id='login-modal')
             span.login-text Login
             form(action="" id='login-form')
                 label(for="username") Username
@@ -52,9 +52,11 @@ html(lang="en")
                         input(type='checkbox' id='show-password-checkbox' checked=false autocomplete="off")
                         i(id='show-password-off' class="fa-solid fa-eye-slash fa-lg show-password-icon active")
                         i(id='show-password-on' class="fa-sharp fa-solid fa-eye fa-lg show-password-icon")
-                button Forgot password  
-                button(type='submit') Login 
-                button Register 
-                button(class='' id='login-modal-close') Cancel
+                button(class='button-forgot-password') Forgot password  
+                button(class='button-modal' type='submit') Login 
+                button(class='button-modal' ) Register 
+                button(class='button-modal login-modal-close') Cancel
+            button(class='button-modal-close login-modal-close') 
+                i(class="fa-solid fa-circle-xmark fa-xl")
         main 
             div(style='size: 20rem; color: red') THIS IS BODY
