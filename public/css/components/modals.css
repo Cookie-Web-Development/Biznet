@@ -23,7 +23,8 @@
 }
 
 .button-modal-close:hover {
-cursor: pointer;
+    cursor: pointer;
+    scale: 1.1
 }
 
 #login-form {

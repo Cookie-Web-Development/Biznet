@@ -47,3 +47,7 @@ document.addEventListener('click', function (event) {
         }
     }
 });   
+
+/*############
+CAROUSEL ITEM LISTING
+##############*/
