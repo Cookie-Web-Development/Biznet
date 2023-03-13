@@ -60,14 +60,13 @@ html(lang="en")
                 i(class="fa-solid fa-circle-xmark fa-xl")
         main 
             section.carousel_container#discount_carousel
-                article 
-                    h3 product 1
-                article
-                    h3 product 2
+                if (discount_list.length > 0)
+                    each item in discount_list 
+                        article
+                            h3=item.name
+                            p=item.price
+                            p=item.description
             section.featured_list
 
         footer
-            ul#target=response
-
-        script.
-            console.log('WTF MAN');
+            span Aloha baby 

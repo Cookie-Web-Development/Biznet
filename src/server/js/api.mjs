@@ -14,10 +14,22 @@ let apiRoute = function (app) {
     let Products = mongoose.model('Products', product_schema);
 
 
-    app.route('/').get((req, res) => {
-
-        let response = 'hola baby'
-        res.render('home', { response })
+    app.route('/').get(async (req, res) => {
+        let discount_list = await Products.aggregate([
+            {
+                $match: {
+                    discount: true
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    price: 1,
+                    discount_percent: 1
+                }
+            }
+        ]);
+        res.render('home', { discount_list })
     });
 
     app.route('/test').get(async (req, res) => {
