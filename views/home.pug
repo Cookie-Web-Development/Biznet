@@ -59,14 +59,70 @@ html(lang="en")
             button(class='button-modal-close login-modal-close') 
                 i(class="fa-solid fa-circle-xmark fa-xl")
         main 
-            section.carousel_container#discount_carousel
-                if (discount_list.length > 0)
-                    each item in discount_list 
-                        article
+            if (discount_list.length > 0)
+                section.carousel_container#discount_carousel
+                    each item in discount_list  
+                        article.discount_product_card   
                             h3=item.name
-                            p=item.price
+                            p=item.formattedPrice
+                            p=item.price_discounted
                             p=item.description
-            section.featured_list
+                    div(id='carousel_next' class='carousel_btn')
+                        i(class="fa-solid fa-chevron-right fa-xl")
+                    div(id='carousel_prev' class='carousel_btn')
+                        i(class="fa-solid fa-chevron-left fa-xl")
+                div#carousel_dot_container
+                    each item in discount_list 
+                        div.carousel_dot
 
         footer
             span Aloha baby 
+        script.
+            let discount_product_card = document.querySelectorAll('.discount_product_card');
+            let carousel_next = document.getElementById('carousel_next');
+            let carousel_prev = document.getElementById('carousel_prev');
+            if (discount_product_card.length > 1) { //carousel code
+                let cardIndex = 0;
+                carouselCurrent(cardIndex);
+
+                function carouselCurrent(index) {
+                    discount_product_card.forEach(card => {
+                        card.classList.remove('current');
+                        card.classList.remove('next');
+                        card.classList.remove('animation');
+                    });
+                    discount_product_card[index].classList.add('current');
+                };
+                
+                carousel_next.addEventListener('click', () => {
+                    let i = cardIndex + 1
+                    if (i >= discount_product_card.length) {
+                        i = 0
+                    }
+                    discount_product_card.forEach(card => {
+                        card.classList.remove('anim_to_left');
+                        card.classList.remove('anim_to_right');
+                        card.classList.remove('anim_to_top');
+                    })
+                    discount_product_card[i].classList.add('next');
+                    discount_product_card[cardIndex].classList.add('anim_to_left');
+                    cardIndex = i;
+                    carouselCurrent(cardIndex);
+                });
+
+                carousel_prev.addEventListener('click', () => {
+                    let i = cardIndex - 1
+                    if (i < 0){
+                        i = discount_product_card.length - 1
+                    }
+                    discount_product_card.forEach(card => {
+                        card.classList.remove('anim_to_left');
+                        card.classList.remove('anim_to_right');
+                        card.classList.remove('anim_to_top');
+                    })
+                    discount_product_card[i].classList.add('next');
+                    discount_product_card[cardIndex].classList.add('anim_to_right');
+                    cardIndex = i;
+                    carouselCurrent(cardIndex);
+                })
+            }

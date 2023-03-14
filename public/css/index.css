@@ -24,6 +24,7 @@ LAYOUT:
 CSS rules that affects elements such as [header], [main], or [footer]; and modifies properties such as [position] or [display] for either itself or its children.
 */
 @import './layout/header.css';
+@import './layout/main.css';
 
 /*
 PAGES:

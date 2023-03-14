@@ -1,3 +1,111 @@
-.carousel_container {
-    border: solid black 1px;   
+/*ANIMATIONS*/
+@keyframes move-right {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: 100% 0;
+    }
 }
+
+@keyframes move-left {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: -100% 0;
+    }
+}
+
+@keyframes move-top {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: 0 -100%;
+    }
+}
+
+#discount_carousel {
+    position: relative;
+    border: solid red 1px;
+    width: 550px;
+    height: 350px;
+    /*overflow: hidden;*/
+}
+
+.discount_product_card {
+    position: absolute;
+    inset: 0;
+    display: none; /*DEV*/
+    /*FOR DEV ONLY*/
+    background-color: lightblue;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.discount_product_card.current {
+    display: flex;
+    z-index: 5;
+}
+
+.discount_product_card.next {
+    display: flex;
+    z-index: 1;
+}
+
+.animation {
+    animation-duration: 1.5s;
+    animation-iteration-count: 1;
+    animation-timing-function: linear;
+}
+
+.anim_to_left {
+    animation-name: move-left;
+
+}
+
+.anim_to_right {
+    animation-name: move-right;
+
+}
+
+.anim_to_top {
+    animation-name: move-top;
+}
+
+.carousel_btn {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 50px;
+    z-index: 10;
+    /*FOR DEV ONLY*/
+    background-color: hsla(360, 100%, 100%, 0.5);
+}
+
+.carousel_btn:hover {
+    cursor: pointer;
+
+}
+
+.carousel_btn:hover i {
+    scale: 1.3;
+}
+
+#carousel_next {
+    right: 0;
+}
+
+#carousel_prev {
+    left: 0;
+}
+
