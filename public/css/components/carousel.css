@@ -1,40 +1,9 @@
-/*ANIMATIONS*/
-@keyframes move-right {
-    from {
-        translate: 0 0;
-    }
-
-    to {
-        translate: 100% 0;
-    }
-}
-
-@keyframes move-left {
-    from {
-        translate: 0 0;
-    }
-
-    to {
-        translate: -100% 0;
-    }
-}
-
-@keyframes move-top {
-    from {
-        translate: 0 0;
-    }
-
-    to {
-        translate: 0 -100%;
-    }
-}
-
 #discount_carousel {
     position: relative;
     border: solid red 1px;
     width: 550px;
     height: 350px;
-    /*overflow: hidden;*/
+    overflow: hidden;
 }
 
 .discount_product_card {
@@ -46,6 +15,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    border: solid black 1px;
 }
 
 
@@ -60,9 +30,11 @@
 }
 
 .animation {
-    animation-duration: 1.5s;
+    animation-duration: 0.5s;
     animation-iteration-count: 1;
     animation-timing-function: linear;
+    display: flex;
+    z-index: 10;
 }
 
 .anim_to_left {
@@ -109,3 +81,33 @@
     left: 0;
 }
 
+/*ANIMATIONS*/
+@keyframes move-right {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: 100% 0;
+    }
+}
+
+@keyframes move-left {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: -100% 0;
+    }
+}
+
+@keyframes move-top {
+    from {
+        translate: 0 0;
+    }
+
+    to {
+        translate: 0 -100%;
+    }
+}

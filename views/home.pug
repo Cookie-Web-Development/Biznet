@@ -89,13 +89,19 @@ html(lang="en")
                     discount_product_card.forEach(card => {
                         card.classList.remove('current');
                         card.classList.remove('next');
-                        card.classList.remove('animation');
+                        //card.classList.remove('animation');
                     });
                     discount_product_card[index].classList.add('current');
                 };
                 
                 carousel_next.addEventListener('click', () => {
-                    let i = cardIndex + 1
+                    if (document.getElementsByClassName('animation')) { //Prevents spam clicking
+                        discount_product_card.forEach(card => {
+                            card.classList.remove('animation')
+                        })
+                    }
+                    let animIndex = cardIndex;
+                    let i = cardIndex + 1;
                     if (i >= discount_product_card.length) {
                         i = 0
                     }
@@ -106,13 +112,23 @@ html(lang="en")
                     })
                     discount_product_card[i].classList.add('next');
                     discount_product_card[cardIndex].classList.add('anim_to_left');
+                    discount_product_card[cardIndex].classList.add('animation');
+                    discount_product_card[cardIndex].addEventListener('animationend', () => {
+                        discount_product_card[animIndex].classList.remove('animation');
+                    })
                     cardIndex = i;
                     carouselCurrent(cardIndex);
                 });
 
                 carousel_prev.addEventListener('click', () => {
-                    let i = cardIndex - 1
-                    if (i < 0){
+                    if (document.getElementsByClassName('animation')) {
+                        discount_product_card.forEach(card => {
+                            card.classList.remove('animation')
+                        })
+                    }
+                    let animIndex = cardIndex;
+                    let i = cardIndex - 1;
+                    if (i < 0) {
                         i = discount_product_card.length - 1
                     }
                     discount_product_card.forEach(card => {
@@ -122,6 +138,10 @@ html(lang="en")
                     })
                     discount_product_card[i].classList.add('next');
                     discount_product_card[cardIndex].classList.add('anim_to_right');
+                    discount_product_card[cardIndex].classList.add('animation')
+                    discount_product_card[cardIndex].addEventListener('animationend', () => {
+                        discount_product_card[animIndex].classList.remove('animation');
+                    })
                     cardIndex = i;
                     carouselCurrent(cardIndex);
                 })
