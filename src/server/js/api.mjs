@@ -51,10 +51,11 @@ let apiRoute = function (app) {
                         }]
                     }
                 }
-            }
+            },
+            { $sample: { size: 5 } }
         ]);
 
-        let empty_list = []
+        let empty_list = [];
         res.render('home', { discount_list })
     });
 

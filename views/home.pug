@@ -60,23 +60,34 @@ html(lang="en")
                 i(class="fa-solid fa-circle-xmark fa-xl")
         main 
             if (discount_list.length > 0)
-                section.carousel_container#discount_carousel
-                    each item in discount_list  
-                        article.discount_product_card   
-                            h3=item.name
-                            p=item.formattedPrice
-                            p=item.price_discounted
-                            p=item.description
-                    div(id='carousel_next' class='carousel_btn')
-                        i(class="fa-solid fa-chevron-right fa-xl")
-                    div(id='carousel_prev' class='carousel_btn')
-                        i(class="fa-solid fa-chevron-left fa-xl")
-                    div#carousel_dot_container
-                        each item in discount_list 
-                            div.carousel_dot
+                h2 Deals of the Day
+                if (discount_list.length == 1)
+                    section.carousel_container#discount_carousel
+                        article.discount_product_card.current
+                            h3=discount_list[0].name 
+                            p=discount_list[0].formattedPrice 
+                            p=discount_list[0].price_discounted 
+                            p=discount_list[0].description
+                else
+                    section.carousel_container#discount_carousel
+                        each item in discount_list  
+                            article.discount_product_card   
+                                h3=item.name
+                                p=item.formattedPrice
+                                p=item.price_discounted
+                                p=item.description
+                        div(id='carousel_next' class='carousel_btn')
+                            i(class="fa-solid fa-chevron-right fa-xl")
+                        div(id='carousel_prev' class='carousel_btn')
+                            i(class="fa-solid fa-chevron-left fa-xl")
+                        div#carousel_dot_container
+                            each item in discount_list 
+                                div.carousel_dot
 
         footer
-            span Aloha baby 
+            span Aloha baby
+
+
         script.
             let discount_product_card = document.querySelectorAll('.discount_product_card');
             
