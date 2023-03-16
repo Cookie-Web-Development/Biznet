@@ -110,6 +110,7 @@
 }
 
 .carousel_dot.current {
+    pointer-events: none;
     /*DEV*/
     background-color: black;
 }
