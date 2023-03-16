@@ -1,7 +1,9 @@
 'use strict';
 
-import { product_schema } from './schema/product_schema.js';
 import mongoose from 'mongoose';
+import { product_schema } from './schema/product_schema.js';
+import { discount_pipeline } from './pipeline/discount.js';
+import { featured_pipeline} from './pipeline/featured.js';
 
 let apiRoute = function (app) {
     mongoose.set('strictQuery', true);
@@ -15,48 +17,11 @@ let apiRoute = function (app) {
 
 
     app.route('/').get(async (req, res) => {
-        let discount_list = await Products.aggregate([
-            {$match: { discount: true }},
-            {
-                $project: {
-                    name: 1,
-                    formattedPrice: {
-                        $concat: [
-                            "  $",
-                            { $toString: { $round: ["$price", 2] } },
-                            {
-                                $cond: [
-                                    {
-                                        $regexMatch: {
-                                            input: { $toString: '$price' },
-                                            regex: /\./
-                                        }
-                                    }, "", ".00"
-                                ]
-                            }
-                        ]
-                    },
-                    discount_percent: 1,
-                    description: 1,
-                    price_discounted: {
-                        $concat: [" $", { $toString: { $round: [{ $subtract: ['$price', { $multiply: ['$price', '$discount_percent'] }] }, 2] } }, {
-                            $cond: [
-                                {
-                                    $regexMatch: {
-                                        input: { $toString: '$price' },
-                                        regex: /\./
-                                    }
-                                }, "", ".00"
-                            ]
-                        }]
-                    }
-                }
-            },
-            { $sample: { size: 5 } }
-        ]);
+        let discount_list = await Products.aggregate(discount_pipeline);
+        let featured_list = await Products.aggregate(featured_pipeline)
 
         let empty_list = [];
-        res.render('home', { discount_list })
+        res.render('home', { discount_list, featured_list })
     });
 
     app.route('/test').get(async (req, res) => {

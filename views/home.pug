@@ -62,14 +62,14 @@ html(lang="en")
             if (discount_list.length > 0)
                 h2 Deals of the Day
                 if (discount_list.length == 1)
-                    section.carousel_container#discount_carousel
+                    section#discount_carousel
                         article.discount_product_card.current
                             h3=discount_list[0].name 
                             p=discount_list[0].formattedPrice 
                             p=discount_list[0].price_discounted 
                             p=discount_list[0].description
                 else
-                    section.carousel_container#discount_carousel
+                    section#discount_carousel
                         each item in discount_list  
                             article.discount_product_card   
                                 h3=item.name
@@ -83,7 +83,16 @@ html(lang="en")
                         div#carousel_dot_container
                             each item in discount_list 
                                 div.carousel_dot
-
+            if (featured_list.length > 0)
+                h2 Best Seller 
+                section#featured_container
+                    each item in featured_list
+                        article.feature_product_card
+                            h3=item.name
+                            p=item.formattedPrice 
+                            if(item.discount == true)
+                                p=item.price_discounted
+                            p=item.description
         footer
             span Aloha baby
 
@@ -100,29 +109,25 @@ html(lang="en")
                 carouselCurrent(cardIndex);
                 
                 carousel_next.addEventListener('click', () => {
-                    animSpamPrevention(discount_product_card);
-
                     let newIndex = cardIndex + 1;
                     if (newIndex >= discount_product_card.length) {
                         newIndex = 0
                     };
 
-                    carouselAnimToggle(discount_product_card, cardIndex, newIndex, 'anim_to_left')
+                    carouselAnimToggle(discount_product_card, cardIndex, newIndex, 'anim_to_left');
                     
                     cardIndex = newIndex;
                     carouselCurrent(cardIndex);
                 });
 
                 carousel_prev.addEventListener('click', () => {
-                    animSpamPrevention(discount_product_card);
-
                     let newIndex = cardIndex - 1;
                     if (newIndex < 0) {
                         newIndex = discount_product_card.length - 1
                     }
 
-                    carouselAnimToggle(discount_product_card, cardIndex, newIndex, 'anim_to_right')
-                    
+                    carouselAnimToggle(discount_product_card, cardIndex, newIndex, 'anim_to_right');
+
                     cardIndex = newIndex;
                     carouselCurrent(cardIndex);
                 })
@@ -134,7 +139,7 @@ html(lang="en")
                     let dotIndex = dotArr.indexOf(dot);
 
                     dot.addEventListener('click', () => {
-                        animSpamPrevention(discount_product_card);
+                        //animSpamPrevention(discount_product_card);
                         carouselAnimToggle(discount_product_card, cardIndex, dotIndex, 'anim_to_top');
                         cardIndex = dotIndex;
                         carouselCurrent(cardIndex);
@@ -156,6 +161,11 @@ html(lang="en")
                 };
 
                 function carouselAnimToggle(arr, index, new_index, animation_name) {
+                    if (document.getElementsByClassName('animation')) {
+                        arr.forEach(card => {
+                            card.classList.remove('animation')
+                        })};
+
                     arr.forEach(card => {
                         card.classList.remove('anim_to_left');
                         card.classList.remove('anim_to_right');
