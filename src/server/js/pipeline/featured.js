@@ -24,6 +24,7 @@ export let featured_pipeline = [
             discount_percent: 1,
             discount: 1,
             description: 1,
+            images: 1,
             price_discounted: {
                 $concat: [" $", { $toString: { $round: [{ $subtract: ['$price', { $multiply: ['$price', '$discount_percent'] }] }, 2] } }, {
                     $cond: [

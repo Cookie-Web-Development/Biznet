@@ -2,8 +2,14 @@
 
 import mongoose from 'mongoose';
 import { product_schema } from './schema/product_schema.js';
+import { product_variation_schema} from './schema/product_variation.js'
 import { discount_pipeline } from './pipeline/discount.js';
 import { featured_pipeline} from './pipeline/featured.js';
+
+/*DEV MODE START: DELETE AFTER USE*/
+import { product_import } from '../../../devTool/product_object.js';
+//import product_variation from '../../../devTool/product_object';
+/*DEV MODE END*/
 
 let apiRoute = function (app) {
     mongoose.set('strictQuery', true);
@@ -21,22 +27,14 @@ let apiRoute = function (app) {
         let featured_list = await Products.aggregate(featured_pipeline)
 
         let empty_list = [];
+        //console.log(discount_list)
         res.render('home', { discount_list, featured_list })
     });
 
     app.route('/test').get(async (req, res) => {
-        /*
-        let agregar = Products.create({
-            "name": "testproduct7",
-            "description": "description testproduct7",
-            "price": 50,
-            "discount": true,
-            "discount_percent": 0.525,
-            "featured": true,
-            "tags": ["product", "test product"]
-        })
-        res.json(agregar);
-        */
+        //let obj = product_import
+        //let agregar = await Products.insertMany(product_import);
+        //res.json(agregar);
         res.send('aloha')
     })
 

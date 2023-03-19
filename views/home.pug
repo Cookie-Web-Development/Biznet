@@ -4,7 +4,7 @@ html(lang="en")
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        link(rel="shortcut icon", href="/public/img/icon.ico", type="image/x-icon")
+        link(rel="shortcut icon", href="/public/img/logo/icon.ico", type="image/x-icon")
         link(rel="stylesheet" href="https://use.fontawesome.com/releases/v6.1.2/css/all.css")
         link(rel="stylesheet", href="/public/css/index.css")
         script(src="/public/js/scripts.js" defer) 
@@ -71,11 +71,15 @@ html(lang="en")
                 else
                     section#discount_carousel
                         each item in discount_list  
-                            article.discount_product_card   
-                                h3=item.name
-                                p=item.formattedPrice
-                                p=item.price_discounted
-                                p=item.description
+                            article.discount_product_card
+                                div.image_container
+                                    each img in item.images
+                                        img(src='/public/img/products-images/' + img)
+                                div.text_container   
+                                    h3=item.name
+                                    p=item.formattedPrice
+                                    p=item.price_discounted
+                                    p=item.description
                         div(id='carousel_next' class='carousel_btn')
                             i(class="fa-solid fa-chevron-right fa-xl")
                         div(id='carousel_prev' class='carousel_btn')

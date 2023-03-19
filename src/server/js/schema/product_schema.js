@@ -27,8 +27,17 @@ export let product_schema = mongoose.Schema({
         type: Boolean,
         default: false
     },
-    pictures: [String],
-    reviews: [{username: String, comment: String}],
-    tags: [String]
+    images: [String],
+    reviews: {
+        type: [ 
+            { username: String, comment: String }
+         ],
+        default: []
+    },
+    tags: [String],
+    sku: {
+        type: String,
+        required: true
+    }
 });
 
