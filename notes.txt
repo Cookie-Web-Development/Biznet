@@ -44,3 +44,20 @@ mongoose
 mocha
 chai
 pug
+
+
+Wild notes:
+- Agregar rating a los productos
+- Agregar categoria
+- Agregar manufacturer / from
+
+Category List:
+- Art and Craft
+- Sport and Fitness
+- Technology
+- Furniture
+- Food
+- Beauty
+- Home
+- School
+- Automobile

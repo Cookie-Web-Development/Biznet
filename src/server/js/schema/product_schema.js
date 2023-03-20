@@ -15,6 +15,14 @@ export let product_schema = mongoose.Schema({
         type: String,
         default: ''
     },
+    category: {
+        type: String,
+        default: "uncategorized"
+    },
+    from: {
+        type: String,
+        default: "Original"
+    },
     discount: {
         type: Boolean,
         default: false
@@ -30,7 +38,7 @@ export let product_schema = mongoose.Schema({
     images: [String],
     reviews: {
         type: [ 
-            { username: String, comment: String }
+            { username: String, comment: String, rating: Number }
          ],
         default: []
     },

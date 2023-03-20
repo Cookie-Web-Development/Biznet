@@ -74,9 +74,14 @@ html(lang="en")
                             article.discount_product_card
                                 div.image_container
                                     each img in item.images
-                                        img(src='/public/img/products-images/' + img)
+                                        img(src='/public/img/products-images/' + img, width='100px')
                                 div.text_container   
                                     h3=item.name
+                                    p=item.category 
+                                    p=item.from
+                                    p=item.tags 
+                                    p=item.discount_percent 
+                                    p=item.sku
                                     p=item.formattedPrice
                                     p=item.price_discounted
                                     p=item.description

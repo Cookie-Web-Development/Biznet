@@ -8,14 +8,15 @@
 
 .discount_product_card {
     position: absolute;
+    display: none;
     inset: 0;
-    display: none; /*DEV*/
-    /*FOR DEV ONLY*/
-    background-color: lightblue;
-    flex-direction: column;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
-    border: solid black 1px;
+    gap: 15px;
+    /*FOR DEV ONLY*/
+    background-color: lightblue;
+    border: solid black 10px;
 }
 
 
@@ -27,6 +28,24 @@
 .discount_product_card.next {
     display: flex;
     z-index: 1;
+}
+
+.discount_product_card > .image_container {
+    width: 50%;
+    height: 100%;
+    /*DEV ONLY*/
+    border: solid red 1px;
+}
+
+.discount_product_card > .text_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    width: 50%;
+    height: 100%;
+    /*DEV ONLY*/
+    border: solid green 1px;
 }
 
 .animation {

@@ -7,7 +7,7 @@ import { discount_pipeline } from './pipeline/discount.js';
 import { featured_pipeline} from './pipeline/featured.js';
 
 /*DEV MODE START: DELETE AFTER USE*/
-import { product_import } from '../../../devTool/product_object.js';
+import { product_import } from '../../../devTool/product_import.js';
 //import product_variation from '../../../devTool/product_object';
 /*DEV MODE END*/
 
@@ -32,7 +32,6 @@ let apiRoute = function (app) {
     });
 
     app.route('/test').get(async (req, res) => {
-        //let obj = product_import
         //let agregar = await Products.insertMany(product_import);
         //res.json(agregar);
         res.send('aloha')
