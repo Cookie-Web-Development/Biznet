@@ -24,10 +24,24 @@ let apiRoute = function (app) {
 
     app.route('/').get(async (req, res) => {
         let discount_list = await Products.aggregate(discount_pipeline);
-        let featured_list = await Products.aggregate(featured_pipeline)
+        let featured_list = await Products.aggregate(featured_pipeline);
+        let formatOptions = {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        };
 
-        let empty_list = [];
-        //console.log(discount_list)
+        discount_list.forEach(item => {
+            item.format_price = item.price.toLocaleString('en-US', formatOptions);
+            item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
+        });
+        featured_list.forEach(item => {
+            item.format_price = item.price.toLocaleString('en-US', formatOptions);
+            item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
+        })
+        featured_list = [featured_list[0]];
+        //console.log(featured_list)
         res.render('home', { discount_list, featured_list })
     });
 

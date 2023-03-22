@@ -59,44 +59,57 @@ html(lang="en")
             button(class='button-modal-close login-modal-close') 
                 i(class="fa-solid fa-circle-xmark fa-xl")
         main 
-            if (discount_list.length > 0)
-                h2 Deals of the Day
-                if (discount_list.length == 1)
-                    section#discount_carousel
-                        article.discount_product_card.current
-                            h3=discount_list[0].name 
-                            p=discount_list[0].formattedPrice 
-                            p=discount_list[0].price_discounted 
-                            p=discount_list[0].description
+            if (featured_list.length > 0)
+                h2 Best Sellers
+                if (featured_list.length == 1)
+                    section#product_carousel
+                        article(data-product-card='medium' data-carousel class='current')
+                            div.image_container
+                                    img(src='/public/img/products-images/' + featured_list[0].images[0])
+                            div.text_container   
+                                p.text_container_header #{featured_list[0].category} / #{featured_list[0].from}
+                                h3=featured_list[0].name
+                                div.product_card_price_tag
+                                    p.price_sell=featured_list[0].format_price_discounted
+                                    if(featured_list[0].discount_percent > 0)
+                                        p.price_discount
+                                            span.price_before #{featured_list[0].format_price} 
+                                            span.discount_percent #{featured_list[0].discount_percent * 100}%
+                                p.product_card_description=featured_list[0].description
+                                ul.product_card_tags
+                                    each tag in featured_list[0].tags
+                                        li=tag 
                 else
-                    section#discount_carousel
-                        each item in discount_list  
-                            article.discount_product_card
+                    section#product_carousel
+                        each item in featured_list  
+                            article(data-product-card='medium' data-carousel)
                                 div.image_container
-                                    each img in item.images
-                                        img(src='/public/img/products-images/' + img, width='100px')
+                                    img(src='/public/img/products-images/' + item.images[0])
                                 div.text_container   
+                                    p.text_container_header #{item.category} / #{item.from}
                                     h3=item.name
-                                    p=item.category 
-                                    p=item.from
-                                    p=item.tags 
-                                    p=item.discount_percent 
-                                    p=item.sku
-                                    p=item.formattedPrice
-                                    p=item.price_discounted
-                                    p=item.description
+                                    div.product_card_price_tag
+                                        p.price_sell=item.format_price_discounted
+                                        if(item.discount_percent > 0)
+                                            p.price_discount
+                                                span.price_before #{item.format_price} 
+                                                span.discount_percent #{item.discount_percent * 100}%
+                                    p.product_card_description=item.description
+                                    ul.product_card_tags
+                                        each tag in item.tags
+                                            li=tag 
                         div(id='carousel_next' class='carousel_btn')
                             i(class="fa-solid fa-chevron-right fa-xl")
                         div(id='carousel_prev' class='carousel_btn')
                             i(class="fa-solid fa-chevron-left fa-xl")
                         div#carousel_dot_container
-                            each item in discount_list 
+                            each item in featured_list 
                                 div.carousel_dot
-            if (featured_list.length > 0)
-                h2 Best Seller 
+            if (discount_list.length > 0)
+                h2 Deals of the Day 
                 section#featured_container
-                    each item in featured_list
-                        article.feature_product_card
+                    each item in discount_list
+                        article
                             h3=item.name
                             p=item.formattedPrice 
                             if(item.discount == true)
@@ -107,9 +120,11 @@ html(lang="en")
 
 
         script.
-            let discount_product_card = document.querySelectorAll('.discount_product_card');
-            
-            if (discount_product_card.length > 1) { //carousel code
+            /*###########
+            Carousel Code
+            #############*/
+            let carouselCards = document.querySelectorAll('[data-carousel]');
+            if (carouselCards.length > 1) { 
                 let carousel_next = document.getElementById('carousel_next');
                 let carousel_prev = document.getElementById('carousel_prev');
                 let carousel_dot = document.querySelectorAll('.carousel_dot');
@@ -119,11 +134,11 @@ html(lang="en")
                 
                 carousel_next.addEventListener('click', () => {
                     let newIndex = cardIndex + 1;
-                    if (newIndex >= discount_product_card.length) {
+                    if (newIndex >= carouselCards.length) {
                         newIndex = 0
                     };
 
-                    carouselAnimToggle(discount_product_card, cardIndex, newIndex, 'anim_to_left');
+                    carouselAnimToggle(carouselCards, cardIndex, newIndex, 'anim_to_left');
                     
                     cardIndex = newIndex;
                     carouselCurrent(cardIndex);
@@ -132,10 +147,10 @@ html(lang="en")
                 carousel_prev.addEventListener('click', () => {
                     let newIndex = cardIndex - 1;
                     if (newIndex < 0) {
-                        newIndex = discount_product_card.length - 1
+                        newIndex = carouselCards.length - 1
                     }
 
-                    carouselAnimToggle(discount_product_card, cardIndex, newIndex, 'anim_to_right');
+                    carouselAnimToggle(carouselCards, cardIndex, newIndex, 'anim_to_right');
 
                     cardIndex = newIndex;
                     carouselCurrent(cardIndex);
@@ -148,8 +163,7 @@ html(lang="en")
                     let dotIndex = dotArr.indexOf(dot);
 
                     dot.addEventListener('click', () => {
-                        //animSpamPrevention(discount_product_card);
-                        carouselAnimToggle(discount_product_card, cardIndex, dotIndex, 'anim_to_top');
+                        carouselAnimToggle(carouselCards, cardIndex, dotIndex, 'anim_to_top');
                         cardIndex = dotIndex;
                         carouselCurrent(cardIndex);
                     })
@@ -157,7 +171,7 @@ html(lang="en")
 
                 // FUNCTIONS
                 function carouselCurrent(index) {
-                    discount_product_card.forEach(card => {
+                    carouselCards.forEach(card => {
                         card.classList.remove('current');
                         card.classList.remove('next');
                     });
@@ -165,7 +179,7 @@ html(lang="en")
                     carousel_dot.forEach(dot => {
                         dot.classList.remove('current')
                     })
-                    discount_product_card[index].classList.add('current');
+                    carouselCards[index].classList.add('current');
                     carousel_dot[index].classList.add('current')
                 };
 
@@ -188,12 +202,14 @@ html(lang="en")
                         arr[index].classList.remove('animation');
                     })
                 };
+            };
 
-                function animSpamPrevention (arr) {
-                    if (document.getElementsByClassName('animation')) {
-                        arr.forEach(card => {
-                            card.classList.remove('animation')
-                        })
-                    }
-                }
-            }
+            /*###############
+            PRODUCT_CARD CODE
+            #################*/
+            let image_container = document.querySelectorAll('.image_container');
+
+
+
+
+            // FUNCTIONS

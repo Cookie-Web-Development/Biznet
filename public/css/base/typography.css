@@ -8,7 +8,11 @@
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
 }
 
-.login-text { /*From .login-modal*/
+
+/*###########
+Login Modal
+#############*/ 
+.login-text { 
     font-size: 2rem;
 }
 
@@ -16,3 +20,23 @@
     text-decoration: underline;
     font-size: var(--fs-note);
 }
+
+/*############
+Product Cards
+##############*/
+.product_card_price_tag > .price_sell {
+    font-size: var(--fs-body)
+}
+
+/*LARGE*/
+/*MEDIUM*/
+[data-product-card='medium'] > .text_container > h3 {
+    font-size: var(--fs-title);
+}
+
+[data-product-card='medium'] > .text_container > .text_container_header {
+    font-size: var(--fs-note);
+    color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
+}
+
+/*SMALL*/

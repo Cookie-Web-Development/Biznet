@@ -4,7 +4,7 @@
 /*VARIABLES*/
     /*TEXT*/
     --font-family: 'Roboto', sans-serif;
-    --fs-title: 1.4rem;
+    --fs-title: 1.6rem;
     --fs-body: 1.2rem;
     --fs-note: 0.9rem;
     --fw-b: 900;
@@ -15,10 +15,12 @@
     --color-main-h: 238;
     --color-main-s: 100%;
     --color-main-l: 10%;
-    /*## light grey ##*/
+    /*## grey ##*/
     --color-grey-h: 360;
     --color-grey-s: 0%;
     --color-grey-l: 35%;
+    /*## light grey ##*/
+    --color-greylight-l: 80%;
     /*## light blue ##*/
     --color-lightblue-h: 238;
     --color-lightblue-s: 83%;
