@@ -1,0 +1,5 @@
+#product_list_filtered {
+    flex: 1;
+    /*DEV ONLY*/
+    border: solid purple 1px;
+}

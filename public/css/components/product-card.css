@@ -10,6 +10,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    /*DEV ONLY*/
+    border: green 1px solid;
 }
 
 [data-product-card='medium'] {
@@ -60,11 +62,14 @@
     bottom: 0;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 5px;
     margin-bottom: 5px;
+    width: fit-content;
+    height: max-content;
 }
 
 .product_card_tags > * {
     height: max-content;
-    width: min-content;
+    width: max-content;
 }

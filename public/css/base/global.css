@@ -51,12 +51,3 @@
 body {
     background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l))
 }
-
-/*FOR TESTING! DELETE AFTER DONE!*/
-main {
-    border: solid red 1px;  
-}
-
-footer {
-    border: solid green 1px;
-}
