@@ -1,6 +1,10 @@
+/*Here goes EVERYTHING about [fonts], [font-sizes] and [font-color]*/
+:root {
+    font-size: 16px;
+}
+
 * {
     font-family: var(--font-family);
-    font-size: 16px;
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-dark-l));
 }
 
@@ -13,7 +17,7 @@
 Login Modal
 #############*/ 
 .login-text { 
-    font-size: 2rem;
+    font-size: var(--fs-max);
 }
 
 .button-forgot-password {
@@ -21,22 +25,82 @@ Login Modal
     font-size: var(--fs-note);
 }
 
+
+/*####
+MAIN
+######*/
+/*Sections titles*/
+h2 {
+    font-size: var(--fs-max);
+}
+
 /*############
 Product Cards
 ##############*/
-.product_card_price_tag > .price_sell {
-    font-size: var(--fs-body)
-}
-
-/*LARGE*/
-/*MEDIUM*/
-[data-product-card='medium'] > .text_container > h3 {
+.text_container > h3 {
     font-size: var(--fs-title);
 }
 
-[data-product-card='medium'] > .text_container > .text_container_header {
+.text_container > .text_container_header {
     font-size: var(--fs-note);
     color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
 }
 
+/*Price Tag*/
+.product_card_price_tag > .price_sell {
+    font-size: var(--fs-price-main);  
+}
+
+.price_discount > * {
+    font-size: var(--fs-note)
+}
+
+.price_discount > .price_before {
+    color: hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
+    position: relative;
+}
+
+.price_discount > .price_before::before { /* discount red line. This is here cuz I treat this as "text-decoration" */
+    content: '';
+    height: 0px;
+    width: 90%;
+    border: solid 1px hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
+    position: absolute;
+    bottom: 50%;
+    rotate: -10deg;
+}
+
+.price_discount > .discount_percent {
+    --color-text-white-l: 100%;
+    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-white-l));
+    /*The following code is here cuz I treat them as "text-decoration*/
+    background-color: hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
+    margin-left: 5px;
+    padding: 2px 4px;
+    border-radius: 5px;
+}
+
+.price_discount > .discount_percent:before {
+    content: '-';
+}
+
+/*Product description*/
+.product_card_description {
+    font-size: var(--fs-body);
+}
+
+/*Product tags*/
+.product_card_tags > * {
+    font-size: var(--fs-note);
+    /*The following code is heree cuz I treat them as "text-decoration"*/
+    background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
+    padding: 1px 2px;
+    border-radius: 5px;
+}
+/*LARGE*/
+
 /*SMALL*/
+[data-product-card='small'] {
+    --fs-body: 0.8rem;
+    font-size: var(--fs-body);
+}

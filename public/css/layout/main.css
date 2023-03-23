@@ -3,4 +3,11 @@ main {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
+}
+
+.section_divider {
+    width: 80vw;
+    color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    border-radius: 50%;
 }

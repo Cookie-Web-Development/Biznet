@@ -4,9 +4,12 @@
 /*VARIABLES*/
     /*TEXT*/
     --font-family: 'Roboto', sans-serif;
-    --fs-title: 1.6rem;
-    --fs-body: 1.2rem;
+    --fs-max: 2rem;
+    --fs-title: 1.8rem;
+    --fs-sub-title: 0.9rem; /*FLAG FOR DELETE IF NO USE*/
+    --fs-body: 1.1rem;
     --fs-note: 0.9rem;
+    --fs-price-main: 1.4rem;
     --fw-b: 900;
     --fw-m: 500;
     --fw-l: 100;
@@ -24,8 +27,16 @@
     /*## light blue ##*/
     --color-lightblue-h: 238;
     --color-lightblue-s: 83%;
-    --color-lightblue-l: 62%;    
-    /*## white ##*/
+    --color-lightblue-l: 62%;
+    /* ## red (discount_price) ##*/
+    --color-red-h: 360;
+    --color-red-s: 100%;
+    --color-red-l: 44%;    
+    /*## green (discount_percent) ##*/
+    --color-green-h: 131;
+    --color-green-s: 100%;
+    --color-green-l: 32%;
+    /*## bg-white ##*/
     --color-bg-h: 360;
     --color-bg-s: 100%;
     --color-bg-l: 100%;

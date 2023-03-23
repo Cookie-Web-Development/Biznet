@@ -1,10 +1,15 @@
 #product_carousel {
     position: relative;
-    border: solid red 1px;
     width: 750px;
     height: 350px;
     overflow: hidden;
     background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+}
+
+[data-carousel] {
+    position: absolute;
+    inset: 0;
+    margin: auto;
 }
 
 [data-carousel].current {

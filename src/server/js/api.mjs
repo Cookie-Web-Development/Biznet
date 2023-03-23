@@ -40,7 +40,7 @@ let apiRoute = function (app) {
             item.format_price = item.price.toLocaleString('en-US', formatOptions);
             item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
         })
-        featured_list = [featured_list[0]];
+        //featured_list = [featured_list[0]];
         //console.log(featured_list)
         res.render('home', { discount_list, featured_list })
     });
