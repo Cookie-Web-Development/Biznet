@@ -36,6 +36,8 @@ PAGES:
 CSS rules that applies onto elements such as [body] and modifies the position or structure layout of the website; divided by its page/route
 */
 
+@import './pages/home.css'
+
 /*
 THEME:
 CSS rules that affect theme changes such as [dark-theme]

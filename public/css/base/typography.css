@@ -101,6 +101,12 @@ Product Cards
 
 /*SMALL*/
 [data-product-card='small'] {
-    --fs-body: 0.8rem;
-    font-size: var(--fs-body);
+    --fs-title: 1.3rem;
+    --fs-price-main: 1.2rem;
+    --fs-note: 0.7rem;
+    /*
+    --fs-title
+    --fs-price-main
+    --fs-note
+    */
 }

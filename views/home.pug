@@ -108,27 +108,26 @@ html(lang="en")
             if (discount_list.length > 0)
                 hr.section_divider
                 h2 Deals of the Day 
-                section#product_list_filtered
-                    each item in discount_list
-                        article(data-product-card='small')
-                            div.image_container
-                                    img(src='/public/img/products-images/' + item.images[0])
-                            div.text_container   
-                                p.text_container_header #{item.category} / #{item.from}
-                                h3=item.name
-                                div.product_card_price_tag
-                                    p.price_sell=item.format_price_discounted
-                                    if(item.discount_percent > 0)
-                                        p.price_discount
-                                            span.price_before #{item.format_price} 
-                                            span.discount_percent #{item.discount_percent * 100}%
-                                p.product_card_description=item.description
-                                ul.product_card_tags
-                                    each tag in item.tags
-                                        li=tag 
+                section#product_search_section
+                    div.product_result_container
+                        each item in discount_list
+                            article(data-product-card='small')
+                                div.image_container
+                                        img(src='/public/img/products-images/' + item.images[0])
+                                div.text_container   
+                                    p.text_container_header #{item.category} / #{item.from}
+                                    h3=item.name
+                                    div.product_card_price_tag
+                                        p.price_sell=item.format_price_discounted
+                                        if(item.discount_percent > 0)
+                                            p.price_discount
+                                                span.price_before #{item.format_price} 
+                                                span.discount_percent #{item.discount_percent * 100}%
+                                    p.product_card_description=item.description
+                                    ul.product_card_tags
+                                        each tag in item.tags
+                                            li=tag 
         footer
-            span Aloha baby
-
 
         script.
             /*###########
