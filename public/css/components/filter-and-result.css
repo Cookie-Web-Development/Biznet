@@ -1,6 +1,14 @@
 #product_search_section {
     display: flex;
     flex-direction: row;
+    width: 100%;
+    justify-content: center;
+    /*DEV ONLY*/
+    border: green solid 1px;
+}
+
+.product_filter_seearch_section {
+    
 }
 
 .product_result_container {

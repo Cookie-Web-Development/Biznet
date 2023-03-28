@@ -32,3 +32,9 @@ ul,
 ol {
   list-style: none;
 }
+
+/* Remove styling for <a>*/
+a {
+  color: inherit;
+  text-decoration: none;
+}

@@ -61,3 +61,30 @@ Category List:
 - Home
 - School
 - Automobile
+
+
+routes:
+- /, /home: pagina principal. Tendra el carousel de featured y la lista de productos en descuento.
+
+- /catalog : catalogo. Se encontraran los campos de busqued/filtros y un campo mostrando los resultados de los filtros. Puntos a considerar:
+    * Al entrar por primera vez, los filtros se encontraran vacios y todos los productos en la base de datos seran mostrados.
+    * Guardar y mantenere la ultima busqueda por session. de este modo, al cambiar de pagina dentro del mismo dominio y volver a '/catalog', los mismos campos dentro de busqueda/filtro quedaran igual.
+    * Utilizar queries para filtrar busquedas.
+
+- /catalog/:id : es la pagina para cada articulo. El :id es determinado por mongodb.
+
+- /deals : este route redirecciona a '/catalog' pero activando la busqueda/filtro de 'descuentos' al entrar a este route, sobre-escribira cualquier busqueda realizado durante la sesion.
+
+- /login : se enviara a este route cuando se encuentre algun error de autenticacion dentro del dialog de 'login' desde cualquier route que lo contenga. TODO LOGIN APROBADO DEBE DE REDIRECCIONAR A LA PAGINA PREVIA A INICIAR SESION.
+
+- /register : este route se para registrar nuevas cuentas PARA CLIENTES. NO SE UTILIZA PARA REGISTRAR COLABORADORES.
+
+- /profile : una vez iniciado session, hacer click en el nombre de usuario redirigira a este route. Se utiliza para modificar detalles a la cuenta SOLAMENTE PARA CLIENTES. NO ES ACCESIBLE PARA CUENTAS DE COLABORADORES.
+
+- /company : sustituye el route de '/profile' pero es exclusivo para las cuentas DE COLABORADORES.
+
+- /admin : sustituye '/company' cuando una cuenta con el rango de 'admin' esta en sesion. NOTA: LAS CUENTAS ADMIN PARA ESTA PLATAFORMA DEBEN SER CREADAS DENTRO DEL SOURCE CODE Y SOLO PUEDE SER UNA CUENTA.
+
+- /admin/register : es para registrar nuevos usuarios PARA COLABORADORES. toda nueva cuenta luego es guardado en la base de datos. Nuevas cuentas de COLABORADORES solamente puede ser creado por la cuenta admin.
+
+- /test : SOLMANENTE PARA DEV. BORRAR ANTES DE PRODUCCION
