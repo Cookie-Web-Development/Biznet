@@ -60,30 +60,39 @@ html(lang="en")
                 div.product_filter_container
                     form
                         label
-                            p On sale 
-                        label
-                            p Best Sellers
-                        label
-                            p By name 
-                            input
-                        label
-                            p By category 
-                            select
-                                each option in search_fields.category_fields 
-                                    option=option
-                        label
-                            p By tags 
-                            select 
-                                each option in search_fields.tags_fields 
-                                    option=option
-                        label
                             p By brand 
                             select 
-                                each option in search_fields.brand_fields 
-                                    option=option
+                                option(value='') Select a brand 
+                                each brand in search_fields.brand_fields 
+                                    option(value=brand)=brand
                         label 
-                            p By rating 
+                            p By category 
+                            select
+                                option(value='') Select a category
+                                each category in search_fields.category_fields
+                                    option(value=category)=category 
+                        label
+                            p By tags
+                            input(type='text', class='filter-input', id='tags-filter', onkeyup='filtereTags()') 
+                            select(id='tags-dropdown') 
+                                option(value="") Select a tag
+                            div#selected_tags
                 div.product_result_container
                     article
 
         script.
+            let tags_db = !{JSON.stringify(search_fields.tags_fields)}
+            let tags_dropdown = document.getElementById('tags-dropdown');
+            let tags_selected =  [];
+            
+            tags_db.forEach(tag => {
+                let option = document.createElement('option');
+                option.value = tag;
+                option.text = tag;
+                tags_dropdown.appendChild(option)
+            })
+
+            function tagFilter() {
+                let unselected_tags; //map or somekind that kicks out all strings from [tags_selected] from [tags_db]
+                //Then have a forEeach with unselected_tags
+            }
