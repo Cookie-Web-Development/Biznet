@@ -71,28 +71,90 @@ html(lang="en")
                                 option(value='') Select a category
                                 each category in search_fields.category_fields
                                     option(value=category)=category 
-                        label
-                            p By tags
-                            input(type='text', class='filter-input', id='tags-filter', onkeyup='filtereTags()') 
+                        div.search-container#tags-filter
+                            label
+                                p By tags
+                                input(type='text', class='filter-input', id='tags-filter', onkeyup='tagFilter()') 
                             select(id='tags-dropdown') 
-                                option(value="") Select a tag
-                            div#selected_tags
+                                option(value="" selected) Select a tag
+                            ul#selected_tags
                 div.product_result_container
                     article
 
         script.
-            let tags_db = !{JSON.stringify(search_fields.tags_fields)}
+            let tags_db = !{JSON.stringify(search_fields.tags_fields)};
+            let tags_select_container = document.getElementById('selected_tags');
             let tags_dropdown = document.getElementById('tags-dropdown');
-            let tags_selected =  [];
-            
-            tags_db.forEach(tag => {
-                let option = document.createElement('option');
-                option.value = tag;
-                option.text = tag;
-                tags_dropdown.appendChild(option)
-            })
+            let unselectedTags = undefined || [...tags_db];
+            let tags_selected =  undefined || [];
+           
+            tagListCreator()
 
             function tagFilter() {
                 let unselected_tags; //map or somekind that kicks out all strings from [tags_selected] from [tags_db]
+
                 //Then have a forEeach with unselected_tags
+            };
+
+            tags_dropdown.addEventListener('click', (e) => {
+                if(e.target.dataset.tag) {
+                    /*Arrays updater*/
+                    unselectedTags = unselectedTags.filter((tag) => {return tag != e.target.dataset.tag}).sort();
+                    tags_selected.push(e.target.dataset.tag);
+                    tags_selected.sort();
+                    
+                    tagListCreator();
+                }
+            });
+
+            tags_select_container.addEventListener('click', (e) => {
+                if(e.target.value) {
+                    tags_selected = tags_selected.filter((tag) => {return tag != e.target.value}).sort();
+                    unselectedTags.push(e.target.value);
+                    unselectedTags.sort();
+
+                    tagListCreator();
+                }
+            })
+
+
+            function tagListCreator() {
+                /*Elements remover*/
+                let dropdown_children = Array.from(tags_dropdown.querySelectorAll('[data-tag]'));
+                let tag_select_children =  Array.from(tags_select_container.children);
+                dropdown_children.forEach(child => { child.remove() });
+                tag_select_children.forEach(child => { child.remove() });
+
+                /*Elements creator*/
+                if(unselectedTags.length > 0){
+                    unselectedTags.forEach(tag => {
+                        let option = document.createElement('option');
+                        option.value = tag;
+                        option.text= tag;
+                        option.dataset.tag = tag;
+                        tags_dropdown.appendChild(option);
+                    });
+                }
+
+                if(tags_selected.length > 0) {
+                tags_selected.forEach(tag => {
+                    let selection_item = document.createElement('li');
+                    let selection_label = document.createElement('label');
+                    let selection_checkbox = document.createElement('input');
+                    let selection_text = document.createElement('span');
+                    
+                    selection_item.classList.add('selected_tag');
+                    selection_checkbox.type = 'checkbox';
+                    selection_checkbox.setAttribute('checked', true);
+                    selection_checkbox.value = tag;
+                    selection_text.textContent = tag;
+
+                    selection_label.appendChild(selection_checkbox);
+                    selection_label.appendChild(selection_text);
+                    selection_item.appendChild(selection_label);
+
+                    tags_select_container.appendChild(selection_item);
+                });
+                }
             }
+
