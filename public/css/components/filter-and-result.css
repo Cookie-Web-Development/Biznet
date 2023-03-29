@@ -20,3 +20,28 @@
     padding: 5px;
 }
 
+/* This needs fixing
+label {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+  
+  select {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    max-height: 200px;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.2s ease-in-out;
+    z-index: 10
+  }
+  
+  label:focus-within select {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  */

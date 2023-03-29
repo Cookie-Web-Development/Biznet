@@ -72,11 +72,10 @@ html(lang="en")
                                 each category in search_fields.category_fields
                                     option(value=category)=category 
                         div.search-container#tags-filter
-                            label
+                            label 
                                 p By tags
-                                input(type='text', class='filter-input', id='tags-filter', onkeyup='tagFilter()') 
-                            select(id='tags-dropdown') 
-                                option(value="" selected) Select a tag
+                                input(type='text', class='filter-input', id='tags-filter-input', onkeyup='tagFilter()') 
+                                select(id='tags-dropdown' size='8') 
                             ul#selected_tags
                 div.product_result_container
                     article
@@ -89,9 +88,23 @@ html(lang="en")
             let tags_selected =  undefined || [];
            
             tagListCreator()
-
+            
             function tagFilter() {
-                let unselected_tags; //map or somekind that kicks out all strings from [tags_selected] from [tags_db]
+                let input = document.getElementById('tags-filter-input').value.toLowerCase();
+                let options = tags_dropdown.options;
+
+                if (input == ''){
+                } else {
+                    for (let i = 0; i < options.length; i++) {
+                        let tag = options[i];
+                        let tagText = tag.text.toLowerCase();
+                        if (tagText.includes(input)){
+                            tag.style.display = ''
+                        } else {
+                            tag.style.display ='none'
+                        }
+                    }                    
+                }
 
                 //Then have a forEeach with unselected_tags
             };
