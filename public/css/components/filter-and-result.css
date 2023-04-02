@@ -14,8 +14,22 @@
     gap: 15px 15px;
 }
 
+.range_container {
+  position: relative;
+  /*DEV ONLY*/
+  border: solid purple 1px;
+  height: 30px;
+}
+
+.price_range_input {
+  position: absolute;
+  background: transparent;
+  appearance: none;
+  pointer-events: none;
+}
+
 /*DEV ONLY*/
-#tags-filter {
+#tags_filter {
     border: 1px solid purple;
     padding: 5px;
 }
@@ -45,3 +59,23 @@ label {
     pointer-events: auto;
   }
   */
+
+  input[type="range"]::-webkit-slider-thumb {
+    pointer-events: auto;
+  }
+  
+  input[type="range"]::-moz-range-thumb {
+    pointer-events: auto;
+  }
+  
+  input[type="range"]::-ms-thumb {
+    pointer-events: auto;
+  }
+  
+  input[type="range"]::-o-range-thumb {
+    pointer-events: auto;
+  }
+  
+  input[type="range"]::range-thumb {
+    pointer-events: auto;
+  }

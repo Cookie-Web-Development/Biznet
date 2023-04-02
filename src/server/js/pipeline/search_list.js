@@ -15,5 +15,17 @@ export let search_list = {
         { $unwind: "$from" },
         { $group: { _id: null, from: { $addToSet: "$from" } } },
         { $project: { _id: 0, from: 1 } },
+    ],
+    price_range: [
+        { $group: {
+            _id: null,
+            min: { $min: "$price" },
+            max: { $max: "$price" }
+        }},
+        { $project: {
+            _id: 0,
+            min: { $floor: "$min" },
+            max: { $ceil: "$max" }
+        }}
     ]
 }

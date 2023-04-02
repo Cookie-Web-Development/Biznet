@@ -50,25 +50,27 @@ let apiRoute = function (app) {
         .get(async (req, res) => {
             let tags = await Products.aggregate(search_list.tags),
             categories = await Products.aggregate(search_list.category),
-            brands = await Products.aggregate(search_list.from);
-            //All of them return [{key: [...string]}]
+            brands = await Products.aggregate(search_list.from),
+            // ^ All of these return [{key: [...string]}]
+            price_range = await Products.aggregate(search_list.price_range);
 
             let search_fields = {
                 tags_fields: tags[0].tags.sort(),
                 category_fields: categories[0].category.sort(),
-                brand_fields: brands[0].from.sort()
+                brand_fields: brands[0].from.sort(),
+                price_range: price_range[0]
             }
             //console.log(search_fields.tags_fields.sort())
             res.render('catalog', { search_fields })
         })
 
     app.route('/test').get(async (req, res) => {
-        let test = await Products.findOneAndUpdate(
+        /*let test = await Products.findOneAndUpdate(
             { _id: "64189e972ea9cdec50ce98da" },
             { from: "Future Now" }
             );
-        res.json(test);
-        //res.send('aloha')
+        res.json(test);*/
+        res.send('aloha')
     });
 
 

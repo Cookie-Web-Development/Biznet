@@ -59,42 +59,98 @@ html(lang="en")
             section#product_search_section
                 div.product_filter_container
                     form
-                        label
-                            p By brand 
-                            select 
-                                option(value='') Select a brand 
-                                each brand in search_fields.brand_fields 
-                                    option(value=brand)=brand
-                        label 
-                            p By category 
-                            select
-                                option(value='') Select a category
-                                each category in search_fields.category_fields
-                                    option(value=category)=category 
-                        div.search-container#tags-filter
+                        div.search_container
+                            label
+                                p By name 
+                                input(type='text', class='filter_input', name='name',  id='testerino', data-reset='text')
+                        div.search_container
+                            label 
+                                p By price range 
+                                p#price_range_display
+                            div.range_container
+                                input(type='range', class='price_range_input', id='min_range_slider', name='price_range_min', data-reset='range-min')
+                                input(type='range', class='price_range_input', id='max_range_slider', name='price_range_max', data-reset='range-max')
+                        div.search_container
+                            label 
+                                p By category 
+                                select(data-reset='select')
+                                    option(value='') Select a category
+                                    each category in search_fields.category_fields
+                                        option(value=category)=category 
+                        div.search_container
+                            label 
+                                p By brand 
+                                select(data-reset='select') 
+                                    option(value='') Select a brand 
+                                    each brand in search_fields.brand_fields 
+                                        option(value=brand)=brand
+                        div.search_container#tags_filter
                             label 
                                 p By tags
-                                input(type='text', class='filter-input', id='tags-filter-input', onkeyup='tagFilter()') 
-                                select(id='tags-dropdown' size='8') 
+                                input(type='text', class='filter_input', id='tags_filter_input', data-reset='text') 
+                                select(id='tags_dropdown' size='8') 
                             ul#selected_tags
+                        div.search_container
+                            label 
+                                p On sale 
+                                input(type='checkbox', value=true, name='discount', data-reset='checkbox')
+                            label 
+                                p Best seller 
+                                input(type='checkbox', value=true, name='featured', data-reset='checkbox')
+                        button(type='button', class='button', id='search_field_reset') Reset search fields
                 div.product_result_container
                     article
 
         script.
+            /*### PRICE RANGE ###*/
+            let min_slider = document.getElementById('min_range_slider');
+            let max_slider = document.getElementById('max_range_slider');
+            let price_range_display = document.getElementById('price_range_display');
+            let price_range_db = !{JSON.stringify(search_fields.price_range)};
+
+            [min_slider, max_slider].forEach(input => {
+                Object.assign(input, {
+                    min : price_range_db.min,
+                    max : price_range_db.max, 
+                    value : input === min_slider ? undefined || price_range_db.min : undefined || price_range_db.max
+                })
+            });
+
+            displayPriceRange();
+
+            min_slider.addEventListener('input', () => {
+                if(+min_slider.value > +max_slider.value) {
+                    min_slider.value = max_slider.value
+                };
+                displayPriceRange()
+            });
+
+            max_slider.addEventListener('input', () => {
+                if(+max_slider.value < +min_slider.value) {
+                    max_slider.value = min_slider.value
+                };
+                displayPriceRange()
+            });
+            
+            function displayPriceRange(minRange = min_slider.value, maxRange = max_slider.value) {
+                price_range_display.textContent = `$ ${minRange} - $ ${maxRange}`
+            };  
+
+            /*### TAGS FILTER ###*/
             let tags_db = !{JSON.stringify(search_fields.tags_fields)};
             let tags_select_container = document.getElementById('selected_tags');
-            let tags_dropdown = document.getElementById('tags-dropdown');
+            let tags_dropdown = document.getElementById('tags_dropdown');
+            let tags_text_filter = document.getElementById('tags_filter_input')
             let unselectedTags = undefined || [...tags_db];
             let tags_selected =  undefined || [];
            
             tagListCreator()
             
-            function tagFilter() {
-                let input = document.getElementById('tags-filter-input').value.toLowerCase();
+            tags_text_filter.addEventListener('input', () => {
+                let input = document.getElementById('tags_filter_input').value.toLowerCase();
                 let options = tags_dropdown.options;
 
-                if (input == ''){
-                } else {
+                if (input != ''){
                     for (let i = 0; i < options.length; i++) {
                         let tag = options[i];
                         let tagText = tag.text.toLowerCase();
@@ -105,9 +161,7 @@ html(lang="en")
                         }
                     }                    
                 }
-
-                //Then have a forEeach with unselected_tags
-            };
+            })
 
             tags_dropdown.addEventListener('click', (e) => {
                 if(e.target.dataset.tag) {
@@ -169,5 +223,37 @@ html(lang="en")
                     tags_select_container.appendChild(selection_item);
                 });
                 }
-            }
+            };
 
+            /*### RESET SEARCH BUTTON ###*/
+            let resetBtn = document.getElementById('search_field_reset')
+            
+            resetBtn.addEventListener('click', () => {
+                let inputElements = Array.from(document.querySelectorAll('[data-reset]'))
+                inputElements.forEach(input => {
+                    switch(input.dataset.reset){
+                        case 'text':
+                            input.value = '';
+                            break;
+                        case 'select':
+                            input.selectedIndex = 0;
+                            break;
+                        case 'checkbox':
+                            input.checked = false;
+                            break;
+                        case 'range-min':
+                            input.value = price_range_db.min;
+                            displayPriceRange();
+                            break;
+                        case 'range-max':
+                            input.value = price_range_db.max;
+                            displayPriceRange();
+                            break;
+                        default:
+                            console.log('something wrong with resetBtn')
+                    }
+                });
+                unselectedTags = [...tags_db];
+                tags_selected = [];
+                tagListCreator();
+            })
