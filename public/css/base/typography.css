@@ -12,27 +12,40 @@
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
 }
 
+/*##########
+INPUT BOXES
+############*/
+.input_box {
+    font-size: var(--fs-note)
+}
+
 
 /*###########
 Login Modal
 #############*/ 
-.login-text { 
+.login_text { /*Literally is the text that says LOGIN*/
     font-size: var(--fs-max);
 }
 
-.button-forgot-password {
+.button_forgot_password {
     text-decoration: underline;
     font-size: var(--fs-note);
 }
 
-
-/*####
-MAIN
-######*/
-/*Sections titles*/
-h2 {
-    font-size: var(--fs-max);
+/*#######################
+Search and Filter Fields
+#########################*/
+.search_container_title {
+    font-size: var(--fs-body);
+    /*The following code is here cuz I treat them as "line-height"*/
+    padding-bottom: 3px;
 }
+
+.search_container_desc {
+    font-size: var(--fs-note);
+    text-align: center;
+}
+
 
 /*############
 Product Cards
@@ -92,7 +105,7 @@ Product Cards
 /*Product tags*/
 .product_card_tags > * {
     font-size: var(--fs-note);
-    /*The following code is heree cuz I treat them as "text-decoration"*/
+    /*The following code is here cuz I treat them as "text-decoration"*/
     background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
     padding: 1px 2px;
     border-radius: 5px;
@@ -109,4 +122,12 @@ Product Cards
     --fs-price-main
     --fs-note
     */
+}
+
+/*####
+MAIN
+######*/
+/*Sections titles*/
+h2 {
+    font-size: var(--fs-max);
 }

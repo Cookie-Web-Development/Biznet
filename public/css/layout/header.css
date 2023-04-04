@@ -1,12 +1,12 @@
-.header-top,
-.header-bot,
+.header_top,
+.header_bot,
 .navbar {
     display: flex;
     flex-direction: row;
     align-items: center;
 }
 
-.header-top {
+.header_top {
     justify-content: space-evenly;
     padding: 1rem;
 }
@@ -15,7 +15,7 @@
     align-self: flex-end;
 }
 
-.header-bot {
+.header_bot {
     justify-content: center;
     margin-top: 1rem;
 }

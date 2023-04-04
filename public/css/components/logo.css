@@ -1,17 +1,17 @@
-.logo-svg {
+.logo_svg {
     stroke: black;
     width: 350px;
 }
 
-.logo-main {
+.logo_main {
     fill: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
 }
 
-.logo-sub {
+.logo_sub {
     fill: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
 }
 
-.logo-white {
+.logo_white {
     --color-grey-l: 60%;
     fill: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
 }

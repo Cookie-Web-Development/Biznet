@@ -11,9 +11,9 @@ html(lang="en")
         title BizNet Technology
     body
         header.header
-            section.header-top
-                svg(viewBox="0 0 444 121" fill="none" xmlns="http://www.w3.org/2000/svg" class='logo-svg')
-                    g(class="logo-main")
+            section.header_top
+                svg(viewBox="0 0 444 121" fill="none" xmlns="http://www.w3.org/2000/svg" class='logo_svg')
+                    g(class="logo_main")
                         path(fill-rule="evenodd" clip-rule="evenodd" d="M46.5 44H79C89 45.8333 106.3 55.1 95.5 77.5C104.5 86.5 114.7 107.3 83.5 118.5H46.5V44ZM62.5 58.5V72.5H79C87 66.5 82.3333 60.6667 79 58.5H62.5ZM62.5 104.5V87.5H82.5C94.1 93.9 87.3333 101.5 82.5 104.5H62.5Z")
                         path(fill-rule="evenodd" clip-rule="evenodd" d="M3.5 115.5H1V119.5H44.5V115.5H42.5V36L28.5 30.5V16.5L26.5 14.5V29.5L21 27V5.5L18 1.5V26L3.5 21V115.5ZM9.5 54V50.5H36.5V54H9.5ZM9.5 86.5V82.5H36.5V86.5H9.5Z")
                         path(d="M122.5 44V118.5H139.5V44H122.5Z")
@@ -21,8 +21,8 @@ html(lang="en")
                         path(d="M280.5 86V44.5H297.5V118.5L280.5 105V86Z")
                         path(d="M318.5 44.5V118.5H370.5V104.5H335.5V89.5H364.5V74.5H335.5V58.5H370.5V44.5H318.5Z")
                         path(d="M383.5 44.5V58.5H405.5V118.5H420.5V58.5H443.5V44.5H383.5Z")
-                    path(class="logo-sub" d="M227 119.5V45H230L297.5 101V119.5L244 77.5V119.5H227Z")
-                    g(class="logo-white")
+                    path(class="logo_sub" d="M227 119.5V45H230L297.5 101V119.5L244 77.5V119.5H227Z")
+                    g(class="logo_white")
                         path(d="M10 46.5V42H36.5V46.5H10Z")
                         path(d="M10 62.5V58.5H36.5V62.5H10Z")
                         path(d="M10 71.5V67H36.5V71.5H10Z")
@@ -34,30 +34,30 @@ html(lang="en")
                     button(type='submit') 
                         i(class="fa-solid fa-magnifying-glass")
                 div.login
-                    button.button#login-modal-btn LOGIN
-            nav.header-bot
+                    button.button.btn_main#login_modal_btn LOGIN
+            nav.header_bot
                 ul.navbar
                     li Home
                     li 
                         a(href='/catalog') Catalog
                     li Deals
         dialog(id='login-modal')
-            span.login-text Login
-            form(action="" id='login-form')
+            span.login_text Login
+            form(action="" id='login_form')
                 label(for="username") Username
-                input(class='input-box' id='username' type='text' autocomplete="off")
+                input(class='input_box' id='username' type='text' autocomplete="off")
                 label(for='password') Password 
-                div(class='input-div password')
+                div(class='input_div password')
                     input(id='password' type='password' autocomplete="off")
-                    label(class='show-password' for='show-password-checkbox')
-                        input(type='checkbox' id='show-password-checkbox' checked=false autocomplete="off")
-                        i(id='show-password-off' class="fa-solid fa-eye-slash fa-lg show-password-icon active")
-                        i(id='show-password-on' class="fa-sharp fa-solid fa-eye fa-lg show-password-icon")
-                button(class='button-forgot-password') Forgot password  
-                button(class='button-modal' type='submit') Login 
-                button(class='button-modal' ) Register 
-                button(class='button-modal login-modal-close') Cancel
-            button(class='button-modal-close login-modal-close') 
+                    label(class='show_password' for='show_password_checkbox')
+                        input(type='checkbox' id='show_password_checkbox' checked=false autocomplete="off")
+                        i(id='show_password_off' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
+                        i(id='show_password_on' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
+                button(class='button_forgot_password') Forgot password  
+                button(class='button btn_modal' type='submit') Login 
+                button(class='button btn_modal' ) Register 
+                button(class='button btn_modal login_modal_close') Cancel
+            button(class='button_modal_close login_modal_close') 
                 i(class="fa-solid fa-circle-xmark fa-xl")
         main 
             if (featured_list.length > 0)

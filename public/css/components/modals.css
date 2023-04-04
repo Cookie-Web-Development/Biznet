@@ -1,4 +1,4 @@
-#login-modal {
+#login_modal {
     height: 28rem;
     width: 38rem;
     padding: 1.5rem 2rem;
@@ -12,7 +12,7 @@
     position: relative;
 }
 
-.button-modal-close {
+.button_modal_close {
     position: absolute;
     width: 2rem;
     height: 2rem;
@@ -23,27 +23,27 @@
     border: none;
 }
 
-.button-modal-close:hover {
+.button_modal_close:hover {
     cursor: pointer;
     scale: 1.1
 }
 
-#login-form {
+#login_form {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
     padding-top: 0.5rem;
 }
 
-#show-password-checkbox {
+#show_password_checkbox {
     display: none;
 }
 
-.show-password-icon {
+.show_password_icon {
     display: none;
     padding-right: 1rem;
 }
 
-.show-password-icon.active {
+.show_password_icon.active {
     display: inline;
 }

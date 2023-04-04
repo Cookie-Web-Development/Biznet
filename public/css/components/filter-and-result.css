@@ -1,81 +1,132 @@
+/* [input_box]es are in components/input-box.css */
+
 #product_search_section {
     display: flex;
     flex-direction: row;
-    width: 100%;
     justify-content: center;
+    width: 100%;
+    padding: 0 2rem;
     /*DEV ONLY*/
-    border: green solid 1px;
 }
 
-.product_result_container {
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(5, 1fr) ;
-    gap: 15px 15px;
-}
-
-.range_container {
+/*### SEARCH FIELDS ###*/
+.product_filter_container {
+  flex: 0.2 2 10%;
+  min-width: 250px;
+  padding: 0 1rem;
   position: relative;
   /*DEV ONLY*/
-  border: solid purple 1px;
-  height: 30px;
+}
+
+.product_filter_container::after {
+  content: "";
+  position: absolute;
+  height:  85%;
+  width: 0;
+  top : 50%;
+  right: 0;
+  translate: 0 -50%;
+  border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+  border-radius: 50%;
+}
+
+.product_filter_container > form > * {
+  padding: 0.5rem 0;
+}
+
+.search_container {
+  position: relative;
+  /*margin: 0.5rem 0;*/
+}
+
+.search_container::after {
+  content: '';
+  height: 0px;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+  border-radius: 50%;
+}
+
+/*vvv Price Range Selector vvv*/
+.range_container {
+  position: relative;
+  height: 1.5rem;
+}
+
+#range_slider_visual {
+  position: absolute;
+  height: 3px;
+  width: 180px;
+  left: 10px;
+  top: 0.6rem;
 }
 
 .price_range_input {
   position: absolute;
   background: transparent;
+  width: 200px;
   appearance: none;
   pointer-events: none;
 }
 
-/*DEV ONLY*/
-#tags_filter {
-    border: 1px solid purple;
-    padding: 5px;
+input[type="range"]::-webkit-slider-thumb { /*Tried grouping them; didnt work*/
+  pointer-events: auto;
 }
 
-/* This needs fixing
-label {
-    display: flex;
-    flex-direction: column;
-    position: relative;
-  }
-  
-  select {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    max-height: 200px;
-    overflow-y: auto;
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.2s ease-in-out;
-    z-index: 10
-  }
-  
-  label:focus-within select {
-    opacity: 1;
-    pointer-events: auto;
-  }
-  */
+input[type="range"]::-moz-range-thumb {
+  pointer-events: auto;
+}
 
-  input[type="range"]::-webkit-slider-thumb {
-    pointer-events: auto;
-  }
+input[type="range"]::-ms-thumb {
+  pointer-events: auto;
+}
+
+input[type="range"]::-o-range-thumb {
+  pointer-events: auto;
+}
+
+/*vvv dropdown lists vvv NOTE: NEED TO CHECK THE DROPDOWN ON FIREFOX!*/ 
+
+/*vvv Tags Filter vvv*/
+#tags_filter {
+  padding: 5px;
+}
+
+#tags_filter > label {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
   
-  input[type="range"]::-moz-range-thumb {
-    pointer-events: auto;
-  }
-  
-  input[type="range"]::-ms-thumb {
-    pointer-events: auto;
-  }
-  
-  input[type="range"]::-o-range-thumb {
-    pointer-events: auto;
-  }
-  
-  input[type="range"]::range-thumb {
-    pointer-events: auto;
-  }
+#tags_dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  max-height: 200px;
+  overflow-y: auto;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.2s ease-in-out;
+  z-index: 10
+}
+
+#tags_filter > label:focus-within select {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/*### RESULTS LIST ###*/
+.product_result_container {
+  flex: 3 1 80%;
+  max-width: 1250px;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr) ;
+  gap: 15px 15px;
+  /*DEV ONLY*/
+}

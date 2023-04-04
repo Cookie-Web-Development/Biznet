@@ -3,9 +3,9 @@
 /*#######
 LOGIN MODAL
 #########*/
-let loginModalBtn = document.getElementById('login-modal-btn');
-let loginModal = document.getElementById('login-modal');
-let loginModalClose = loginModal.querySelectorAll('.login-modal-close');
+let loginModalBtn = document.getElementById('login_modal_btn');
+let loginModal = document.getElementById('login_modal');
+let loginModalClose = loginModal.querySelectorAll('.login_modal_close');
 
 loginModalBtn.addEventListener('click', () => {
     loginModal.showModal();
@@ -20,9 +20,9 @@ loginModalClose.forEach(btn => {
 
 /*### Show password icon*/
 let passwordInput = loginModal.querySelector('#password');
-let showPasswordCheckbox = loginModal.querySelector('#show-password-checkbox');
-let showPasswordIconOff = document.querySelector('#show-password-off');
-let showPasswordIconOn = document.querySelector('#show-password-on');
+let showPasswordCheckbox = loginModal.querySelector('#show_password_checkbox');
+let showPasswordIconOff = document.querySelector('#show_password_off');
+let showPasswordIconOn = document.querySelector('#show_password_on');
 
 showPasswordCheckbox.addEventListener('change', () => {
     if (showPasswordCheckbox.checked) {
@@ -49,7 +49,3 @@ document.addEventListener('click', function (event) {
         }
     }
 });   
-
-/*############
-CAROUSEL ITEM LISTING
-##############*/
