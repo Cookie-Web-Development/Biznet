@@ -6,9 +6,9 @@
     --font-family: 'Roboto', sans-serif;
     --fs-max: 2rem;
     --fs-title: 1.8rem;
-    --fs-sub-title: 0.9rem; /*FLAG FOR DELETE IF NO USE*/
     --fs-body: 1.1rem;
     --fs-note: 0.9rem;
+    --fs-note-s: 0.8rem; /*FLAG FOR DELETE IF NO USE*/
     --fs-price-main: 1.4rem;
     --fw-b: 900;
     --fw-m: 500;

@@ -86,20 +86,21 @@ html(lang="en")
                                     each brand in search_fields.brand_fields 
                                         option(value=brand)=brand
                         div.search_container#tags_filter
-                            label 
+                            label(for='tags_filter_input')
                                 p.search_container_title By tags
+                            div#tags_input_dropdown_container
                                 input(type='text', class='input_box', id='tags_filter_input', data-reset='text') 
                                 select(id='tags_dropdown' size='8') 
                             ul#selected_tags
-                        div.search_container
-                            label 
+                        div.search_container.single_option
+                            label(for='discount_checkbox') 
                                 p.search_container_title On sale 
-                                input(type='checkbox', value=true, name='discount', data-reset='checkbox')
-                        div.search_container
-                            label 
+                            input(type='checkbox', value=true, name='discount', data-reset='checkbox', id='discount_checkbox')
+                        div.search_container.single_option
+                            label(for='featured_checkbox') 
                                 p.search_container_title Best seller 
-                                input(type='checkbox', value=true, name='featured', data-reset='checkbox')
-                        button(type='button', class='button btn_inline', id='search_field_reset') Reset search fields
+                            input(type='checkbox', value=true, name='featured', data-reset='checkbox', id='featured_checkbox')
+                        button(type='button', class='button btn_inline', id='search_field_reset') Clear search fields
                 div.product_result_container
                     article
         footer 
@@ -160,7 +161,6 @@ html(lang="en")
             tags_text_filter.addEventListener('input', () => {
                 let input = tags_text_filter.value.toLowerCase();
                 let options = tags_dropdown.options;
-
                 if (input != ''){
                     for (let i = 0; i < options.length; i++) {
                         let tag = options[i];
@@ -180,13 +180,21 @@ html(lang="en")
             })
 
             tags_dropdown.addEventListener('click', (e) => {
-                if(e.target.dataset.tag) {
+                //console.log(e.target)
+                let target = tags_dropdown.selectedOptions[0]
+                if(target.dataset.tag) {
                     /*Arrays updater*/
-                    unselectedTags = unselectedTags.filter((tag) => {return tag != e.target.dataset.tag}).sort();
-                    tags_selected.push(e.target.dataset.tag);
+                    unselectedTags = unselectedTags.filter((tag) => {return tag != target.dataset.tag}).sort();
+                    tags_selected.push(target.dataset.tag);
                     tags_selected.sort();
-                    
                     tagListCreator();
+                    
+                    //Clear elements after selection
+                    let container = Array.from(document.getElementById('tags_input_dropdown_container').children);
+                    container.forEach(elem => {
+                        elem.blur()
+                    });
+                    tags_text_filter.value = '';
                 };
             });
 
@@ -239,7 +247,8 @@ html(lang="en")
 
                     tags_select_container.appendChild(selection_item);
                 });
-                };
+                }
+
             };
 
             /*### RESET SEARCH BUTTON ###*/
@@ -274,3 +283,13 @@ html(lang="en")
                 tags_selected = [];
                 tagListCreator();
             })
+
+            /*
+                        div.search_container#tags_filter
+                            label
+                                p.search_container_title By tags
+                                input(type='text', class='input_box', id='tags_filter_input', data-reset='text') 
+                                select(id='tags_dropdown' size='8') 
+                            ul#selected_tags
+            
+            */

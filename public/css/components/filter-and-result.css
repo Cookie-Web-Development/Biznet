@@ -91,16 +91,15 @@ input[type="range"]::-o-range-thumb {
 /*vvv dropdown lists vvv NOTE: NEED TO CHECK THE DROPDOWN ON FIREFOX!*/ 
 
 /*vvv Tags Filter vvv*/
+
 #tags_filter {
   padding: 5px;
 }
 
-#tags_filter > label {
-  display: flex;
-  flex-direction: column;
+#tags_input_dropdown_container {
   position: relative;
 }
-  
+
 #tags_dropdown {
   position: absolute;
   top: 100%;
@@ -114,12 +113,59 @@ input[type="range"]::-o-range-thumb {
   z-index: 10
 }
 
-#tags_filter > label:focus-within select {
+#tags_input_dropdown_container:focus-within select {
   opacity: 1;
   pointer-events: auto;
 }
 
+#selected_tags {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 3px;
+  gap: 2px;
+}
 
+#selected_tags > li {
+  padding: 2px;
+  position: relative;
+  border: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l)) solid 1px;
+  border-radius: 5px;
+}
+
+#selected_tags > li > *:hover {
+  cursor: pointer;
+}
+
+
+#selected_tags > li > label > input {
+  position: absolute;
+  width: 0;
+  height: 0;
+  opacity: 0;
+}
+
+#selected_tags > li::before {
+  content: 'x';
+  margin: 0 5px 0 2px;
+}
+
+/*### ON SALE & BEST SALE ###*/
+.search_container.single_option {
+  user-select: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.search_container.single_option > *:hover {
+  cursor: pointer;
+}
+
+/*### RESET BTN ###*/
+#search_field_reset {
+  margin-top: 5px;
+}
 /*### RESULTS LIST ###*/
 .product_result_container {
   flex: 3 1 80%;

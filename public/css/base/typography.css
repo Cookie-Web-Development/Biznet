@@ -46,6 +46,9 @@ Search and Filter Fields
     text-align: center;
 }
 
+#selected_tags > li {
+    font-size: var(--fs-note-s);
+}
 
 /*############
 Product Cards
