@@ -6,6 +6,7 @@ import { product_variation_schema } from './schema/product_variation.js'
 import { discount_pipeline } from './pipeline/discount.js';
 import { featured_pipeline } from './pipeline/featured.js';
 import { search_list } from './pipeline/search_list.js';
+import search_result from './pipeline/search_result.js';
 
 /*DEV MODE START: DELETE AFTER USE*/
 import { product_import } from '../../../devTool/product_import.js';
@@ -64,8 +65,9 @@ let apiRoute = function (app) {
             res.render('catalog', { search_fields })
         })
         .post(async (req, res) => {
-            console.log(req.body);
-            res.json({ filtered_data: req.body })
+            let results = await Products.aggregate(search_result(req.body))
+            console.log(results)
+            res.json({ filtered_data: 'aloha' })
         })
 
     app.route('/test').get(async (req, res) => {
@@ -81,3 +83,26 @@ let apiRoute = function (app) {
 };
 
 export default apiRoute;
+
+/* example req.body
+$expr: {
+        $and:
+req.body: {
+    "name": "car",
+    "price_range_min": "379",
+    "price_range_max": "1238",
+    "category": "Automobile",
+    "brand": "Ralph's",
+    "selected_tags": [
+        "Ball",
+        "Basketball"
+    ],
+    "discount": "true",
+    "featured": "true"
+}
+
+req.body.empty = {}
+
+
+
+*/

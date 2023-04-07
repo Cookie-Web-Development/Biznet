@@ -320,6 +320,22 @@ html(lang="en")
                 let formData = new FormData(search_form);
                 let data = {}
                 for (let [key, value] of formData.entries()) {
+                    switch(key) {
+                        case 'price_range_min':
+                            (value != price_range_db.min) ? data[key] = value : undefined;
+                            break;
+                        case 'price_range_max':
+                            (value != price_range_db.max) ? data[key] = value : undefined;
+                            break;
+                        case 'selected_tags':
+                            (data[key]) ? data[key].push(value) : data[key] = [value];
+                            break;
+                        default: 
+                            (value != "") ? data[key] = value : undefined;
+                    }
+                };
+                /* backup
+                for (let [key, value] of formData.entries()) {
                     if (key === "selected_tags") {
                         if(data[key]) {
                             data[key].push(value)
@@ -330,6 +346,7 @@ html(lang="en")
                         data[key] = value
                     }
                 };
+                */
                 console.log('data is:')
                 console.log(data)
                 xhr.open("POST", endpoint);
