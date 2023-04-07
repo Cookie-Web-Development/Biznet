@@ -63,6 +63,10 @@ let apiRoute = function (app) {
             //console.log(search_fields.tags_fields.sort())
             res.render('catalog', { search_fields })
         })
+        .post(async (req, res) => {
+            console.log(req.body);
+            res.json({ filtered_data: req.body })
+        })
 
     app.route('/test').get(async (req, res) => {
         /*let test = await Products.findOneAndUpdate(

@@ -58,11 +58,11 @@ html(lang="en")
             h2 Catalog 
             section#product_search_section
                 div.product_filter_container
-                    form
+                    form(id='catalog_seach_form' action='/catalog' method='post')
                         div.search_container
                             label
                                 p.search_container_title By name 
-                                input(type='text', class='input_box', name='name',  id='testerino', data-reset='text')
+                                input(type='text', class='input_box', name='name', data-reset='text')
                         div.search_container
                             label 
                                 p.search_container_title By price range 
@@ -74,14 +74,14 @@ html(lang="en")
                         div.search_container
                             label 
                                 p.search_container_title By category 
-                                select(data-reset='select', class='input_box')
+                                select(data-reset='select', class='input_box', name='category')
                                     option(value='') Select a category
                                     each category in search_fields.category_fields
                                         option(value=category)=category 
                         div.search_container
                             label 
                                 p.search_container_title By brand 
-                                select(data-reset='select', class='input_box') 
+                                select(data-reset='select', class='input_box', name='brand') 
                                     option(value='') Select a brand 
                                     each brand in search_fields.brand_fields 
                                         option(value=brand)=brand
@@ -95,18 +95,23 @@ html(lang="en")
                         div.search_container.single_option
                             label(for='discount_checkbox') 
                                 p.search_container_title On sale 
-                            input(type='checkbox', value=true, name='discount', data-reset='checkbox', id='discount_checkbox')
+                            input(type='checkbox', value="true", name='discount', data-reset='checkbox', id='discount_checkbox')
                         div.search_container.single_option
                             label(for='featured_checkbox') 
                                 p.search_container_title Best seller 
-                            input(type='checkbox', value=true, name='featured', data-reset='checkbox', id='featured_checkbox')
+                            input(type='checkbox', value="true", name='featured', data-reset='checkbox', id='featured_checkbox')
                         button(type='button', class='button btn_inline', id='search_field_reset') Clear search fields
                 div.product_result_container
-                    article
+                    div=filtered_data
         footer 
             div
 
         script.
+            /*### Global_variables ###*/
+            let debounce_delay = 500 //ms
+            let eventDispatcherCheck = false; //helps debounce when events are fired multiple times
+            let eventAPI = 'sendToAPI'; //Custom event for API Endpoint
+
             /*### PRICE RANGE ###*/
             let min_slider = document.getElementById('min_range_slider');
             let max_slider = document.getElementById('max_range_slider');
@@ -205,14 +210,16 @@ html(lang="en")
                     unselectedTags.sort();
 
                     tagListCreator();
+                    tags_dropdown.dispatchEvent(new Event(eventAPI))
                 }
             })
 
 
             function tagListCreator() {
-                /*Elements remover*/
                 let dropdown_children = Array.from(tags_dropdown.querySelectorAll('[data-tag]'));
                 let tag_select_children =  Array.from(tags_select_container.children);
+
+                /*Elements remover*/
                 dropdown_children.forEach(child => { child.remove() });
                 tag_select_children.forEach(child => { child.remove() });
 
@@ -228,26 +235,26 @@ html(lang="en")
                 }
 
                 if(tags_selected.length > 0) {
-                tags_selected.forEach(tag => {
-                    let selection_item = document.createElement('li');
-                    let selection_label = document.createElement('label');
-                    let selection_checkbox = document.createElement('input');
-                    let selection_text = document.createElement('span');
-                    
-                    selection_item.classList.add('selected_tag');
-                    selection_checkbox.type = 'checkbox';
-                    selection_checkbox.setAttribute('checked', true);
-                    selection_checkbox.value = tag;
-                    selection_checkbox.name = 'selected_tags'
-                    selection_text.textContent = tag;
+                    tags_selected.forEach(tag => {
+                        let selection_item = document.createElement('li');
+                        let selection_label = document.createElement('label');
+                        let selection_checkbox = document.createElement('input');
+                        let selection_text = document.createElement('span');
+                        
+                        selection_item.classList.add('selected_tag');
+                        selection_checkbox.type = 'checkbox';
+                        selection_checkbox.setAttribute('checked', true);
+                        selection_checkbox.value = tag;
+                        selection_checkbox.name = 'selected_tags'
+                        selection_text.textContent = tag;
 
-                    selection_label.appendChild(selection_checkbox);
-                    selection_label.appendChild(selection_text);
-                    selection_item.appendChild(selection_label);
+                        selection_label.appendChild(selection_checkbox);
+                        selection_label.appendChild(selection_text);
+                        selection_item.appendChild(selection_label);
 
-                    tags_select_container.appendChild(selection_item);
-                });
-                }
+                        tags_select_container.appendChild(selection_item);
+                    });
+                };
 
             };
 
@@ -256,6 +263,9 @@ html(lang="en")
             
             resetBtn.addEventListener('click', () => {
                 let inputElements = Array.from(document.querySelectorAll('[data-reset]'))
+                unselectedTags = [...tags_db];
+                tags_selected = [];
+                tagListCreator();
                 inputElements.forEach(input => {
                     switch(input.dataset.reset){
                         case 'text':
@@ -277,19 +287,119 @@ html(lang="en")
                             break;
                         default:
                             console.log('something wrong with resetBtn')
+                    };
+
+                    /*API event Trigger*/
+                    if(eventDispatcherCheck) { //prevents repeated fire of the dispatch
+                        return;
+                    } else {
+                        eventDispatcherCheck = true; 
+                        input.dispatchEvent(new Event(eventAPI))
                     }
                 });
-                unselectedTags = [...tags_db];
-                tags_selected = [];
-                tagListCreator();
             })
+            /*### API ENDPOINT ##*/
+            let search_form = document.getElementById('catalog_seach_form');
+            let input_fields = Array.from(search_form.querySelectorAll('input[name], select'));
 
+            let xhr = new XMLHttpRequest();
+            let endpoint = '/catalog';
+
+            function debounce (func, delay) {
+                let timeout;
+                return (...args) => {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => {
+                        func(...args); 
+                        eventDispatcherCheck = false //reverts the checker after debounce does its thing
+                    }, delay);
+                };
+            };
+
+            function submitForm () {
+                let formData = new FormData(search_form);
+                let data = {}
+                for (let [key, value] of formData.entries()) {
+                    if (key === "selected_tags") {
+                        if(data[key]) {
+                            data[key].push(value)
+                        } else {
+                            data[key] = [value];
+                        }
+                    } else {
+                        data[key] = value
+                    }
+                };
+                console.log('data is:')
+                console.log(data)
+                xhr.open("POST", endpoint);
+                xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        let response = JSON.parse(xhr.responseText);
+                        console.log(response);
+                    } else {
+                        console.error(xhr.statusText);
+                    }
+                };
+                xhr.onerror = () => {
+                    console.error(xhr.statusText);
+                };
+                xhr.send(JSON.stringify(data));
+            };
+
+            input_fields.forEach(input => {
+                input.addEventListener(eventAPI, debounce(submitForm, debounce_delay));
+                input.addEventListener('input', () => {
+                    input.dispatchEvent(new Event(eventAPI))
+                })
+            });
+        
             /*
-                        div.search_container#tags_filter
-                            label
-                                p.search_container_title By tags
-                                input(type='text', class='input_box', id='tags_filter_input', data-reset='text') 
-                                select(id='tags_dropdown' size='8') 
-                            ul#selected_tags
             
+            const xhr = new XMLHttpRequest();
+            const url = "your-api-url";
+            const formData = new FormData(document.getElementById("your-form-id"));
+            const debounceDelay = 500;
+
+            const debounce = (func, delay) => {
+            let timeoutId;
+            return (...args) => {
+                clearTimeout(timeoutId);
+                timeoutId = setTimeout(() => {
+                func(...args);
+                }, delay);
+            };
+            };
+
+            const submitForm = () => {
+            const data = {};
+            for (const [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            xhr.open("POST", url);
+            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+            xhr.onload = () => {
+                if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                console.log(response);
+                } else {
+                console.error(xhr.statusText);
+                }
+            };
+            xhr.onerror = () => {
+                console.error(xhr.statusText);
+            };
+            xhr.send(JSON.stringify(data));
+            };
+
+            const debouncedSubmit = debounce(submitForm, debounceDelay);
+
+            const form = document.getElementById("your-form-id");
+            form.addEventListener("input", debouncedSubmit);
+
+
+
+
             */
