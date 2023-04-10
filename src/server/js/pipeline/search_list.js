@@ -2,19 +2,48 @@
 
 export let search_list = {
     tags: [
-        { $unwind: "$tags" },
-        { $group: { _id: null, tag: { $addToSet: "$tags" } } },
-        { $project: { _id: 0, tags: "$tag" } },
+        { $group: {
+            _id: null,
+            en: { $addToSet: "$tags.en" },
+            es: { $addToSet: "$tags.es" }
+        }},
+        { $project: {
+            en: { $reduce: {
+                input: "$en",
+                initialValue: [],
+                in: { $concatArrays: [ '$$value', '$$this' ] }
+            }},
+            es: { $reduce: {
+                input: '$es',
+                initialValue: [],
+                in: { $concatArrays: [ '$$value', '$$this' ] }
+            }}
+        }},
+        { $unwind: '$en' },
+        { $unwind: '$es' },
+        { $group: {
+            _id: null,
+            en: { $addToSet: '$en' },
+            es: { $addToSet: '$es' }
+        }},
+        { $project: {
+            _id: 0
+        }}
     ],
     category: [
-        { $unwind: "$category" },
-        { $group: { _id: null, category: { $addToSet: "$category" } } },
-        { $project: { _id: 0, category: 1 } },
+        { $group: {
+            _id: null,
+            en: { $addToSet: "$category.en" },
+            es: { $addToSet: "$category.es" }
+        }},
+        { $project: {
+            _id: 0
+        }}
     ],
-    from: [
-        { $unwind: "$from" },
-        { $group: { _id: null, from: { $addToSet: "$from" } } },
-        { $project: { _id: 0, from: 1 } },
+    brand: [
+        { $unwind: "$brand" },
+        { $group: { _id: null, brand: { $addToSet: "$brand" } } },
+        { $project: { _id: 0, brand: 1 } }
     ],
     price_range: [
         { $project: {
@@ -40,5 +69,15 @@ export let search_list = {
             min: { $min: "$price" },
             max: { $max: "$price" }
         }},
+    category: [
+        { $unwind: "$category" },
+        { $group: { _id: null, category: { $addToSet: "$category" } } },
+        { $project: { _id: 0, category: 1 } },
+    ],
+    tags: [
+        { $unwind: "$tags" },
+        { $group: { _id: null, tag: { $addToSet: "$tags" } } },
+        { $project: { _id: 0, tags: "$tag" } },
+    ],
 
 */

@@ -1,6 +1,7 @@
 'use strict';
 
 import mongoose from 'mongoose';
+import langData from './lang/lang.json' assert { type: "json" };
 import { product_schema } from './schema/product_schema.js';
 import { product_variation_schema } from './schema/product_variation.js'
 import { discount_pipeline } from './pipeline/discount.js';
@@ -10,6 +11,10 @@ import search_result from './pipeline/search_result.js';
 
 /*DEV MODE START: DELETE AFTER USE*/
 import { product_import } from '../../../devTool/product_import.js';
+//import crypto from 'crypto';
+
+//const key = crypto.randomBytes(32).toString('hex');
+//console.log(key);
 //import product_variation from '../../../devTool/product_object';
 /*DEV MODE END*/
 
@@ -25,6 +30,11 @@ let apiRoute = function (app) {
 
 
     app.route(['/', '/home']).get(async (req, res) => {
+        //session lang is req.session.lang
+        console.log(req.session.id)
+        let lang = req.session.lang || "es";
+
+        console.log(lang)
         let discount_list = await Products.aggregate(discount_pipeline);
         let featured_list = await Products.aggregate(featured_pipeline);
         let formatOptions = {
@@ -34,35 +44,36 @@ let apiRoute = function (app) {
             maximumFractionDigits: 2
         };
 
-        discount_list.forEach(item => {
+        discount_list.forEach(item => { //price formatter
             item.format_price = item.price.toLocaleString('en-US', formatOptions);
             item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
         });
-        featured_list.forEach(item => {
+        featured_list.forEach(item => { //price formatter
             item.format_price = item.price.toLocaleString('en-US', formatOptions);
             item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
         })
         //featured_list = [featured_list[0]];
-        //console.log(featured_list)
-        res.render('home', { discount_list, featured_list })
+        //console.log(featured_list);
+        res.render('home', { discount_list, featured_list, lang, langData })
     });
 
     app.route('/catalog')
         .get(async (req, res) => {
+            let lang = req.session.lang || 'es';
             let tags = await Products.aggregate(search_list.tags),
             categories = await Products.aggregate(search_list.category),
-            brands = await Products.aggregate(search_list.from),
+            brands = await Products.aggregate(search_list.brand),
             // ^ All of these return [{key: [...string]}]
             price_range = await Products.aggregate(search_list.price_range);
-
+        
             let search_fields = {
-                tags_fields: tags[0].tags.sort(),
-                category_fields: categories[0].category.sort(),
-                brand_fields: brands[0].from.sort(),
+                tags_fields: tags[0][lang].sort(),
+                category_fields: categories[0][lang].sort(),
+                brand_fields: brands[0].brand.sort(),
                 price_range: price_range[0]
             }
             //console.log(search_fields.tags_fields.sort())
-            res.render('catalog', { search_fields })
+            res.render('catalog', { search_fields, lang, langData })
         })
         .post(async (req, res) => {
             let results = await Products.aggregate(search_result(req.body))
@@ -70,12 +81,23 @@ let apiRoute = function (app) {
             res.json({ filtered_data: 'aloha' })
         })
 
+    app.route('/lang_change').get((req, res) => {
+        if(req.session.lang == 'en') {
+            req.session.lang = 'es'
+        } else {
+            req.session.lang = 'en'
+        }
+        console.log(`session: ${req.session.lang}`);
+        let referer = req.headers.referer || '/';
+        res.redirect(referer);
+    });
+
     app.route('/test').get(async (req, res) => {
-        /*let test = await Products.findOneAndUpdate(
-            { _id: "64189e972ea9cdec50ce98da" },
-            { from: "Future Now" }
-            );
-        res.json(test);*/
+        //let test = await Products.create(product_import);
+        //res.json(test);
+        //let testerino = 'es'
+        //let opt = {es: 1, en: 2}
+        //console.log(opt[testerino])
         res.send('aloha')
     });
 

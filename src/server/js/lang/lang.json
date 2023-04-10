@@ -1,0 +1,105 @@
+{
+    "header": {
+        "search_bar": {
+            "en": "search",
+            "es": "buscar"
+        },
+        "login": {
+            "login_upper": {
+                "en": "LOGIN",
+                "es": "ENTRAR"
+            },
+            "login_lower": {
+                "en": "Login",
+                "es": "Iniciar sesión"
+            },
+            "username": {
+                "en": "Username",
+                "es": "Nombre de usuario"
+            },
+            "password": {
+                "en": "Password",
+                "es": "Contraseña"
+            },
+            "password_forgot": {
+                "en": "Forgot password?",
+                "es": "¿Olvidó su contraseña?"
+            },
+            "sign_up": {
+                "en": "Create new account",
+                "es": "Crear una nueva cuenta"
+            },
+            "cancel": {
+                "en": "Cancel",
+                "es": "Cancelar"
+            }
+        },
+        "navbar": {
+            "home": {
+                "en": "Home",
+                "es": "Inicio"
+            },
+            "catalog": {
+                "en": "Catalog",
+                "es": "Catálogo"
+            },
+            "deals": {
+                "en": "Deals",
+                "es": "Ofertas"
+            }
+        }
+    },
+    "main": {
+        "best_seller": {
+            "en": "Best Seller",
+            "es": "Los más vendidos"
+        },
+        "deals_day": {
+            "en": "Deals of the Day",
+            "es": "Ofertas del día"
+        },
+        "search_filter": {
+            "by_name": {
+                "en": "By name",
+                "es": "Por nombre"
+            },
+            "by_price": {
+                "en": "By price range",
+                "es": "Por rango de precio"
+            },
+            "by_category": {
+                "en": "By category",
+                "es": "Por categoría",
+                "select": {
+                    "en": "Select a category",
+                    "es": "Selecciona una categoría"
+                }
+            },
+            "by_brand": {
+                "en": "By brand",
+                "es": "Por marca",
+                "select": {
+                    "en": "Select a brand",
+                    "es": "Selecciona una marca"
+                }
+            },
+            "by_tags": {
+                "en": "By tags",
+                "es": "Por etiquetas"
+            },
+            "on_sale": {
+                "en": "On sale",
+                "es": "En descuento"
+            },
+            "best_seller": {
+                "en": "Best seller",
+                "es": "Más vendidos"
+            },
+            "clear_fields": {
+                "en": "Clear search fields",
+                "es": "Despejar campos de búsqueda"
+            }
+        }
+        
+    }
+}

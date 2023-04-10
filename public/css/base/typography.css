@@ -80,7 +80,7 @@ Product Cards
     content: '';
     height: 0px;
     width: 90%;
-    border: solid 1px hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
+    border-bottom: solid 1px hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
     position: absolute;
     bottom: 50%;
     rotate: -10deg;

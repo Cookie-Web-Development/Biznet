@@ -51,17 +51,6 @@ Wild notes:
 - Agregar categoria
 - Agregar manufacturer / from
 
-Category List:
-- Art and Craft
-- Sport and Fitness
-- Technology
-- Furniture
-- Food
-- Beauty
-- Home
-- School
-- Automobile
-
 
 routes:
 - /, /home: pagina principal. Tendra el carousel de featured y la lista de productos en descuento.

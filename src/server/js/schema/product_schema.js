@@ -4,22 +4,40 @@ import mongoose from 'mongoose';
 
 export let product_schema = mongoose.Schema({
     name: {
-        type: String, 
-        required: true
+        es: {
+            type: String,
+            required: true
+        },
+        en: {
+            type: String,
+            required: true
+        }
     },
     price: {
         type: Number,
         required: true
     },
     description: {
-        type: String,
-        default: ''
+        en: {
+            type: String,
+            default: ''
+        },
+        es: {
+            type: String,
+            default: ''
+        }
     },
     category: {
-        type: String,
-        default: "uncategorized"
+        en: {
+            type: String,
+            default: 'uncategorized'
+        },
+        es: {
+            type: String,
+            default: 'sin categoría'
+        }
     },
-    from: {
+    brand: {
         type: String,
         default: "Original"
     },
@@ -42,7 +60,10 @@ export let product_schema = mongoose.Schema({
          ],
         default: []
     },
-    tags: [String],
+    tags: {
+        en: [String],
+        es: [String]
+    },
     sku: {
         type: String,
         required: true

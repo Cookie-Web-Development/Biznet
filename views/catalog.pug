@@ -1,5 +1,5 @@
 doctype html
-html(lang="en")
+html(lang=lang)
     head
         meta(charset="UTF-8")
         meta(http-equiv="X-UA-Compatible", content="IE=edge")
@@ -29,43 +29,50 @@ html(lang="en")
                         path(d="M10 80V75.5H36.5V80H10Z")
                         path(d="M10 103.5V99H36.5V103.5H10Z")
                         path(d="M10 111V107.5H36.5V111H10Z") 
+                form(class='searchbar', action='')
+                    input(type='text', placeholder=langData.header.search_bar[lang] autocomplete="off")
+                    button(type='submit') 
+                        i(class="fa-solid fa-magnifying-glass")
+                form(class='lang_selector', action='/lang_change', method='get')
+                    button(class='button btn_inline')=lang
                 div.login
-                    button.button.btn_main#login_modal_btn LOGIN
+                    button.button.btn_main#login_modal_btn=langData.header.login.login_upper[lang]
             nav.header_bot
                 ul.navbar
-                    li Home
-                    li Catalog
-                    li Deals
+                    li=langData.header.navbar.home[lang]
+                    li 
+                        a(href='/catalog')=langData.header.navbar.catalog[lang]
+                    li=langData.header.navbar.deals[lang]
         dialog(id='login_modal')
-            span.login_text Login
+            span.login_text=langData.header.login.login_lower[lang]
             form(action="" id='login_form')
-                label(for="username") Username
+                label(for="username")=langData.header   .login.username[lang]
                 input(class='input_box' id='username' type='text' autocomplete="off")
-                label(for='password') Password 
+                label(for='password')=langData.header.login.password[lang] 
                 div(class='input_div password')
                     input(id='password' type='password' autocomplete="off")
                     label(class='show_password' for='show_password_checkbox')
                         input(type='checkbox' id='show_password_checkbox' checked=false autocomplete="off")
                         i(id='show_password_off' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
                         i(id='show_password_on' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
-                button(class='button_forgot_password') Forgot password  
-                button(class='button btn_modal' type='submit') Login 
-                button(class='button btn_modal' ) Register 
-                button(class='button btn_modal login-modal-close') Cancel
+                button(class='button_forgot_password')=langData.header.login.password_forgot[lang]
+                button(class='button btn_modal' type='submit')=langData.header.login.login_lower[lang] 
+                button(class='button btn_modal')=langData.header.login.sign_up[lang] 
+                button(class='button btn_modal login_modal_close')=langData.header.login.cancel[lang]
             button(class='button_modal_close login_modal_close') 
                 i(class="fa-solid fa-circle-xmark fa-xl")
         main 
-            h2 Catalog 
+            h2=langData.header.navbar.catalog[lang] 
             section#product_search_section
                 div.product_filter_container
                     form(id='catalog_seach_form' action='/catalog' method='post')
                         div.search_container
                             label
-                                p.search_container_title By name 
+                                p.search_container_title=langData.main.search_filter.by_name[lang] 
                                 input(type='text', class='input_box', name='name', data-reset='text')
                         div.search_container
                             label 
-                                p.search_container_title By price range 
+                                p.search_container_title=langData.main.search_filter.by_price[lang]
                                 p#price_range_display.search_container_desc
                             div.range_container
                                 div(id='range_slider_visual')
@@ -73,34 +80,34 @@ html(lang="en")
                                 input(type='range', class='price_range_input', id='max_range_slider', name='price_range_max', data-reset='range_max')
                         div.search_container
                             label 
-                                p.search_container_title By category 
+                                p.search_container_title=langData.main.search_filter.by_category[lang]
                                 select(data-reset='select', class='input_box', name='category')
-                                    option(value='') Select a category
+                                    option(value='')=langData.main.search_filter.by_category.select[lang]
                                     each category in search_fields.category_fields
                                         option(value=category)=category 
                         div.search_container
                             label 
-                                p.search_container_title By brand 
+                                p.search_container_title=langData.main.search_filter.by_brand[lang]
                                 select(data-reset='select', class='input_box', name='brand') 
-                                    option(value='') Select a brand 
+                                    option(value='')=langData.main.search_filter.by_brand.select[lang]
                                     each brand in search_fields.brand_fields 
                                         option(value=brand)=brand
                         div.search_container#tags_filter
                             label(for='tags_filter_input')
-                                p.search_container_title By tags
+                                p.search_container_title=langData.main.search_filter.by_tags[lang]
                             div#tags_input_dropdown_container
                                 input(type='text', class='input_box', id='tags_filter_input', data-reset='text') 
                                 select(id='tags_dropdown' size='8') 
                             ul#selected_tags
                         div.search_container.single_option
                             label(for='discount_checkbox') 
-                                p.search_container_title On sale 
+                                p.search_container_title=langData.main.search_filter.on_sale[lang]
                             input(type='checkbox', value="true", name='discount', data-reset='checkbox', id='discount_checkbox')
                         div.search_container.single_option
                             label(for='featured_checkbox') 
-                                p.search_container_title Best seller 
+                                p.search_container_title=langData.main.search_filter.best_seller[lang]
                             input(type='checkbox', value="true", name='featured', data-reset='checkbox', id='featured_checkbox')
-                        button(type='button', class='button btn_inline', id='search_field_reset') Clear search fields
+                        button(type='button', class='button btn_inline', id='search_field_reset')=langData.main.search_filter.clear_fields[lang]
                 div.product_result_container
                     div=filtered_data
         footer 
