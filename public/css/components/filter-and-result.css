@@ -167,7 +167,7 @@ input[type="range"]::-o-range-thumb {
   margin-top: 5px;
 }
 /*### RESULTS LIST ###*/
-.product_result_container {
+#product_result_container {
   flex: 3 1 80%;
   max-width: 1250px;
   position: relative;

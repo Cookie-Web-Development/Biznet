@@ -7,7 +7,7 @@ import { product_variation_schema } from './schema/product_variation.js'
 import { discount_pipeline } from './pipeline/discount.js';
 import { featured_pipeline } from './pipeline/featured.js';
 import { search_list } from './pipeline/search_list.js';
-import search_result from './pipeline/search_result.js';
+import search_query from './pipeline/search_query.js';
 
 /*DEV MODE START: DELETE AFTER USE*/
 import { product_import } from '../../../devTool/product_import.js';
@@ -27,7 +27,12 @@ let apiRoute = function (app) {
     });
 
     let Products = mongoose.model('Products', product_schema);
-
+    let formatOptions = {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    };
 
     app.route(['/', '/home']).get(async (req, res) => {
         //session lang is req.session.lang
@@ -37,12 +42,7 @@ let apiRoute = function (app) {
         console.log(lang)
         let discount_list = await Products.aggregate(discount_pipeline);
         let featured_list = await Products.aggregate(featured_pipeline);
-        let formatOptions = {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        };
+ 
 
         discount_list.forEach(item => { //price formatter
             item.format_price = item.price.toLocaleString('en-US', formatOptions);
@@ -76,9 +76,14 @@ let apiRoute = function (app) {
             res.render('catalog', { search_fields, lang, langData })
         })
         .post(async (req, res) => {
-            let results = await Products.aggregate(search_result(req.body))
+            let results = await Products.aggregate(search_query(req.body));
+
+            results.forEach(item => { //price formatter
+                item.format_price = item.price.toLocaleString('en-US', formatOptions);
+                item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
+            });
             console.log(results)
-            res.json({ filtered_data: 'aloha' })
+            res.json({ api_results: results })
         })
 
     app.route('/lang_change').get((req, res) => {
@@ -98,6 +103,15 @@ let apiRoute = function (app) {
         //let testerino = 'es'
         //let opt = {es: 1, en: 2}
         //console.log(opt[testerino])
+        let testobj = {
+            key1: 1,
+            key2: 2
+        };
+        let x = 1;
+        if (x = 1) {
+            testobj = { bigbunk: [testobj]}
+        }
+        console.log(testobj)
         res.send('aloha')
     });
 

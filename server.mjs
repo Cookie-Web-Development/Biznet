@@ -44,22 +44,18 @@ app.use(session({ //from ChatGPT
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// Middleware function to set language preference from ChatGPT
+// Middleware function to set language preference
 let setLanguagePreference = (req, res, next) => {
-  // Check if language preference is set in session
-  let language = req.session.language;
-  if (!language) {
+  if (!req.session.language) {
     // Check for language in request headers
-    language = req.headers['accept-language'];
-    if (!language) {
+    req.session.language = req.headers['accept-language'];
+    if (!req.session.language) {
       // Set default language
       language = 'es';
     } else {
       // Extract the language code from the header
-      language = language.split(',')[0].split(';')[0].split('-')[0];
+      req.session.language = req.session.language.split(',')[0].split(';')[0].split('-')[0];
     }
-    // Save the language preference to the session
-    req.session.language = language;
   }
   next();
 }

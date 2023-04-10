@@ -107,9 +107,9 @@ html(lang=lang)
                             label(for='featured_checkbox') 
                                 p.search_container_title=langData.main.search_filter.best_seller[lang]
                             input(type='checkbox', value="true", name='featured', data-reset='checkbox', id='featured_checkbox')
+                        input(type='hidden', name='search_lang', value=lang)
                         button(type='button', class='button btn_inline', id='search_field_reset')=langData.main.search_filter.clear_fields[lang]
-                div.product_result_container
-                    div=filtered_data
+                div#product_result_container
         footer 
             div
 
@@ -192,7 +192,6 @@ html(lang=lang)
             })
 
             tags_dropdown.addEventListener('click', (e) => {
-                //console.log(e.target)
                 let target = tags_dropdown.selectedOptions[0]
                 if(target.dataset.tag) {
                     /*Arrays updater*/
@@ -304,7 +303,23 @@ html(lang=lang)
                         input.dispatchEvent(new Event(eventAPI))
                     }
                 });
-            })
+            });
+
+            /*### DISPLAY RESULTS ###*/
+            let results_container = document.getElementById('product_result_container');
+            
+            function display_results(results_arr) {
+                if(!results_arr.length) {
+                    let result_text = document.createElement('p');
+                    result_text.textContent = 'Nothing here'
+                    results_container.appendChild(result_text)
+                } else {
+                    let result_text = document.createElement('p');
+                    result_text.textContent = 'Wait... Im getting something'
+                    results_container.appendChild(result_text)
+                }
+            }
+
             /*### API ENDPOINT ##*/
             let search_form = document.getElementById('catalog_seach_form');
             let input_fields = Array.from(search_form.querySelectorAll('input[name], select'));
@@ -341,27 +356,14 @@ html(lang=lang)
                             (value != "") ? data[key] = value : undefined;
                     }
                 };
-                /* backup
-                for (let [key, value] of formData.entries()) {
-                    if (key === "selected_tags") {
-                        if(data[key]) {
-                            data[key].push(value)
-                        } else {
-                            data[key] = [value];
-                        }
-                    } else {
-                        data[key] = value
-                    }
-                };
-                */
-                console.log('data is:')
-                console.log(data)
+
                 xhr.open("POST", endpoint);
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 xhr.onload = () => {
                     if (xhr.status === 200) {
                         let response = JSON.parse(xhr.responseText);
-                        console.log(response);
+                        console.log('This is from response')
+                        display_results(response.api_results)
                     } else {
                         console.error(xhr.statusText);
                     }
@@ -378,52 +380,5 @@ html(lang=lang)
                     input.dispatchEvent(new Event(eventAPI))
                 })
             });
-        
-            /*
-            
-            const xhr = new XMLHttpRequest();
-            const url = "your-api-url";
-            const formData = new FormData(document.getElementById("your-form-id"));
-            const debounceDelay = 500;
 
-            const debounce = (func, delay) => {
-            let timeoutId;
-            return (...args) => {
-                clearTimeout(timeoutId);
-                timeoutId = setTimeout(() => {
-                func(...args);
-                }, delay);
-            };
-            };
-
-            const submitForm = () => {
-            const data = {};
-            for (const [key, value] of formData.entries()) {
-                data[key] = value;
-            }
-
-            xhr.open("POST", url);
-            xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-            xhr.onload = () => {
-                if (xhr.status === 200) {
-                const response = JSON.parse(xhr.responseText);
-                console.log(response);
-                } else {
-                console.error(xhr.statusText);
-                }
-            };
-            xhr.onerror = () => {
-                console.error(xhr.statusText);
-            };
-            xhr.send(JSON.stringify(data));
-            };
-
-            const debouncedSubmit = debounce(submitForm, debounceDelay);
-
-            const form = document.getElementById("your-form-id");
-            form.addEventListener("input", debouncedSubmit);
-
-
-
-
-            */
+            document.addEventListener("DOMContentLoaded", debounce(submitForm, debounce_delay))
