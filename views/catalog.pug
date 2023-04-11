@@ -225,9 +225,9 @@ html(lang=lang)
                 let dropdown_children = Array.from(tags_dropdown.querySelectorAll('[data-tag]'));
                 let tag_select_children =  Array.from(tags_select_container.children);
 
-                /*Elements remover*/
-                dropdown_children.forEach(child => { child.remove() });
-                tag_select_children.forEach(child => { child.remove() });
+                    /*Elements remover*/
+                    dropdown_children.forEach(child => { child.remove() });
+                    tag_select_children.forEach(child => { child.remove() });
 
                 /*Elements creator*/
                 if(unselectedTags.length > 0){
@@ -309,14 +309,97 @@ html(lang=lang)
             let results_container = document.getElementById('product_result_container');
             
             function display_results(results_arr) {
+                let lang = !{JSON.stringify(lang)};
+
+                //Element Remover
+                Array.from(results_container.children).forEach(child => child.remove());
+
                 if(!results_arr.length) {
                     let result_text = document.createElement('p');
                     result_text.textContent = 'Nothing here'
                     results_container.appendChild(result_text)
-                } else {
-                    let result_text = document.createElement('p');
-                    result_text.textContent = 'Wait... Im getting something'
-                    results_container.appendChild(result_text)
+                } else { //Product cards  creator
+                    results_arr.forEach(product => {
+                        // product_card PARENT
+                        let product_card = document.createElement('article');
+                        product_card.dataset.productCard = 'small';
+                        
+                        // ## image_container
+                        let image_container = document.createElement('div');
+                        image_container.classList.add('image_container');
+                        // #### image
+                        let image_elem = document.createElement('img');
+                        image_elem.setAttribute('src', `/public/img/products-images/${product.images[0]}`);
+
+                        image_container.appendChild(image_elem);
+                        product_card.appendChild(image_container); //Append to PARENT
+
+                        // ## text_container
+                        let text_container = document.createElement('div');
+                        text_container.classList.add('text_container');
+
+                        let text_header = document.createElement('p');
+                        text_header.classList.add('text_container_header');
+                        text_header.textContent = `${product.category[lang]} / ${product.brand}`
+                        text_container.appendChild(text_header);
+
+                        let text_name = document.createElement('h3');
+                        text_name.textContent = `${product.name[lang]}`
+                        text_container.appendChild(text_name);
+
+                        // #### price_tag
+                        let price_container = document.createElement('div');
+                        price_container.classList.add('product_card_price_tag');
+
+                        let price_value = document.createElement('p');
+                        price_value.classList.add('price_sell');
+                        price_value.textContent = `${product.format_price_discounted}`
+
+                        price_container.appendChild(price_value);
+
+                        if (product.discount_percent > 0) {
+                            let price_discount = document.createElement('p');
+                            price_discount.classList.add('price_discount');
+
+                            let price_before = document.createElement('span');
+                            price_before.classList.add('price_before');
+                            price_before.textContent = `${product.format_price}`;
+                            
+                            let discount_percent = document.createElement('span');
+                            discount_percent.classList.add('discount_percent');
+                            discount_percent.textContent = `${Math.round(product.discount_percent * 100)}%`;
+
+                            price_discount.appendChild(price_before);
+                            price_discount.appendChild(discount_percent);
+
+                            price_container.appendChild(price_discount)
+                        }
+
+                        text_container.appendChild(price_container);
+
+                        // #### text_description
+                        let text_description = document.createElement('p');
+                        text_description.classList.add('product_card_description')
+                        text_description.textContent = `${product.description[lang]}`
+
+                        text_container.appendChild(text_description);
+
+                        // #### tag_list
+                        let tags_list = document.createElement('ul')
+                        tags_list.classList.add('product_card_tags')
+
+                        product.tags[lang].forEach(tag => {
+                            let text_tag = document.createElement('li')
+                            text_tag.textContent = tag
+                            tags_list.appendChild(text_tag)
+                        })
+                        
+                        text_container.appendChild(tags_list);
+                        
+                        product_card.appendChild(text_container);
+
+                        results_container.appendChild(product_card);
+                    });
                 }
             }
 
@@ -362,7 +445,6 @@ html(lang=lang)
                 xhr.onload = () => {
                     if (xhr.status === 200) {
                         let response = JSON.parse(xhr.responseText);
-                        console.log('This is from response')
                         display_results(response.api_results)
                     } else {
                         console.error(xhr.statusText);
