@@ -59,6 +59,28 @@
             "es": "Ofertas del día"
         },
         "search_filter": {
+            "sort_title": {
+                "en": "Sort by:",
+                "es": "Ordenar por:"
+            },
+            "sort_options": {
+                "price_ascending": {
+                    "en": "Price: 0 -> 9",
+                    "es": "Precio: 0 -> 9"
+                },
+                "price_descending": {
+                    "en": "Price: 9 -> 0",
+                    "es": "Precio: 9 -> 0"
+                },
+                "alphabetical_ascending": {
+                    "en": "Name: A -> Z",
+                    "es": "Nombre: A -> Z"
+                },
+                "alphabetical_descending": {
+                    "en": "Name: Z -> A",
+                    "es": "Nombre: Z -> A"
+                }
+            },
             "by_name": {
                 "en": "By name",
                 "es": "Por nombre"

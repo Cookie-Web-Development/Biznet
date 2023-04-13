@@ -11,7 +11,8 @@ req.body: {
   selected_tags: [ 'Accesorios', 'Acústica' ],
   discount: 'true',
   featured: 'true',
-  search_lang: 'es'
+  search_lang: 'es',
+  sort_option: "0-9"
 }
 */
     let queryObj = {}
@@ -68,8 +69,24 @@ req.body: {
         }
         
         queryObj = andQuery
-    }
-    console.log(queryObj)
+    };
+    
+    // sorting option
+    let sort = {};
+    switch(query_input.sort_option) {
+        case '9-0':
+            sort = { price_discounted: -1 }
+            break;
+        case 'a-z':
+            sort = { name: 1 }
+            break;
+        case 'z-a':
+            sort = { name: -1 }
+            break;
+        default:
+            sort = { price_discounted: 1 }
+    }   
+
     return [
         { $addFields: {
             price_discounted: { $round: [{ $subtract: [ '$price', { $multiply: [ '$price', '$discount_percent' ]}]}, 2] }
@@ -86,6 +103,7 @@ req.body: {
             tags: 1,
             images: 1,
             sku: 1
-        }}
+        }},
+        { $sort: sort}
     ]
 }

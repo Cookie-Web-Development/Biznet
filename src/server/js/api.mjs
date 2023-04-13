@@ -77,12 +77,10 @@ let apiRoute = function (app) {
         })
         .post(async (req, res) => {
             let results = await Products.aggregate(search_query(req.body));
-
             results.forEach(item => { //price formatter
                 item.format_price = item.price.toLocaleString('en-US', formatOptions);
                 item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
             });
-            console.log(results)
             res.json({ api_results: results })
         })
 
