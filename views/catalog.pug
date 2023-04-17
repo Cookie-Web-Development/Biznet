@@ -117,15 +117,20 @@ html(lang=lang)
                             input(type='checkbox', value="true", name='featured', data-reset='checkbox', id='featured_checkbox')
                         input(type='hidden', name='search_lang', value=lang)
                         button(type='button', class='button btn_inline', id='search_field_reset')=langData.main.search_filter.clear_fields[lang]
-                div#product_result_container
+                div.product_display_container
+                    div(id='product_result')
+                    div(id='pagination', data-pagination-type='normal')
         footer 
             div
 
         script.
             /*### Global_variables ###*/
-            let debounce_delay = 500 //ms
+            let lang = !{JSON.stringify(lang)};
+            let debounce_delay = 500; //ms
             let eventDispatcherCheck = false; //helps debounce when events are fired multiple times
             let eventAPI = 'sendToAPI'; //Custom event for API Endpoint
+
+            //Session_variables: this is to save current session values such as language, search values, pagination page, etc
 
             /*### PRICE RANGE ###*/
             let min_slider = document.getElementById('min_range_slider');
@@ -314,20 +319,105 @@ html(lang=lang)
             });
 
             /*### DISPLAY RESULTS ###*/
-            let results_container = document.getElementById('product_result_container');
-            
-            function display_results(results_arr) {
-                let lang = !{JSON.stringify(lang)};
+            let results_container = document.getElementById('product_result');
+            let results_pagination = document.getElementById('pagination');
+            let item_per_page = 8;
+            let active_page = undefined || 1; //PENDING: set session value for active_page
 
+
+            function display_results(results_arr) {
                 //Element Remover
                 Array.from(results_container.children).forEach(child => child.remove());
+                Array.from(results_pagination.children).forEach(child => child.remove());
+                results_pagination.style.display = 'none';
 
                 if(!results_arr.length) {
                     let result_text = document.createElement('p');
                     result_text.textContent = 'Nothing here'
                     results_container.appendChild(result_text)
-                } else { //Product cards  creator
-                    results_arr.forEach(product => {
+                } else { 
+                    //Pagination
+                    let start_index = (active_page - 1) * item_per_page;
+                    let end_index = start_index + item_per_page;
+
+                    let active_catalog_page = results_arr.slice(start_index, end_index);
+
+                    if (results_arr.length > item_per_page) { //create pages UI
+                        let total_pages = Math.ceil(results_arr.length / item_per_page);
+                        results_pagination.style.display = 'flex'; 
+
+                        let pagination_arr = [];
+
+                        if(active_page !== 1) {
+                            pagination_arr.push('prev');
+                        }
+
+                        pagination_arr.push('1')
+
+                        for(let i = -3; i <= 3; i++ ) {
+                            let result = active_page + i;
+                            if ((i === -3 && result > 2) || ( i === 3 && result < total_pages - 1 )) {
+                                pagination_arr.push('...')
+                            } else {
+                                if (result >= 2 && result < total_pages) {
+                                    pagination_arr.push(`${result}`)
+                                }
+                            }
+                        }
+
+                        pagination_arr.push(`${total_pages}`)
+
+                        if(active_page !== total_pages) {
+                            pagination_arr.push('next')
+                        }
+                        console.log(pagination_arr)
+                        if(pagination_arr.length > 0) {
+                            pagination_arr.forEach(page => {
+                                let create_elem;
+                                switch(page){
+                                    case `${active_page}`: //Plans for this, later
+                                        create_elem = document.createElement('p');
+                                        create_elem.setAttribute('id', 'page_current');
+                                        break;
+                                    case '...':
+                                        create_elem = document.createElement('p');
+                                        break;
+                                    default: 
+                                        create_elem = document.createElement('button');
+                                        create_elem.classList.add('button', 'button_pagination');
+                                        create_elem.dataset.pageValue = page
+                                }
+                                if (page == "prev" || page == "next") {
+                                    page == 'prev' ? create_elem.innerHTML = "<i class='fa-solid fa-chevron-left'></i>" : create_elem.innerHTML = "<i class='fa-solid fa-chevron-right'></i>"; 
+                                } else {
+                                    create_elem.textContent = page;
+
+                                }
+                                results_pagination.appendChild(create_elem)
+                            })
+                        }
+                    }
+                    //Pagination function
+                    results_pagination.querySelectorAll('button').forEach(button => {
+                        button.addEventListener('click', () => {
+                            let page_change_target = button.dataset.pageValue;
+                            switch(page_change_target){
+                                case 'prev':
+                                    page_change_target = active_page - 1;
+                                    break;
+                                case 'next':
+                                    page_change_target = active_page + 1;
+                                    break;
+                                default: 
+                                    page_change_target = +page_change_target;
+                            };
+                            active_page = page_change_target;
+                            display_results(results_arr)
+                        })
+                    })
+
+                    //Product cards  creator
+                    active_catalog_page.forEach(product => { //change to active_catalog_page when pagination work; keep results_arr while dev
                         // product_card PARENT
                         let product_card = document.createElement('article');
                         product_card.dataset.productCard = 'small';
@@ -447,13 +537,13 @@ html(lang=lang)
                             (value != "") ? data[key] = value : undefined;
                     }
                 };
-                console.log(data)
                 xhr.open("POST", endpoint);
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 xhr.onload = () => {
                     if (xhr.status === 200) {
                         let response = JSON.parse(xhr.responseText);
-                        display_results(response.api_results)
+                        active_page = 1;
+                        display_results(response.api_results); 
                     } else {
                         console.error(xhr.statusText);
                     }

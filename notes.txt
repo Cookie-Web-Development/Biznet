@@ -77,3 +77,22 @@ routes:
 - /admin/register : es para registrar nuevos usuarios PARA COLABORADORES. toda nueva cuenta luego es guardado en la base de datos. Nuevas cuentas de COLABORADORES solamente puede ser creado por la cuenta admin.
 
 - /test : SOLMANENTE PARA DEV. BORRAR ANTES DE PRODUCCION
+
+
+
+PAGINATION NOTES:
+1 = Pagina minima o primera pagina
+X = Pagina actual
+N = Pagina maxima o ultima pagina
+
+
+Evaluaciones
+if (X != 1) {
+    - Se debe crear elemento de prev. page y pag 1 || primera pagina
+    - Discriminamos cuantos elementos crear entre 1 y X usando (X - 1); En donde: 
+    [NOTA: El resultado de X - 1 hay que restarle otra unidad. Ejemplo: si X = 2, 2 - 1 = 1; pero no existe ningun elemento entre 1 y 2]
+        - [X-1] siempre debe ser el primer elemento
+        - [X-2] debe ser el segundo...
+        - [X-3] debe ser el tercero, so on and so forth
+
+}

@@ -18,6 +18,13 @@
     width: 100%;
 }
 
+.button_pagination {
+    border-radius: 5px;
+    font-size: var(--fs-body);
+    height: var(--fs-max);
+    width: var(--fs-max);
+}
+
 .button:hover {
     cursor: pointer;
     background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));

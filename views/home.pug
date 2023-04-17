@@ -112,24 +112,26 @@ html(lang=lang)
                 hr.section_divider
                 h2=langData.main.deals_day[lang]
                 section#product_search_section
-                    div#product_result_container
-                        each item in discount_list
-                            article(data-product-card='small')
-                                div.image_container
-                                        img(src='/public/img/products-images/' + item.images[0])
-                                div.text_container   
-                                    p.text_container_header #{item.category[lang]} / #{item.brand}
-                                    h3=item.name[lang]
-                                    div.product_card_price_tag
-                                        p.price_sell=item.format_price_discounted
-                                        if(item.discount_percent > 0)
-                                            p.price_discount
-                                                span.price_before #{item.format_price} 
-                                                span.discount_percent #{Math.round(item.discount_percent * 100)}%
-                                    p.product_card_description=item.description[lang]
-                                    ul.product_card_tags
-                                        each tag in item.tags[lang]
-                                            li=tag 
+                    div(product_display_container)
+                        div(id='product_result')
+                            each item in discount_list
+                                article(data-product-card='small')
+                                    div.image_container
+                                            img(src='/public/img/products-images/' + item.images[0])
+                                    div.text_container   
+                                        p.text_container_header #{item.category[lang]} / #{item.brand}
+                                        h3=item.name[lang]
+                                        div.product_card_price_tag
+                                            p.price_sell=item.format_price_discounted
+                                            if(item.discount_percent > 0)
+                                                p.price_discount
+                                                    span.price_before #{item.format_price} 
+                                                    span.discount_percent #{Math.round(item.discount_percent * 100)}%
+                                        p.product_card_description=item.description[lang]
+                                        ul.product_card_tags
+                                            each tag in item.tags[lang]
+                                                li=tag
+                        div(id='pagination', data-pagination-type='mini')
         footer
 
         script.

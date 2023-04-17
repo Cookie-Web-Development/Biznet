@@ -166,13 +166,38 @@ input[type="range"]::-o-range-thumb {
 #search_field_reset {
   margin-top: 5px;
 }
+
 /*### RESULTS LIST ###*/
-#product_result_container {
+.product_display_container {
   flex: 3 1 80%;
   max-width: 1250px;
+}
+
+#product_result {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(5, 1fr) ;
-  gap: 15px 15px;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 0 2rem;
+  gap: 15px;
   /*DEV ONLY*/
 }
+
+
+/*### PAGINATION ###*/
+/*pagination button in buttons.css*/
+#pagination {
+  display: none; /*This needs to be changed by js*/
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  height: 100px;
+  user-select: none;
+}
+
+#page_current {
+  font-size: var(--fs-price-main);
+  position: relative;
+  cursor: pointer;
+} 
