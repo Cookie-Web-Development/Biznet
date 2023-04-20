@@ -4,6 +4,7 @@ export let discount_pipeline = [
     {$match: { discount: true }},
     {
         $project: {
+            _id:  1,
             name: 1,
             price: 1.,
             discount_percent: 1,

@@ -1,4 +1,5 @@
 "use strict";
+import mongoose from 'mongoose';
 
 export default function search_query (query_input) {
 /*
@@ -16,6 +17,11 @@ req.body: {
 }
 */
     let queryObj = {}
+    //id
+    if(query_input.id) {
+        queryObj._id = new mongoose.Types.ObjectId(query_input.id);
+    }
+
     //name
     if(query_input.name) {
         queryObj.$or = [
@@ -86,13 +92,13 @@ req.body: {
         default:
             sort = { price_discounted: 1 }
     }   
-
     return [
         { $addFields: {
             price_discounted: { $round: [{ $subtract: [ '$price', { $multiply: [ '$price', '$discount_percent' ]}]}, 2] }
         }},
         { $match: queryObj },
         { $project: {
+            _id: 1,
             name: 1,
             price: 1,
             description: 1,

@@ -17,7 +17,6 @@ Visible apperances such as [sizes] and [color] for individual components.
 @import './components/input-box.css';
 @import './components/logo.css'; 
 @import './components/modals.css'; 
-@import './components/navbar.css';
 @import './components/product-card.css';
 @import './components/product-list.css';
 @import './components/search-bar.css'; 
@@ -33,10 +32,11 @@ CSS rules that affects elements such as [header], [main], or [footer]; and modif
 
 /*
 PAGES:
-CSS rules that applies onto elements such as [body] and modifies the position or structure layout of the website; divided by its page/route
+CSS rules that applies onto elements such as [body] and modifies the position or structure layout of the website; divided by its page/route. Styles here apply only to a single page/route and nowhere else.
 */
 
 @import './pages/home.css';
+@import './pages/product.css';
 
 /*
 THEME:

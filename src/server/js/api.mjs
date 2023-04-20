@@ -36,10 +36,8 @@ let apiRoute = function (app) {
 
     app.route(['/', '/home']).get(async (req, res) => {
         //session lang is req.session.lang
-        console.log(req.session.id)
         let lang = req.session.lang || "es";
 
-        console.log(lang)
         let discount_list = await Products.aggregate(discount_pipeline);
         let featured_list = await Products.aggregate(featured_pipeline);
  
@@ -84,13 +82,32 @@ let apiRoute = function (app) {
             res.json({ api_results: results })
         })
 
+    app.route('/catalog/:id')
+        .get(async (req, res) => {
+            //Declara una funcion para similares el cual usara los datos de session para busqueda inicial y en todo caso un fallback de {} con un sample al final. Se debe hacer aqui para que se pueeda utilizar tanto en el try como en el cattch y evitar codigo doble.
+            try {
+                let lang = req.session.lang || 'es';
+                let product_id = req.params.id;
+                let result = await Products.aggregate(search_query({ id: product_id }));
+                
+                result.forEach(item => { //price formatter
+                    item.format_price = item.price.toLocaleString('en-US', formatOptions);
+                    item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
+                });
+                res.render('product', { api_results: result[0], lang, langData })
+
+            } catch (err) {
+                let lang = req.session.lang || 'es';
+                res.render('product', { api_results: null, lang, langData })
+            }
+        })
+
     app.route('/lang_change').get((req, res) => {
         if(req.session.lang == 'en') {
             req.session.lang = 'es'
         } else {
             req.session.lang = 'en'
         }
-        console.log(`session: ${req.session.lang}`);
         let referer = req.headers.referer || '/';
         res.redirect(referer);
     });

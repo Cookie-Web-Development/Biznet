@@ -39,7 +39,8 @@ html(lang=lang)
                     button.button.btn_main#login_modal_btn=langData.header.login.login_upper[lang]
             nav.header_bot
                 ul.navbar
-                    li=langData.header.navbar.home[lang]
+                    li
+                        a(href='/')=langData.header.navbar.home[lang]
                     li 
                         a(href='/catalog')=langData.header.navbar.catalog[lang]
                     li=langData.header.navbar.deals[lang]

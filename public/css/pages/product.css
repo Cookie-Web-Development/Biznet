@@ -1,0 +1,33 @@
+.product_display {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    /*DEV ONLY*/
+    width: 100%;
+    border: solid purple 2px;
+}
+
+.image_display {
+    height: 500px;
+    width: 500px;
+    /*DEV ONLY*/
+    border: green solid 1px;
+}
+
+.image_display > img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.image_display > .image_display_selector {
+    display: none;
+}
+
+.text_display {
+    /*DEV ONLY*/
+    border: blue solid 1px;
+}

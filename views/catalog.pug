@@ -39,7 +39,8 @@ html(lang=lang)
                     button.button.btn_main#login_modal_btn=langData.header.login.login_upper[lang]
             nav.header_bot
                 ul.navbar
-                    li=langData.header.navbar.home[lang]
+                    li
+                        a(href='/')=langData.header.navbar.home[lang]
                     li 
                         a(href='/catalog')=langData.header.navbar.catalog[lang]
                     li=langData.header.navbar.deals[lang]
@@ -423,11 +424,14 @@ html(lang=lang)
                         product_card.dataset.productCard = 'small';
                         
                         // ## image_container
-                        let image_container = document.createElement('div');
+                        let image_container = document.createElement('a');
                         image_container.classList.add('image_container');
+                        image_container.setAttribute('href', `/catalog/${product._id}`);
+
                         // #### image
                         let image_elem = document.createElement('img');
                         image_elem.setAttribute('src', `/public/img/products-images/${product.images[0]}`);
+
 
                         image_container.appendChild(image_elem);
                         product_card.appendChild(image_container); //Append to PARENT
@@ -442,12 +446,17 @@ html(lang=lang)
                         text_container.appendChild(text_header);
 
                         let text_name = document.createElement('h3');
-                        text_name.textContent = `${product.name[lang]}`
+                        let text_name_link = document.createElement('a');
+                        text_name_link.textContent = `${product.name[lang]}`;
+                        text_name_link.setAttribute('href', `/catalog/${product._id}`)
+
+                        text_name.appendChild(text_name_link);
                         text_container.appendChild(text_name);
 
                         // #### price_tag
-                        let price_container = document.createElement('div');
+                        let price_container = document.createElement('a');
                         price_container.classList.add('product_card_price_tag');
+                        price_container.setAttribute('href', `/catalog/${product._id}`)
 
                         let price_value = document.createElement('p');
                         price_value.classList.add('price_sell');

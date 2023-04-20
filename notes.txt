@@ -96,3 +96,17 @@ if (X != 1) {
         - [X-3] debe ser el tercero, so on and so forth
 
 }
+
+
+Consider restructuring pug views by separating each section and importing them in the render. The folder structure would look like 
+├── views
+│   ├── layout.pug
+│   ├── index.pug
+│   ├── about.pug
+│   ├── partials
+│   │   ├── header.pug
+│   │   ├── footer.pug
+│   │   └── nav.pug
+│   └── includes
+│       ├── head.pug
+│       └── scripts.pug
