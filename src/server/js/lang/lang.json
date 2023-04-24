@@ -46,6 +46,10 @@
             "deals": {
                 "en": "Deals",
                 "es": "Ofertas"
+            },
+            "return_search_results": {
+                "en": "Return to search results",
+                "es": "Volver a los resultados de busqueda"
             }
         }
     },

@@ -127,6 +127,32 @@ Product Cards
     */
 }
 
+/*#########
+Product Display
+###########*/
+.text_display > .text_container_header {
+    font-size: var(--fs-body);
+    color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
+}
+
+.text_display > h3 {
+    font-size: var(--fs-max);
+}
+
+.product_display_price_tag > .price_sell {
+    font-size: var(--fs-price-main);
+    font-weight: var(--fw-b);
+}
+
+.product_display_price_tag > .price_discount > * {
+    font-size: var(--fs-body);
+}
+
+.text_display > .product_display_description {
+    font-size: var(--fs-body);
+}
+
+
 /*####
 MAIN
 ######*/
@@ -134,3 +160,4 @@ MAIN
 h2 {
     font-size: var(--fs-max);
 }
+

@@ -19,6 +19,7 @@
     flex-direction: column;
     align-items: center;
     margin-top: 1rem;
+    gap: 0.5rem;
 }
 
 .navbar {
@@ -49,6 +50,12 @@
     top: 0;
 }
 
+.breadcrumb_container {
+    width: 65%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 
 .breadcrumb {
     display: flex;
@@ -56,10 +63,14 @@
     flex-direction: row;
     align-items: center;
     justify-content: flex-start;
-    margin-top: 0.5rem;
 }
 
 .breadcrumb_trail:not(:last-child)::after {
     content: ' >';
+    padding-right: 0.5rem;
+}
+
+.return_search_result > li:before {
+    content: '<-';
     padding-right: 0.5rem;
 }

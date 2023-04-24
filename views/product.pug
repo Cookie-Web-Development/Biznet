@@ -44,14 +44,25 @@ html(lang=lang)
                     li 
                         a(href='/catalog')=langData.header.navbar.catalog[lang]
                     li=langData.header.navbar.deals[lang]
-                ul(class='breadcrumb', aria-label='breadcrumb')
-                    li(class='breadcrumb_trail')
-                        a(href='/')=langData.header.navbar.home[lang]
-                    li(class='breadcrumb_trail')
-                        //Tener preparado una busqueda por categoria al hacer click en este  link!!
-                        a(href='/catalog')=api_results.category[lang]
-                    li(class='breadcrumb_trail')
-                        a(href='/catalog/' + api_results._id)=api_results.name[lang]
+                div.breadcrumb_container
+                    if ( !api_results )
+                        ul(class='breadcrumb', aria-label='breadcrumb')
+                            li(class='breadcrumb_trail')
+                                a(href='/')=langData.header.navbar.home[lang]
+                            li(class='breadcrumb_trail')
+                                a(href='/catalog')=langData.header.navbar.catalog[lang]
+                    else
+                        ul(class='breadcrumb', aria-label='breadcrumb')
+                            li(class='breadcrumb_trail')
+                                a(href='/')=langData.header.navbar.home[lang]
+                            li(class='breadcrumb_trail')
+                                //Tener preparado una busqueda por categoria al hacer click en este  link!!
+                                a(href='/catalog')=api_results.category[lang]
+                            li(class='breadcrumb_trail')
+                                a(href='/catalog/' + api_results._id)=api_results.name[lang]
+                        ul(class='return_search_result')
+                            li
+                                a(href='/catalog')=langData.header.navbar.return_search_results[lang]
         dialog(id='login_modal')
             span.login_text=langData.header.login.login_lower[lang]
             form(action="" id='login_form')
@@ -71,34 +82,33 @@ html(lang=lang)
             button(class='button_modal_close login_modal_close') 
                 i(class="fa-solid fa-circle-xmark fa-xl")
         main 
-            section.main_article 
+            section.main_article(class='product_display')
                 if ( !api_results )
                     p Nothig here bro
                 else
-                    article(class='product_display')
-                        div.image_display
-                            img(src='/public/img/products-images/' + api_results.images[0])
-                            if ( api_results.images.length > 1)
-                                aside.image_display_selector
-                                    ul
-                                        each img in api_results.images
-                                            li 
-                                                img(src='/public/img/products-images/' + img)
-                        div.text_display
-                            p.text_container_header #{ api_results.category[lang]} / #{ api_results.brand}
-                            h3=api_results.name[lang]
-                            //Pending add average rating
-                            div.product_display_price_tag
-                                p.price_sell=api_results.format_price_discounted 
-                                if(api_results.discount_percent > 0)
-                                    p.price_discount 
-                                        span.price_before #{api_results.format_price}
-                                        span.discount_percent #{Math.round(api_results.discount_percent * 100)}%
-                            p.product_display_description=api_results.description[lang]
-                            //Pending add product variations
-                            ul.product_display_tags 
-                                each tag in api_results.tags[lang]
-                                    li=tag
+                    div.image_display
+                        img(src='/public/img/products-images/' + api_results.images[0])
+                        if ( api_results.images.length > 1)
+                            aside.image_display_selector
+                                ul
+                                    each img in api_results.images
+                                        li 
+                                            img(src='/public/img/products-images/' + img)
+                    div.text_display
+                        p.text_container_header #{ api_results.category[lang]} / #{ api_results.brand}
+                        h3=api_results.name[lang]
+                        //Pending add average rating
+                        div.product_display_price_tag
+                            p.price_sell=api_results.format_price_discounted 
+                            if(api_results.discount_percent > 0)
+                                p.price_discount 
+                                    span.price_before #{api_results.format_price}
+                                    span.discount_percent #{Math.round(api_results.discount_percent * 100)}%
+                        p.product_display_description=api_results.description[lang]
+                        //Pending add product variations
+                        ul.product_card_tags 
+                            each tag in api_results.tags[lang]
+                                li=tag
             section.same_brand
             section.similar_articles
             section.product_reviews
