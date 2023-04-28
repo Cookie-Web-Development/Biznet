@@ -110,3 +110,19 @@ Consider restructuring pug views by separating each section and importing them i
 │   └── includes
 │       ├── head.pug
 │       └── scripts.pug
+
+
+
+
+search_session:"
+    {
+        "sort_option":"a-z",
+        "name":"tennis",
+        "price_range_max":"620",
+        "category":"Deportes",
+        "brand":"Concerto",
+        "selected_tags":["Accesorio","Acústica","Aprendizaje"],
+        "discount":"true",
+        "featured":"true",
+        "search_lang":"es"
+    }"

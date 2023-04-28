@@ -132,6 +132,32 @@ html(lang=lang)
             let eventAPI = 'sendToAPI'; //Custom event for API Endpoint
 
             //Session_variables: this is to save current session values such as language, search values, pagination page, etc
+            let search_session = JSON.parse(sessionStorage.getItem('search_session')) || {};
+            /*
+            if(JSON.parse(sessionStorage.getItem('search_session'))) {
+                search_session = JSON.parse(sessionStorage.getItem('search_session'))
+            }*/
+            //console.log(search_session)
+            for (let key in search_session) {
+                if (search_session.hasOwnProperty(key)) {
+                    switch (key){
+                        case 'name': 
+                            document.querySelector(`input[name='${key}']`).value = search_session[key]
+                            break;
+                        case 'sort_option':
+                        case 'category': 
+                        case 'brand': 
+                            let selectElem = document.querySelector(`select[name='${key}']`);
+                            let selectionIndex = Array.from(selectElem.options).findIndex(option => option.value === search_session[key]);
+                            selectElem.selectedIndex = selectionIndex;
+                            break;
+                        case 'discount': 
+                        case 'featured':
+                            document.querySelector(`input[name='${key}']`).checked = search_session[[key]] 
+                            break;
+                    }
+                }
+            }
 
             /*### PRICE RANGE ###*/
             let min_slider = document.getElementById('min_range_slider');
@@ -143,11 +169,11 @@ html(lang=lang)
             [min_slider, max_slider].forEach(input => {
                 Object.assign(input, {
                     min : price_range_db.min,
-                    max : price_range_db.max, 
-                    value : input === min_slider ? undefined || price_range_db.min : undefined || price_range_db.max
+                    max : price_range_db.max,
+                    value: input === min_slider ? search_session.price_range_min || price_range_db.min : search_session.price_range_max || price_range_db.max 
                 })
             });
-
+            
             displayPriceRange();
 
             min_slider.addEventListener('input', () => {
@@ -179,9 +205,21 @@ html(lang=lang)
             let tags_select_container = document.getElementById('selected_tags');
             let tags_dropdown = document.getElementById('tags_dropdown');
             let tags_text_filter = document.getElementById('tags_filter_input')
-            let unselectedTags = undefined || [...tags_db];
-            let tags_selected =  undefined || [];
-           
+            let unselectedTags = [...tags_db];
+            let tags_selected; // =  search_session.selected_tags ? search_session.selected_tags : [];
+
+            if (search_session.selected_tags) {
+                tags_selected = search_session.selected_tags;
+
+                tags_selected.forEach(tag => {
+                    unselectedTags = unselectedTags.filter((tagName) => {return tagName != tag}).sort();
+                })
+            } else {
+                tags_selected = [];
+            }
+
+
+
             tagListCreator()
             
             tags_text_filter.addEventListener('input', () => {
@@ -190,7 +228,7 @@ html(lang=lang)
                 if (input != ''){
                     for (let i = 0; i < options.length; i++) {
                         let tag = options[i];
-                        let tagText = tag.text.toLowerCase();
+                        let tagText = tag.text.toLowerCase();   
                         if (tagText.includes(input)){
                             tag.style.display = ''
                         } else {
@@ -237,7 +275,7 @@ html(lang=lang)
 
             function tagListCreator() {
                 let dropdown_children = Array.from(tags_dropdown.querySelectorAll('[data-tag]'));
-                let tag_select_children =  Array.from(tags_select_container.children);
+                let tag_select_children = Array.from(tags_select_container.children);
 
                     /*Elements remover*/
                     dropdown_children.forEach(child => { child.remove() });
@@ -323,7 +361,7 @@ html(lang=lang)
             let results_container = document.getElementById('product_result');
             let results_pagination = document.getElementById('pagination');
             let item_per_page = 8;
-            let active_page = undefined || 1; //PENDING: set session value for active_page
+            let active_page = search_session.active_page || 1; //PENDING: set session value for active_page
 
 
             function display_results(results_arr) {
@@ -371,7 +409,6 @@ html(lang=lang)
                         if(active_page !== total_pages) {
                             pagination_arr.push('next')
                         }
-                        console.log(pagination_arr)
                         if(pagination_arr.length > 0) {
                             pagination_arr.forEach(page => {
                                 let create_elem;
@@ -546,10 +583,13 @@ html(lang=lang)
                             (value != "") ? data[key] = value : undefined;
                     }
                 };
+
                 xhr.open("POST", endpoint);
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 xhr.onload = () => {
                     if (xhr.status === 200) {
+                        sessionStorage.removeItem('search_session');
+                        sessionStorage.setItem('search_session',  JSON.stringify(data));
                         let response = JSON.parse(xhr.responseText);
                         active_page = 1;
                         display_results(response.api_results); 

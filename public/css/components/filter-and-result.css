@@ -145,7 +145,7 @@ input[type="range"]::-o-range-thumb {
   opacity: 0;
 }
 
-#selected_tags > li::before {
+#selected_tags > li > label > span::before {
   content: 'x';
   margin: 0 5px 0 2px;
 }

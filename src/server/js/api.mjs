@@ -118,15 +118,9 @@ let apiRoute = function (app) {
         //let testerino = 'es'
         //let opt = {es: 1, en: 2}
         //console.log(opt[testerino])
-        let testobj = {
-            key1: 1,
-            key2: 2
-        };
-        let x = 1;
-        if (x = 1) {
-            testobj = { bigbunk: [testobj]}
-        }
-        console.log(testobj)
+        let arr = ['a', 'b', 'c']
+        let result = arr.indexOf('c');
+        console.log(result)
         res.send('aloha')
     });
 
