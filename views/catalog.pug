@@ -132,28 +132,38 @@ html(lang=lang)
             let eventAPI = 'sendToAPI'; //Custom event for API Endpoint
 
             //Session_variables: this is to save current session values such as language, search values, pagination page, etc
-            let search_session = JSON.parse(sessionStorage.getItem('search_session')) || {};
-            /*
-            if(JSON.parse(sessionStorage.getItem('search_session'))) {
-                search_session = JSON.parse(sessionStorage.getItem('search_session'))
-            }*/
-            //console.log(search_session)
-            for (let key in search_session) {
-                if (search_session.hasOwnProperty(key)) {
+
+            let search_query, save_session = true; //save_session es para evitar guardar quick_querry en search_session storage
+            //Checks if applying either quick_query or search_session
+            if (Object.keys(!{JSON.stringify(quick_query)}).length >= 1) {
+                search_query = !{JSON.stringify(quick_query)};
+                save_session = false;
+                if(JSON.parse(sessionStorage.getItem('search_session')).sort_option) {
+                    search_query.sort_option = JSON.parse(sessionStorage.getItem('search_session')).sort_option
+                };
+                if(search_query.selected_tags){
+                    search_query.selected_tags = [search_query.selected_tags]
+                }
+            } else {
+                search_query = JSON.parse(sessionStorage.getItem('search_session')) || {}
+            }
+
+            for (let key in search_query) {
+                if (search_query.hasOwnProperty(key)) {
                     switch (key){
                         case 'name': 
-                            document.querySelector(`input[name='${key}']`).value = search_session[key]
+                            document.querySelector(`input[name='${key}']`).value = search_query[key]
                             break;
                         case 'sort_option':
                         case 'category': 
                         case 'brand': 
                             let selectElem = document.querySelector(`select[name='${key}']`);
-                            let selectionIndex = Array.from(selectElem.options).findIndex(option => option.value === search_session[key]);
+                            let selectionIndex = Array.from(selectElem.options).findIndex(option => option.value === search_query[key]);
                             selectElem.selectedIndex = selectionIndex;
                             break;
                         case 'discount': 
                         case 'featured':
-                            document.querySelector(`input[name='${key}']`).checked = search_session[[key]] 
+                            document.querySelector(`input[name='${key}']`).checked = search_query[[key]] 
                             break;
                     }
                 }
@@ -170,7 +180,7 @@ html(lang=lang)
                 Object.assign(input, {
                     min : price_range_db.min,
                     max : price_range_db.max,
-                    value: input === min_slider ? search_session.price_range_min || price_range_db.min : search_session.price_range_max || price_range_db.max 
+                    value: input === min_slider ? search_query.price_range_min || price_range_db.min : search_query.price_range_max || price_range_db.max 
                 })
             });
             
@@ -206,10 +216,10 @@ html(lang=lang)
             let tags_dropdown = document.getElementById('tags_dropdown');
             let tags_text_filter = document.getElementById('tags_filter_input')
             let unselectedTags = [...tags_db];
-            let tags_selected; // =  search_session.selected_tags ? search_session.selected_tags : [];
+            let tags_selected; // =  search_query.selected_tags ? search_query.selected_tags : [];
 
-            if (search_session.selected_tags) {
-                tags_selected = search_session.selected_tags;
+            if (search_query.selected_tags) {
+                tags_selected = search_query.selected_tags;
 
                 tags_selected.forEach(tag => {
                     unselectedTags = unselectedTags.filter((tagName) => {return tagName != tag}).sort();
@@ -361,7 +371,7 @@ html(lang=lang)
             let results_container = document.getElementById('product_result');
             let results_pagination = document.getElementById('pagination');
             let item_per_page = 8;
-            let active_page = search_session.active_page || 1; //PENDING: set session value for active_page
+            let active_page = search_query.active_page || 1; //PENDING: set session value for active_page
 
 
             function display_results(results_arr) {
@@ -455,7 +465,7 @@ html(lang=lang)
                     })
 
                     //Product cards  creator
-                    active_catalog_page.forEach(product => { //change to active_catalog_page when pagination work; keep results_arr while dev
+                    active_catalog_page.forEach(product => { //change to active_catalog_page when pagination works; keep results_arr while dev
                         // product_card PARENT
                         let product_card = document.createElement('article');
                         product_card.dataset.productCard = 'small';
@@ -463,7 +473,7 @@ html(lang=lang)
                         // ## image_container
                         let image_container = document.createElement('a');
                         image_container.classList.add('image_container');
-                        image_container.setAttribute('href', `/catalog/${product._id}`);
+                        image_container.setAttribute('href', `/product/${product._id}`);
 
                         // #### image
                         let image_elem = document.createElement('img');
@@ -479,13 +489,26 @@ html(lang=lang)
 
                         let text_header = document.createElement('p');
                         text_header.classList.add('text_container_header');
-                        text_header.textContent = `${product.category[lang]} / ${product.brand}`
+                        
+                        let text_header_anchor_category = document.createElement('a');
+                        let header_category_encoded = encodeURIComponent(`${product.category[lang]}`)
+                        text_header_anchor_category.setAttribute('href', `/catalog?category=${header_category_encoded}`);
+                        text_header_anchor_category.textContent = `${product.category[lang]}`
+                        
+                        let text_header_anchor_brand = document.createElement('a');
+                        let header_brand_encoded = encodeURIComponent(`${product.brand}`)
+                        text_header_anchor_brand.setAttribute('href', `/catalog?brand=${header_brand_encoded}`)
+                        text_header_anchor_brand.textContent = `${product.brand}`;
+
+                        text_header.appendChild(text_header_anchor_category);
+                        text_header.appendChild(document.createTextNode(' / '));
+                        text_header.appendChild(text_header_anchor_brand);
                         text_container.appendChild(text_header);
 
                         let text_name = document.createElement('h3');
                         let text_name_link = document.createElement('a');
                         text_name_link.textContent = `${product.name[lang]}`;
-                        text_name_link.setAttribute('href', `/catalog/${product._id}`)
+                        text_name_link.setAttribute('href', `/product/${product._id}`)
 
                         text_name.appendChild(text_name_link);
                         text_container.appendChild(text_name);
@@ -493,7 +516,7 @@ html(lang=lang)
                         // #### price_tag
                         let price_container = document.createElement('a');
                         price_container.classList.add('product_card_price_tag');
-                        price_container.setAttribute('href', `/catalog/${product._id}`)
+                        price_container.setAttribute('href', `/product/${product._id}`)
 
                         let price_value = document.createElement('p');
                         price_value.classList.add('price_sell');
@@ -533,9 +556,13 @@ html(lang=lang)
                         tags_list.classList.add('product_card_tags')
 
                         product.tags[lang].forEach(tag => {
-                            let text_tag = document.createElement('li')
-                            text_tag.textContent = tag
-                            tags_list.appendChild(text_tag)
+                            let text_tag = document.createElement('li');
+                            let anchor_tag = document.createElement('a');
+                            let encodedTag = encodeURIComponent(tag);
+                            anchor_tag.textContent = tag;
+                            anchor_tag.setAttribute('href', `/catalog?selected_tags=${encodedTag}`)
+                            text_tag.appendChild(anchor_tag);
+                            tags_list.appendChild(text_tag);
                         })
                         
                         text_container.appendChild(tags_list);
@@ -588,8 +615,13 @@ html(lang=lang)
                 xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
                 xhr.onload = () => {
                     if (xhr.status === 200) {
-                        sessionStorage.removeItem('search_session');
-                        sessionStorage.setItem('search_session',  JSON.stringify(data));
+                        //Diferenciar entre quick_querie y search_query
+                        if(save_session) {
+                            sessionStorage.removeItem('search_session');
+                            sessionStorage.setItem('search_session',  JSON.stringify(data));
+                        } else {
+                            save_session = true;
+                        }
                         let response = JSON.parse(xhr.responseText);
                         active_page = 1;
                         display_results(response.api_results); 

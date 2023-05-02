@@ -57,6 +57,12 @@ let apiRoute = function (app) {
 
     app.route('/catalog')
         .get(async (req, res) => {
+            //if there is a URL param for quiick search, include iit in the reender section...
+            let quick_query = undefined;
+            if (req.query) {
+                quick_query = {...req.query}
+            };
+            //URL PARAM /catalog?key=value <- ESTTO NO DEBE DE GUARDARSEE EN EEL SEARCH SESSION@!
             let lang = req.session.lang || 'es';
             let tags = await Products.aggregate(search_list.tags),
             categories = await Products.aggregate(search_list.category),
@@ -71,7 +77,7 @@ let apiRoute = function (app) {
                 price_range: price_range[0]
             }
             //console.log(search_fields.tags_fields.sort())
-            res.render('catalog', { search_fields, lang, langData })
+            res.render('catalog', { search_fields, lang, langData, quick_query })
         })
         .post(async (req, res) => {
             let results = await Products.aggregate(search_query(req.body));
@@ -82,7 +88,7 @@ let apiRoute = function (app) {
             res.json({ api_results: results })
         })
 
-    app.route('/catalog/:id')
+    app.route('/product/:id')
         .get(async (req, res) => {
             //Declara una funcion para similares el cual usara los datos de session para busqueda inicial y en todo caso un fallback de {} con un sample al final. Se debe hacer aqui para que se pueeda utilizar tanto en el try como en el cattch y evitar codigo doble.
             try {
@@ -113,14 +119,13 @@ let apiRoute = function (app) {
     });
 
     app.route('/test').get(async (req, res) => {
+        let query = {...req.query};
         //let test = await Products.create(product_import);
         //res.json(test);
         //let testerino = 'es'
         //let opt = {es: 1, en: 2}
         //console.log(opt[testerino])
-        let arr = ['a', 'b', 'c']
-        let result = arr.indexOf('c');
-        console.log(result)
+        console.log(query)
         res.send('aloha')
     });
 
