@@ -59,7 +59,7 @@ html(lang=lang)
                                 //Tener preparado una busqueda por categoria al hacer click en este  link!!
                                 a(href='/catalog')=api_results.category[lang]
                             li(class='breadcrumb_trail')
-                                a(href='/catalog/' + api_results._id)=api_results.name[lang]
+                                a(href='/product/' + api_results._id)=api_results.name[lang]
                         ul(class='return_search_result')
                             li
                                 a(href='/catalog')=langData.header.navbar.return_search_results[lang]
