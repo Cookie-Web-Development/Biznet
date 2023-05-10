@@ -82,20 +82,18 @@ html(lang=lang)
             button(class='button_modal_close login_modal_close') 
                 i(class="fa-solid fa-circle-xmark fa-xl")
         main 
-            section.main_article(class='product_display')
+            section.product_display
                 if ( !api_results )
                     p Nothig here bro
                 else
+                    if ( api_results.images.length > 1)
+                        div.thumbnail_display
+                            each image in api_results.images                                    
+                                img(class='thumbnail_image', data-thumbnail=image, src='/public/img/products-images/' + image)
                     div.image_display
-                        img(src='/public/img/products-images/' + api_results.images[0])
-                        if ( api_results.images.length > 1)
-                            aside.image_display_selector
-                                ul
-                                    each img in api_results.images
-                                        li 
-                                            img(src='/public/img/products-images/' + img)
+                        img(data-thumbnail-target, src='/public/img/products-images/' + api_results.images[0])
                     div.text_display
-                        p.text_container_header #{ api_results.category[lang]} / #{ api_results.brand}
+                        p.text_container_header #{ api_results.category[lang] } / #{ api_results.brand }
                         h3=api_results.name[lang]
                         //Pending add average rating
                         div.product_display_price_tag
@@ -116,7 +114,39 @@ html(lang=lang)
                 //// ul
                 ////// li
                 ////////container for review description
+            dialog#image_display_modal
+                img#modal_image
         footer
 
         script.
+            //## Thumbnail selector
+            let image_route = '/public/img/products-images/'
+            let thumbnail_select = document.querySelectorAll('[data-thumbnail]');
+            let thumbnail_target = document.querySelector('[data-thumbnail-target]');
+
+            thumbnail_select[0].classList.add('active')
+            
+            thumbnail_select.forEach(thumbnail => {
+                thumbnail.addEventListener('click', (e) => {
+                    thumbnail_target.setAttribute('src', `${image_route}${e.target.dataset.thumbnail}`);
+                    thumbnail_select.forEach(select => {
+                        select.classList.remove('active')
+                    })
+                    e.target.classList.add('active')
+                })
+            });
+
+            //## Image Modal
+            let image_display_modal = document.getElementById('image_display_modal');
+            let modal_image = document.getElementById('modal_image');
+
+            thumbnail_target.addEventListener('click', (e) => {
+                modal_image.setAttribute('src', `${e.target.src}`);
+                image_display_modal.showModal();
+            })
+           
+           // close modal when clicking anywhere
+           image_display_modal.addEventListener('click', () => {
+                image_display_modal.close()
+           })
            

@@ -1,7 +1,7 @@
 .product_display {
     display: flex;
-    flex-direction: row;
-    align-items: center;
+    flex-direction: row; /*MUST CHAGE FOR MOBILE*/
+    align-items: flex-start;
     justify-content: space-around;
     gap: 2rem;
     position: relative;
@@ -11,6 +11,39 @@
     height: 350px;
 }
 
+/*#####
+thumbnail_display
+#######*/
+.thumbnail_display {
+    display: flex; 
+    height: 100%; /*MUST CHAGE FOR MOBILE*/
+    width: fit-content; /*MUST CHAGE FOR MOBILE*/
+    flex-direction: column; /*MUST CHAGE FOR MOBILE*/
+    justify-content: flex-start;
+    gap: 0.5rem;  
+
+}
+
+.thumbnail_image {
+    max-width: 70px;
+    /*DEV*/
+    transition: transform 0.5s, margin 0.3s;
+    border: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l)) 1px solid;
+}
+
+
+.thumbnail_image:hover, .thumbnail_image.active {
+    transform: scale(1.3);
+    margin: 5px 0; /*MUST CHAGE FOR MOBILE*/
+}
+
+.thumbnail_image.active {
+    border: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l)) 5px solid;
+}
+
+/*###########
+image_display
+#############*/
 .image_display {    
     max-width: 50%;
     height: 100%;
@@ -24,13 +57,15 @@
     object-position: center;
 }
 
-.image_display > .image_display_selector {
-    display: none;
-}
 
+/*##########
+text_display
+############*/
 .text_display {
+    position: relative;
     flex-grow: 1;
     height: 100%;
+    min-height: 300px;
     line-height: 2rem;
     /*DEV ONLY*/
 }
