@@ -15,6 +15,6 @@ export let category_schema = mongoose.Schema({
     }, 
     category_id: {
         type: Number,
-        required: true
+        unique: true,
     }
 })

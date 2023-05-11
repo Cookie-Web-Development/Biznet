@@ -3,7 +3,7 @@
 import mongoose from 'mongoose';
 import langData from './lang/lang.json' assert { type: "json" };
 import { product_schema } from './schema/product_schema.js';
-import { product_variation_schema } from './schema/product_variation.js'
+import { product_variation_schema } from './schema/product_variation_schema.js'
 import { discount_pipeline } from './pipeline/discount.js';
 import { featured_pipeline } from './pipeline/featured.js';
 import { search_list } from './pipeline/search_list.js';
