@@ -2,14 +2,15 @@
 
 import mongoose from 'mongoose';
 
-export let review_schema = mongoose.Schema({
+export let reviews_schema = mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: true,
     },
     product_id: {
         type: mongoose.Schema.Types.ObjectId,
-        required: true
+        required: true,
+        ref: "products"
     },
     review_score: {
         type: Number,

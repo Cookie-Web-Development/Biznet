@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose';
 
-export let category_schema = mongoose.Schema({
+export let categories_schema = mongoose.Schema({
     name: {
         es: {
             type: String,

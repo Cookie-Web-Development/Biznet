@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose';
 
-export let user_schema = mongoose.Schema({
+export let users_schema = mongoose.Schema({
     username: {
         type: String,
         required: true,

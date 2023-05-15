@@ -2,7 +2,7 @@
 
 import mongoose from 'mongoose';
 
-export let product_variation_schema = mongoose.Schema({
+export let product_variations_schema = mongoose.Schema({
     variation_type: {
         type: String,
         required: true
@@ -13,7 +13,7 @@ export let product_variation_schema = mongoose.Schema({
     },
     product_id: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Products"
+        ref: "products"
     },
     variation_price: Number,
     variation_discount_percent: {

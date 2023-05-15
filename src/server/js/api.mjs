@@ -2,8 +2,13 @@
 
 import mongoose from 'mongoose';
 import langData from './lang/lang.json' assert { type: "json" };
-import { product_schema } from './schema/products_schema.js';
-import { product_variation_schema } from './schema/product_variations_schema.js'
+import { products_schema } from './schema/products_schema.js';
+import { product_variations_schema } from './schema/product_variations_schema.js';
+import { brands_schema } from './schema/brands_schema.js';
+import { categories_schema } from './schema/categories_schema.js';
+import { reviews_schema } from './schema/reviews_schema.js';
+import { tags_schema } from './schema/tags_schema.js';
+import { users_schema } from './schema/users_schema.js';
 import { discount_pipeline } from './pipeline/discount.js';
 import { featured_pipeline } from './pipeline/featured.js';
 import { search_list } from './pipeline/search_list.js';
@@ -21,13 +26,7 @@ import { product_import } from '../../../devTool/product_import.js';
 let apiRoute = function (app) {
     mongoose.set('strictQuery', true);
 
-    /*
-    mongoose.connect(process.env.URI_PRODUCTS, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    });
-
-    /*New connections Start*/
+    /*Mongoose Connections*/
     const connectionSettings = {
         useNewUrlParser: true,
         useUnifiedTopology: true
@@ -35,18 +34,15 @@ let apiRoute = function (app) {
 
     const productsDB = mongoose.createConnection(process.env.URI_PRODUCTS, connectionSettings );
     const usersDB = mongoose.createConnection(process.env.URI_USERS, connectionSettings);
-    /*New connections End*/
 
-    //let Products = mongoose.model('Products', product_schema);
-    let Products = productsDB.model('Products', product_schema);
-    /*Product_Variations = productsDB.model('Variations', undefined),
-    Brands = productsDB.model('Brands', undefined),
-    Categories = productsDB.model('Categories', undefined),
-    Reviews = productsDB.model('Reviews', undefined),
-    Tags = productsDB.model('Tags', undefined);
-
-    let Users = usersDB.model('Users', undefined);*/
-
+    /*Models*/
+    let Products = productsDB.model('products', products_schema),
+    Product_Variations = productsDB.model('variations', product_variations_schema),
+    Brands = productsDB.model('brands', brands_schema),
+    Categories = productsDB.model('categories', categories_schema),
+    Reviews = productsDB.model('reviews', reviews_schema),
+    Tags = productsDB.model('tags', tags_schema);
+    let Users = usersDB.model('users', users_schema);
 
     let formatOptions = {
         style: 'currency',
