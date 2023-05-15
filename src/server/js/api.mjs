@@ -2,8 +2,8 @@
 
 import mongoose from 'mongoose';
 import langData from './lang/lang.json' assert { type: "json" };
-import { product_schema } from './schema/product_schema.js';
-import { product_variation_schema } from './schema/product_variation_schema.js'
+import { product_schema } from './schema/products_schema.js';
+import { product_variation_schema } from './schema/product_variations_schema.js'
 import { discount_pipeline } from './pipeline/discount.js';
 import { featured_pipeline } from './pipeline/featured.js';
 import { search_list } from './pipeline/search_list.js';
@@ -21,12 +21,33 @@ import { product_import } from '../../../devTool/product_import.js';
 let apiRoute = function (app) {
     mongoose.set('strictQuery', true);
 
+    /*
     mongoose.connect(process.env.URI_PRODUCTS, {
         useNewUrlParser: true,
         useUnifiedTopology: true
     });
 
-    let Products = mongoose.model('Products', product_schema);
+    /*New connections Start*/
+    const connectionSettings = {
+        useNewUrlParser: true,
+        useUnifiedTopology: true
+    };
+
+    const productsDB = mongoose.createConnection(process.env.URI_PRODUCTS, connectionSettings );
+    const usersDB = mongoose.createConnection(process.env.URI_USERS, connectionSettings);
+    /*New connections End*/
+
+    //let Products = mongoose.model('Products', product_schema);
+    let Products = productsDB.model('Products', product_schema);
+    /*Product_Variations = productsDB.model('Variations', undefined),
+    Brands = productsDB.model('Brands', undefined),
+    Categories = productsDB.model('Categories', undefined),
+    Reviews = productsDB.model('Reviews', undefined),
+    Tags = productsDB.model('Tags', undefined);
+
+    let Users = usersDB.model('Users', undefined);*/
+
+
     let formatOptions = {
         style: 'currency',
         currency: 'USD',
