@@ -16,6 +16,10 @@ import search_query from './pipeline/search_query.js';
 
 /*DEV MODE START: DELETE AFTER USE*/
 import { product_import } from '../../../devTool/product_import.js';
+import { devBrand } from '../../../devTool/devPipeline/devBrand.js';
+import { devCategory } from '../../../devTool/devPipeline/devCategory.js';
+import { devTag } from '../../../devTool/devPipeline/devTag.js';
+
 //import crypto from 'crypto';
 
 //const key = crypto.randomBytes(32).toString('hex');
@@ -35,6 +39,52 @@ let apiRoute = function (app) {
     const productsDB = mongoose.createConnection(process.env.URI_PRODUCTS, connectionSettings );
     const usersDB = mongoose.createConnection(process.env.URI_USERS, connectionSettings);
 
+    /*pre-hooks for schemas: used to assign customs_ids before saving*/
+
+    //brand
+    brands_schema.statics.createBrand = async function(data) {
+        let last_entry = await this.findOne({}, { _id: 0, brand_id: 1 } ,{sort: { brand_id: -1}}) || { brand_id: 0 };
+
+        let indexTracker = 0;  // one of the obj in the array contains brand_id
+
+        for (let i = 0; i < data.length; i++) {
+            if(!data[i].hasOwnProperty('brand_id')) {
+                data[i].brand_id = last_entry.brand_id + indexTracker + 1;
+                indexTracker++
+            }
+        }
+        return this.create(data)
+    }
+    //category
+    categories_schema.statics.createCategory = async function (data) {
+        let last_entry  = await this.findOne({}, {_id: 0, category_id: 1}, {sort: { category_id: -1}}) || { category_id: 0 };
+
+        let indexTracker = 0;
+
+        for (let i = 0; i < data.length; i++) {
+            if(!data[i].hasOwnProperty('category_id')) {
+                data[i].category_id = last_entry.category_id + indexTracker + 1;
+                indexTracker++
+            }
+        }
+        return this.create(data)
+    }
+
+    //tags
+    tags_schema.statics.createTag =  async function (data) {
+        let last_entry = await this.findOne({}, {_id: 0, tag_id: 1}, {sort: {tag_id: -1}}) || { tag_id: 0 };
+
+        let indexTracker = 0;
+
+        for(let i = 0; i < data.length ; i++) {
+            if(!data[i].hasOwnProperty('tag_id')) {
+                data[i].tag_id = last_entry.tag_id + indexTracker + 1;
+                indexTracker++
+            }
+        }
+        return this.create(data)
+    }
+
     /*Models*/
     let Products = productsDB.model('products', products_schema),
     Product_Variations = productsDB.model('variations', product_variations_schema),
@@ -44,7 +94,7 @@ let apiRoute = function (app) {
     Tags = productsDB.model('tags', tags_schema);
     let Users = usersDB.model('users', users_schema);
 
-    let formatOptions = {
+    let formatOptions = { //format currency in USD with two decimal places
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 2,
@@ -136,13 +186,14 @@ let apiRoute = function (app) {
     });
 
     app.route('/test').get(async (req, res) => {
-        let query = {...req.query};
-        //let test = await Products.create(product_import);
+        //let query = {...req.query};
+        //let test = await Tags.createTag(devTag);
+        //let test = await Categories.deleteMany();
         //res.json(test);
         //let testerino = 'es'
         //let opt = {es: 1, en: 2}
         //console.log(opt[testerino])
-        console.log(query)
+        //console.log(query)
         res.send('aloha')
     });
 
