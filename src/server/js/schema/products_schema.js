@@ -2,7 +2,33 @@
 
 import mongoose from 'mongoose';
 
-export let products_schema = mongoose.Schema({
+let listing_schema = mongoose.Schema({
+    variation_type: [String],
+    variation_options: Object,
+    price: {
+        type: Number,
+        required: true
+    },
+    discount: {
+        type: Boolean,
+        default: false
+    },
+    discount_percent: {
+        type: Number,
+        default: 0
+    },
+    featured: {
+        type: Boolean,
+        default: false
+    },
+    images: [String],
+    sku: {
+        type: String,
+        required: true
+    }
+});
+
+let products_schema = mongoose.Schema({
     name: {
         es: {
             type: String,
@@ -12,10 +38,6 @@ export let products_schema = mongoose.Schema({
             type: String,
             required: true
         }
-    },
-    price: {
-        type: Number,
-        required: true
     },
     description: {
         en: {
@@ -35,28 +57,17 @@ export let products_schema = mongoose.Schema({
         type: Number,
         ref: "brands"
     },
-    discount: {
-        type: Boolean,
-        default: false
-    },
-    discount_percent: {
-        type: Number,
-        default: 0
-    },
-    featured: {
-        type: Boolean,
-        default: false
-    },
-    images: [String],
     tag_id: {
         type: [Number],
         ref: "tags"
     },
-    sku: {
-        type: String,
+    listing: {
+        type: [listing_schema],
         required: true
     }
 });
+
+export { products_schema, listing_schema}
 
 /* BACKUP
 "use strict";
