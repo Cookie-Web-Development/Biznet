@@ -190,12 +190,6 @@ let apiRoute = function (app) {
 
     app.route('/test').get(async (req, res) => {
         //let query = {...req.query};
-
-        /*
-        let update = await Products.aggregate(product_update)
-        res.json(update);
-        */
-
         /*
         let changeDB = await Products.updateMany( {"category.en" : "Home Improvement"}, { $set: { "category.en" : "Home Improvements"}})
 
@@ -205,7 +199,7 @@ let apiRoute = function (app) {
         //let opt = {es: 1, en: 2}
         //console.log(opt[testerino])
         //console.log(query)
-        //res.send('aloha')
+        res.send('aloha')
     });
 
     app.route('/test_db').get(async (req, res) => {

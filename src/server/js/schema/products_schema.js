@@ -65,16 +65,7 @@ let products_schema = mongoose.Schema({
     listing: {
         type: [listing_schema],
         required: true
-    }, //FIELDS FOR MIGRATION PORPUSE! DELETE AFTER FINISHED
-    category: String,
-    brand: String,
-    tags: [String],
-    sku: String,
-    discount: Boolean,
-    discount_percent: Number,
-    featured: Boolean,
-    images: [String]
-
+    }
 });
 
 export { products_schema, listing_schema}
