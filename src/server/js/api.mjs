@@ -3,7 +3,7 @@
 import mongoose from 'mongoose';
 import langData from './lang/lang.json' assert { type: "json" };
 import { products_schema } from './schema/products_schema.js';
-import { product_variations_schema } from './schema/product_variations_schema.js';
+//import { product_variations_schema } from './schema/product_variations_schema.js';
 import { brands_schema } from './schema/brands_schema.js';
 import { categories_schema } from './schema/categories_schema.js';
 import { reviews_schema } from './schema/reviews_schema.js';
@@ -19,6 +19,9 @@ import { product_import } from '../../../devTool/product_import.js';
 import { devBrand } from '../../../devTool/devPipeline/devBrand.js';
 import { devCategory } from '../../../devTool/devPipeline/devCategory.js';
 import { devTag } from '../../../devTool/devPipeline/devTag.js';
+import { product_update } from '../../../devTool/product_update.js'
+
+
 
 //import crypto from 'crypto';
 
@@ -36,19 +39,19 @@ let apiRoute = function (app) {
         useUnifiedTopology: true
     };
 
-    const productsDB = mongoose.createConnection(process.env.URI_PRODUCTS, connectionSettings );
+    const productsDB = mongoose.createConnection(process.env.URI_PRODUCTS, connectionSettings);
     const usersDB = mongoose.createConnection(process.env.URI_USERS, connectionSettings);
 
     /*pre-hooks for schemas: used to assign customs_ids before saving*/
 
     //brand
-    brands_schema.statics.createBrand = async function(data) {
-        let last_entry = await this.findOne({}, { _id: 0, brand_id: 1 } ,{sort: { brand_id: -1}}) || { brand_id: 0 };
+    brands_schema.statics.createBrand = async function (data) {
+        let last_entry = await this.findOne({}, { _id: 0, brand_id: 1 }, { sort: { brand_id: -1 } }) || { brand_id: 0 };
 
         let indexTracker = 0;  // one of the obj in the array contains brand_id
 
         for (let i = 0; i < data.length; i++) {
-            if(!data[i].hasOwnProperty('brand_id')) {
+            if (!data[i].hasOwnProperty('brand_id')) {
                 data[i].brand_id = last_entry.brand_id + indexTracker + 1;
                 indexTracker++
             }
@@ -57,12 +60,12 @@ let apiRoute = function (app) {
     }
     //category
     categories_schema.statics.createCategory = async function (data) {
-        let last_entry  = await this.findOne({}, {_id: 0, category_id: 1}, {sort: { category_id: -1}}) || { category_id: 0 };
+        let last_entry = await this.findOne({}, { _id: 0, category_id: 1 }, { sort: { category_id: -1 } }) || { category_id: 0 };
 
         let indexTracker = 0;
 
         for (let i = 0; i < data.length; i++) {
-            if(!data[i].hasOwnProperty('category_id')) {
+            if (!data[i].hasOwnProperty('category_id')) {
                 data[i].category_id = last_entry.category_id + indexTracker + 1;
                 indexTracker++
             }
@@ -71,13 +74,13 @@ let apiRoute = function (app) {
     }
 
     //tags
-    tags_schema.statics.createTag =  async function (data) {
-        let last_entry = await this.findOne({}, {_id: 0, tag_id: 1}, {sort: {tag_id: -1}}) || { tag_id: 0 };
+    tags_schema.statics.createTag = async function (data) {
+        let last_entry = await this.findOne({}, { _id: 0, tag_id: 1 }, { sort: { tag_id: -1 } }) || { tag_id: 0 };
 
         let indexTracker = 0;
 
-        for(let i = 0; i < data.length ; i++) {
-            if(!data[i].hasOwnProperty('tag_id')) {
+        for (let i = 0; i < data.length; i++) {
+            if (!data[i].hasOwnProperty('tag_id')) {
                 data[i].tag_id = last_entry.tag_id + indexTracker + 1;
                 indexTracker++
             }
@@ -87,11 +90,11 @@ let apiRoute = function (app) {
 
     /*Models*/
     let Products = productsDB.model('products', products_schema),
-    Product_Variations = productsDB.model('variations', product_variations_schema),
-    Brands = productsDB.model('brands', brands_schema),
-    Categories = productsDB.model('categories', categories_schema),
-    Reviews = productsDB.model('reviews', reviews_schema),
-    Tags = productsDB.model('tags', tags_schema);
+        //Product_Variations = productsDB.model('variations', product_variations_schema),
+        Brands = productsDB.model('brands', brands_schema),
+        Categories = productsDB.model('categories', categories_schema),
+        Reviews = productsDB.model('reviews', reviews_schema),
+        Tags = productsDB.model('tags', tags_schema);
     let Users = usersDB.model('users', users_schema);
 
     let formatOptions = { //format currency in USD with two decimal places
@@ -107,7 +110,7 @@ let apiRoute = function (app) {
 
         let discount_list = await Products.aggregate(discount_pipeline);
         let featured_list = await Products.aggregate(featured_pipeline);
- 
+
 
         discount_list.forEach(item => { //price formatter
             item.format_price = item.price.toLocaleString('en-US', formatOptions);
@@ -127,16 +130,16 @@ let apiRoute = function (app) {
             //if there is a URL param for quiick search, include iit in the reender section...
             let quick_query = undefined;
             if (req.query) {
-                quick_query = {...req.query}
+                quick_query = { ...req.query }
             };
             //URL PARAM /catalog?key=value <- ESTTO NO DEBE DE GUARDARSEE EN EEL SEARCH SESSION@!
             let lang = req.session.lang || 'es';
             let tags = await Products.aggregate(search_list.tags),
-            categories = await Products.aggregate(search_list.category),
-            brands = await Products.aggregate(search_list.brand),
-            // ^ All of these return [{key: [...string]}]
-            price_range = await Products.aggregate(search_list.price_range);
-        
+                categories = await Products.aggregate(search_list.category),
+                brands = await Products.aggregate(search_list.brand),
+                // ^ All of these return [{key: [...string]}]
+                price_range = await Products.aggregate(search_list.price_range);
+
             let search_fields = {
                 tags_fields: tags[0][lang].sort(),
                 category_fields: categories[0][lang].sort(),
@@ -162,7 +165,7 @@ let apiRoute = function (app) {
                 let lang = req.session.lang || 'es';
                 let product_id = req.params.id;
                 let result = await Products.aggregate(search_query({ id: product_id }));
-                
+
                 result.forEach(item => { //price formatter
                     item.format_price = item.price.toLocaleString('en-US', formatOptions);
                     item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
@@ -176,7 +179,7 @@ let apiRoute = function (app) {
         })
 
     app.route('/lang_change').get((req, res) => {
-        if(req.session.lang == 'en') {
+        if (req.session.lang == 'en') {
             req.session.lang = 'es'
         } else {
             req.session.lang = 'en'
@@ -187,22 +190,38 @@ let apiRoute = function (app) {
 
     app.route('/test').get(async (req, res) => {
         //let query = {...req.query};
-        //let test = await Tags.createTag(devTag);
-        //let test = await Categories.deleteMany();
-        //res.json(test);
+
+        /*
+        let update = await Products.aggregate(product_update)
+        res.json(update);
+        */
+
+        /*
+        let changeDB = await Products.updateMany( {"category.en" : "Home Improvement"}, { $set: { "category.en" : "Home Improvements"}})
+
+        res.json(changeDB)
+        */
         //let testerino = 'es'
         //let opt = {es: 1, en: 2}
         //console.log(opt[testerino])
         //console.log(query)
-        res.send('aloha')
+        //res.send('aloha')
     });
 
+    app.route('/test_db').get(async (req, res) => {
+        let db = await Tags.aggregate([{ $match: {} }, { $sort: { tag_id: 1 } }])
+        res.json(db)
+    });
 
+    app.route('/test_product').get(async (req, res) => {
+        let products = await Products.aggregate([{ $match: {} }])
+        res.json(products)
+    })
 };
 
 export default apiRoute;
 
-/* example req.body
+/* example req.body 
 $expr: {
         $and:
 req.body: {

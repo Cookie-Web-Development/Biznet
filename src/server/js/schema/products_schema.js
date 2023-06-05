@@ -3,28 +3,25 @@
 import mongoose from 'mongoose';
 
 let listing_schema = mongoose.Schema({
-    variation_type: [String],
-    variation_options: Object,
+    variation_options: {
+        en: Object,
+        es: Object
+    },
     price: {
-        type: Number,
-        required: true
+        type: Number//, required: true
     },
     discount: {
-        type: Boolean,
-        default: false
+        type: Boolean//, default: false
     },
     discount_percent: {
-        type: Number,
-        default: 0
+        type: Number//, default: 0
     },
     featured: {
-        type: Boolean,
-        default: false
+        type: Boolean//, default: false
     },
     images: [String],
     sku: {
-        type: String,
-        required: true
+        type: String//, required: true
     }
 });
 
@@ -61,10 +58,23 @@ let products_schema = mongoose.Schema({
         type: [Number],
         ref: "tags"
     },
+    variation_type: {
+        en: [String],
+        es: [String]
+    },
     listing: {
         type: [listing_schema],
         required: true
-    }
+    }, //FIELDS FOR MIGRATION PORPUSE! DELETE AFTER FINISHED
+    category: String,
+    brand: String,
+    tags: [String],
+    sku: String,
+    discount: Boolean,
+    discount_percent: Number,
+    featured: Boolean,
+    images: [String]
+
 });
 
 export { products_schema, listing_schema}
