@@ -12,7 +12,7 @@ html(lang=lang)
                             div.image_container
                                     img(src='/public/img/products-images/' + featured_list[0].listing[0].images[0])
                             div.text_container   
-                                p.text_container_header #{featured_list[0].category_id} / #{featured_list[0].brand_id}
+                                p.text_container_header #{featured_list[0].category_name[lang]} / #{featured_list[0].brand_name}
                                 h3=featured_list[0].name[lang]
                                 div.product_card_price_tag
                                     p.price_sell=featured_list[0].listing[0].format_price_discounted
@@ -31,7 +31,7 @@ html(lang=lang)
                                 div.image_container
                                     img(src='/public/img/products-images/' + item.listing[0].images[0])
                                 div.text_container   
-                                    p.text_container_header #{item.category_id} / #{item.brand_id}
+                                    p.text_container_header #{item.category_name[lang]} / #{item.brand_name}
                                     h3=item.name[lang]
                                     div.product_card_price_tag
                                         p.price_sell=item.listing[0].format_price_discounted
@@ -41,8 +41,8 @@ html(lang=lang)
                                                 span.discount_percent #{Math.round(item.listing[0].discount_percent * 100)}%
                                     p.product_card_description=item.description[lang]
                                     ul.product_card_tags
-                                        each tag in item.tag_id
-                                            li=tag 
+                                        each tag in item.tag_array
+                                            li=tag.name[lang] 
                         div(id='carousel_next' class='carousel_btn')
                             i(class="fa-solid fa-chevron-right fa-xl")
                         div(id='carousel_prev' class='carousel_btn')
@@ -61,7 +61,7 @@ html(lang=lang)
                                     div.image_container
                                             img(src='/public/img/products-images/' + item.listing[0].images[0])
                                     div.text_container   
-                                        p.text_container_header #{item.category_id} / #{item.brand_id}
+                                        p.text_container_header #{item.category_name[lang]} / #{item.brand_name}
                                         h3=item.name[lang]
                                         div.product_card_price_tag
                                             p.price_sell=item.listing[0].format_price_discounted
@@ -71,8 +71,8 @@ html(lang=lang)
                                                     span.discount_percent #{Math.round(item.listing[0].discount_percent * 100)}%
                                         p.product_card_description=item.description[lang]
                                         ul.product_card_tags
-                                            each tag in item.tag_id
-                                                li=tag
+                                            each tag in item.tag_array
+                                                li=tag.name[lang]
                         div(id='pagination', data-pagination-type='mini')
         footer
 
