@@ -1,23 +1,28 @@
 'use strict';
 
 export let featured_pipeline = [
-    {$match: { featured: true }},
+    { $match: { featured: true }},
+    { $addFields: {
+        listing: {
+            $map: {
+                input: "$listing",
+                as: "entry",
+                in: {
+                    $mergeObjects: [
+                        "$$entry",
+                        {price_discounted: {
+                            $subtract: ["$$entry.price", { $multiply: ["$$entry.price", "$$entry.discount_percent"]}]
+                        }}
+                    ]
+                }
+            }
+        }
+    }},
     {
         $project: {
-            _id: 1,
-            name: 1,
-            price: 1,
-            discount_percent: 1,
-            description: 1,
-            category: 1,
-            brand: 1,
-            tags: 1,
-            sku: 1,
-            images: 1,
-            price_discounted: { 
-                $round: [{ $subtract: ['$price', { $multiply: ['$price', '$discount_percent'] }] }, 2] } 
-            }
+            __v: 0
         },
+    },
     { $sample: { size: 8 } }
 ];
 
