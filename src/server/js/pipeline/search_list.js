@@ -1,50 +1,67 @@
 "use strict";
 
 export let search_list = {
-    tags: [
-        { $group: {
-            _id: null,
-            en: { $addToSet: "$tags.en" },
-            es: { $addToSet: "$tags.es" }
-        }},
-        { $project: {
-            en: { $reduce: {
-                input: "$en",
-                initialValue: [],
-                in: { $concatArrays: [ '$$value', '$$this' ] }
-            }},
-            es: { $reduce: {
-                input: '$es',
-                initialValue: [],
-                in: { $concatArrays: [ '$$value', '$$this' ] }
-            }}
-        }},
-        { $unwind: '$en' },
-        { $unwind: '$es' },
-        { $group: {
-            _id: null,
-            en: { $addToSet: '$en' },
-            es: { $addToSet: '$es' }
-        }},
-        { $project: {
-            _id: 0
-        }}
-    ],
-    category: [
-        { $group: {
-            _id: null,
-            en: { $addToSet: "$category.en" },
-            es: { $addToSet: "$category.es" }
-        }},
-        { $project: {
-            _id: 0
-        }}
-    ],
+    multi_lang: (lang) => {
+        let sort_lang = `name.${lang}`;
+
+        return [
+            {
+                $project: {
+                    _id: 0,
+                    __v: 0
+                }
+            },
+            {
+                $sort: {
+                    [sort_lang]: 1
+                }
+            }
+        ]
+    },
     brand: [
-        { $unwind: "$brand" },
-        { $group: { _id: null, brand: { $addToSet: "$brand" } } },
-        { $project: { _id: 0, brand: 1 } }
+        { $project: { _id: 0, __v: 0 } }
     ],
+    price_range: [
+        {
+            $project: {
+                _id: 0,
+                price_list: {
+                    $map: {
+                        input: "$listing",
+                        as: "entry",
+                        in: {
+                            $round: [{ $subtract: ["$$entry.price", { $multiply: ["$$entry.price", "$$entry.discount_percent"] }] }, 2]
+                        }
+                    }
+                }
+            }
+        },
+        {
+            $unwind: "$price_list"
+        },
+        {
+            $group: {
+                _id: null,
+                price_list: {
+                    $push: "$price_list"
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                max: {
+                    $max: "$price_list"
+                },
+                min: {
+                    $min: "$price_list"
+                }
+            }
+        }
+    ]
+}
+
+/*
     price_range: [
         { $project: {
             price_discounted: { $subtract: [ '$price', { $multiply: [ '$price', '$discount_percent' ]}]}
@@ -60,24 +77,5 @@ export let search_list = {
             max: { $ceil: "$max" }
         }}
     ]
-}
-
-/*
-    price_range: [
-        { $group: {
-            _id: null,
-            min: { $min: "$price" },
-            max: { $max: "$price" }
-        }},
-    category: [
-        { $unwind: "$category" },
-        { $group: { _id: null, category: { $addToSet: "$category" } } },
-        { $project: { _id: 0, category: 1 } },
-    ],
-    tags: [
-        { $unwind: "$tags" },
-        { $group: { _id: null, tag: { $addToSet: "$tags" } } },
-        { $project: { _id: 0, tags: "$tag" } },
-    ],
 
 */

@@ -139,29 +139,30 @@ let apiRoute = function (app) {
             };
             //URL PARAM /catalog?key=value <- ESTTO NO DEBE DE GUARDARSEE EN EEL SEARCH SESSION@!
             let lang = req.session.lang || 'es';
-            let tags = await Products.aggregate(search_list.tags),
-                categories = await Products.aggregate(search_list.category),
-                brands = await Products.aggregate(search_list.brand),
+            let tags = await Tags.aggregate(search_list.multi_lang(lang)),
+                categories = await Categories.aggregate(search_list.multi_lang(lang)),
+                brands = await Brands.aggregate(search_list.brand),
                 // ^ All of these return [{key: [...string]}]
                 price_range = await Products.aggregate(search_list.price_range);
-
+            /*
             let search_fields = {
                 tags_fields: tags[0][lang].sort(),
                 category_fields: categories[0][lang].sort(),
                 brand_fields: brands[0].brand.sort(),
                 price_range: price_range[0]
-            }
+            }*/
             //console.log(search_fields.tags_fields.sort())
-            res.render('catalog', { search_fields, lang, langData, quick_query })
+            //res.render('catalog', { search_fields, lang, langData, quick_query })
+            res.json(price_range)
         })
-        .post(async (req, res) => {
+        /*.post(async (req, res) => {
             let results = await Products.aggregate(search_query(req.body));
             results.forEach(item => { //price formatter
                 item.format_price = item.price.toLocaleString('en-US', formatOptions);
                 item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
             });
             res.json({ api_results: results })
-        })
+        })*/
 
     app.route('/product/:id')
         .get(async (req, res) => {
@@ -209,7 +210,7 @@ let apiRoute = function (app) {
     });
 
     app.route('/test_db').get(async (req, res) => {
-        let db = await Tags.aggregate([{ $match: {} }, { $sort: { tag_id: 1 } }])
+        let db = await Brands.aggregate([{ $match: {} }, { $sort: { tag_id: 1 } }])
         res.json(db)
     });
 
