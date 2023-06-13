@@ -110,7 +110,7 @@ let apiRoute = function (app) {
 
         let discount_list = await Products.aggregate(discount_pipeline);
         let featured_list = await Products.aggregate(featured_pipeline);
-        
+
         discount_list.forEach(item => { //price formatter
             item.listing.forEach(entry => {
                 entry.format_price = entry.price.toLocaleString('en-US', formatOptions);
@@ -124,10 +124,8 @@ let apiRoute = function (app) {
                 entry.format_price_discounted = entry.price_discounted.toLocaleString('en-US', formatOptions);
             })
         })
-        //featured_list = [featured_list[0]];
-        //console.log(featured_list);
+
         res.render('home', { discount_list, featured_list, lang, langData })
-        //res.json(featured_list)
     });
 
     app.route('/catalog')
@@ -142,27 +140,28 @@ let apiRoute = function (app) {
             let tags = await Tags.aggregate(search_list.multi_lang(lang)),
                 categories = await Categories.aggregate(search_list.multi_lang(lang)),
                 brands = await Brands.aggregate(search_list.brand),
-                // ^ All of these return [{key: [...string]}]
                 price_range = await Products.aggregate(search_list.price_range);
-            /*
+            // price_range returns [{max, min}]
+
             let search_fields = {
-                tags_fields: tags[0][lang].sort(),
-                category_fields: categories[0][lang].sort(),
-                brand_fields: brands[0].brand.sort(),
+                tags: [...tags],
+                categories: [...categories],
+                brands: [...brands],
                 price_range: price_range[0]
-            }*/
-            //console.log(search_fields.tags_fields.sort())
-            //res.render('catalog', { search_fields, lang, langData, quick_query })
-            res.json(price_range)
+            }
+            res.render('catalog', { search_fields, lang, langData, quick_query });
+            //res.json(search_fields)
         })
-        /*.post(async (req, res) => {
+        .post(async (req, res) => {
             let results = await Products.aggregate(search_query(req.body));
             results.forEach(item => { //price formatter
-                item.format_price = item.price.toLocaleString('en-US', formatOptions);
-                item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
+                item.listing.forEach(entry => {
+                    entry.format_price = entry.price.toLocaleString('en-US', formatOptions);
+                    entry.format_price_discounted = entry.price_discounted.toLocaleString('en-US', formatOptions);
+                })
             });
             res.json({ api_results: results })
-        })*/
+        })
 
     app.route('/product/:id')
         .get(async (req, res) => {
@@ -195,18 +194,7 @@ let apiRoute = function (app) {
     });
 
     app.route('/test').get(async (req, res) => {
-        //let query = {...req.query};
-        
-        let database = await Products.aggregate([{$match: {}}])
-
-        
-        res.json(database)
-
-        //let testerino = 'es'
-        //let opt = {es: 1, en: 2}
-        //console.log(opt[testerino])
-        //console.log(query)
-        //res.send('aloha')
+        res.send('aloha')
     });
 
     app.route('/test_db').get(async (req, res) => {
@@ -221,26 +209,3 @@ let apiRoute = function (app) {
 };
 
 export default apiRoute;
-
-/* example req.body 
-$expr: {
-        $and:
-req.body: {
-    "name": "car",
-    "price_range_min": "379",
-    "price_range_max": "1238",
-    "category": "Automobile",
-    "brand": "Ralph's",
-    "selected_tags": [
-        "Ball",
-        "Basketball"
-    ],
-    "discount": "true",
-    "featured": "true"
-}
-
-req.body.empty = {}
-
-
-
-*/

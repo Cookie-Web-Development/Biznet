@@ -33,15 +33,15 @@ html(lang=lang)
                                 p.search_container_title=langData.main.search_filter.by_category[lang]
                                 select(data-reset='select', class='input_box', name='category')
                                     option(value='')=langData.main.search_filter.by_category.select[lang]
-                                    each category in search_fields.category_fields
-                                        option(value=category)=category 
+                                    each category in search_fields.categories
+                                        option(value=category.category_id)=category.name[lang] 
                         div.search_container
                             label 
                                 p.search_container_title=langData.main.search_filter.by_brand[lang]
                                 select(data-reset='select', class='input_box', name='brand') 
                                     option(value='')=langData.main.search_filter.by_brand.select[lang]
-                                    each brand in search_fields.brand_fields 
-                                        option(value=brand)=brand
+                                    each brand in search_fields.brands
+                                        option(value=brand.brand_id)=brand.name
                         div.search_container#tags_filter
                             label(for='tags_filter_input')
                                 p.search_container_title=langData.main.search_filter.by_tags[lang]
@@ -152,24 +152,24 @@ html(lang=lang)
             };  
 
             /*### TAGS FILTER ###*/
-            let tags_db = !{JSON.stringify(search_fields.tags_fields)};
+            let tags_db = !{JSON.stringify(search_fields.tags)};
             let tags_select_container = document.getElementById('selected_tags');
             let tags_dropdown = document.getElementById('tags_dropdown');
             let tags_text_filter = document.getElementById('tags_filter_input')
             let unselectedTags = [...tags_db];
-            let tags_selected; // =  search_query.selected_tags ? search_query.selected_tags : [];
-
+            let tags_selected;
+            
             if (search_query.selected_tags) {
-                tags_selected = search_query.selected_tags;
+                //tags_selected = search_query.selected_tags;
+                tags_selected = tags_db.map((tag) => {return tag.tag_id == search_query.selected_tags})
 
-                tags_selected.forEach(tag => {
-                    unselectedTags = unselectedTags.filter((tagName) => {return tagName != tag}).sort();
+
+                tags_selected.forEach(tagId_selected => {
+                    unselectedTags = unselectedTags.filter((tag_unselected) => {return tag_unselected.tag_id != tagId_selected.tag_id});
                 })
             } else {
                 tags_selected = [];
             }
-
-
 
             tagListCreator()
             
@@ -194,13 +194,15 @@ html(lang=lang)
                 }
             })
 
-            tags_dropdown.addEventListener('click', (e) => {
+            tags_dropdown.addEventListener('click', (e) => { //adding tags
                 let target = tags_dropdown.selectedOptions[0]
                 if(target.dataset.tag) {
+
                     /*Arrays updater*/
-                    unselectedTags = unselectedTags.filter((tag) => {return tag != target.dataset.tag}).sort();
-                    tags_selected.push(target.dataset.tag);
-                    tags_selected.sort();
+                    unselectedTags = unselectedTags.filter(tag => tag.tag_id != target.dataset.tag);
+
+                    tags_selected = [...tags_selected, ...tags_db.filter(tag =>tag.tag_id == target.dataset.tag)]
+
                     tagListCreator();
                     
                     //Clear elements after selection
@@ -210,17 +212,32 @@ html(lang=lang)
                     });
                     tags_text_filter.value = '';
                 };
+
             });
 
-            tags_select_container.addEventListener('click', (e) => {
-                if(e.target.value) {
-                    tags_selected = tags_selected.filter((tag) => {return tag != e.target.value}).sort();
-                    unselectedTags.push(e.target.value);
-                    unselectedTags.sort();
+            tags_select_container.addEventListener('click', (e) => { //deleting tags
+                
+                if(e.target.dataset.tag) {
+                    let tag_target = tags_db.filter((tag) => {return tag.tag_id == e.target.dataset.tag});
+                    tags_selected = tags_selected.filter((tag) => {return tag.tag_id != e.target.dataset.tag});
 
+                    unselectedTags = [...unselectedTags, ...tag_target];
+
+                    unselectedTags.sort((a, b) => {
+                        if (a.name[lang] > b.name[lang]){
+                            return 1
+                        }
+                        if (a.name[lang] < b.name[lang]) {
+                            return -1
+                        }
+
+                        return 0
+                    });
+                    
                     tagListCreator();
                     tags_dropdown.dispatchEvent(new Event(eventAPI))
                 }
+                
             })
 
 
@@ -228,17 +245,18 @@ html(lang=lang)
                 let dropdown_children = Array.from(tags_dropdown.querySelectorAll('[data-tag]'));
                 let tag_select_children = Array.from(tags_select_container.children);
 
-                    /*Elements remover*/
-                    dropdown_children.forEach(child => { child.remove() });
-                    tag_select_children.forEach(child => { child.remove() });
+                /*Elements remover*/
+                dropdown_children.forEach(child => { child.remove() });
+                tag_select_children.forEach(child => { child.remove() });
 
                 /*Elements creator*/
                 if(unselectedTags.length > 0){
-                    unselectedTags.forEach(tag => {
+
+                    unselectedTags.forEach(tag_unselected => {
                         let option = document.createElement('option');
-                        option.value = tag;
-                        option.text= tag;
-                        option.dataset.tag = tag;
+                        option.value = tag_unselected.tag_id;
+                        option.text= tag_unselected.name[lang];
+                        option.dataset.tag = tag_unselected.tag_id;
                         tags_dropdown.appendChild(option);
                     });
                 }
@@ -253,9 +271,10 @@ html(lang=lang)
                         selection_item.classList.add('selected_tag');
                         selection_checkbox.type = 'checkbox';
                         selection_checkbox.setAttribute('checked', true);
-                        selection_checkbox.value = tag;
-                        selection_checkbox.name = 'selected_tags'
-                        selection_text.textContent = tag;
+                        selection_checkbox.value = tag.tag_id;
+                        selection_checkbox.dataset.tag = tag.tag_id;
+                        selection_checkbox.name = 'selected_tags';
+                        selection_text.textContent = tag.name[lang];
 
                         selection_label.appendChild(selection_checkbox);
                         selection_label.appendChild(selection_text);
@@ -418,7 +437,7 @@ html(lang=lang)
 
                         // #### image
                         let image_elem = document.createElement('img');
-                        image_elem.setAttribute('src', `/public/img/products-images/${product.images[0]}`);
+                        image_elem.setAttribute('src', `/public/img/products-images/${product.listing[0].images[0]}`); //PENDING displayo different variations if necesarry
 
 
                         image_container.appendChild(image_elem);
@@ -432,9 +451,9 @@ html(lang=lang)
                         text_header.classList.add('text_container_header');
                         
                         let text_header_anchor_category = document.createElement('a');
-                        let header_category_encoded = encodeURIComponent(`${product.category[lang]}`)
+                        let header_category_encoded = encodeURIComponent(`${product.category_name[lang]}`)
                         text_header_anchor_category.setAttribute('href', `/catalog?category=${header_category_encoded}`);
-                        text_header_anchor_category.textContent = `${product.category[lang]}`
+                        text_header_anchor_category.textContent = `${product.category_name[lang]}`
                         
                         let text_header_anchor_brand = document.createElement('a');
                         let header_brand_encoded = encodeURIComponent(`${product.brand}`)
@@ -461,21 +480,21 @@ html(lang=lang)
 
                         let price_value = document.createElement('p');
                         price_value.classList.add('price_sell');
-                        price_value.textContent = `${product.format_price_discounted}`
+                        price_value.textContent = `${product.listing[0].format_price_discounted}`
 
                         price_container.appendChild(price_value);
 
-                        if (product.discount_percent > 0) {
+                        if (product.listing[0].discount_percent > 0) {
                             let price_discount = document.createElement('p');
                             price_discount.classList.add('price_discount');
 
                             let price_before = document.createElement('span');
                             price_before.classList.add('price_before');
-                            price_before.textContent = `${product.format_price}`;
+                            price_before.textContent = `${product.listing[0].format_price}`;
                             
                             let discount_percent = document.createElement('span');
                             discount_percent.classList.add('discount_percent');
-                            discount_percent.textContent = `${Math.round(product.discount_percent * 100)}%`;
+                            discount_percent.textContent = `${Math.round(product.listing[0].discount_percent * 100)}%`;
 
                             price_discount.appendChild(price_before);
                             price_discount.appendChild(discount_percent);
@@ -496,11 +515,11 @@ html(lang=lang)
                         let tags_list = document.createElement('ul')
                         tags_list.classList.add('product_card_tags')
 
-                        product.tags[lang].forEach(tag => {
+                        product.tag_array.forEach(tag => {
                             let text_tag = document.createElement('li');
                             let anchor_tag = document.createElement('a');
-                            let encodedTag = encodeURIComponent(tag);
-                            anchor_tag.textContent = tag;
+                            let encodedTag = encodeURIComponent(tag.tag_id);
+                            anchor_tag.textContent = tag.name[lang];
                             anchor_tag.setAttribute('href', `/catalog?selected_tags=${encodedTag}`)
                             text_tag.appendChild(anchor_tag);
                             tags_list.appendChild(text_tag);

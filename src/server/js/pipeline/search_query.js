@@ -1,85 +1,109 @@
 "use strict";
 import mongoose from 'mongoose';
 
-export default function search_query (query_input) {
-/*
-req.body: {
-  name: 'Batidora',
-  price_range_min: '164',
-  price_range_max: '785',
-  category: 'Automotriz',
-  brand: 'Cybertron',
-  selected_tags: [ 'Accesorios', 'Acústica' ],
-  discount: 'true',
-  featured: 'true',
-  search_lang: 'es',
-  sort_option: "0-9"
-}
-*/
+export default function search_query(query_input) {
+    /*
+    req.body: {
+      name: 'Batidora',
+      price_range_min: '164',
+      price_range_max: '785',
+      category: '2',
+      brand: '1',
+      selected_tags: [ '5', '6' ],
+      discount: 'true',
+      featured: 'true',
+      search_lang: 'es',
+      sort_option: "0-9"
+    }
+    */
     let queryObj = {}
     //id
-    if(query_input.id) {
+    if (query_input.id) {
         queryObj._id = new mongoose.Types.ObjectId(query_input.id);
     }
 
     //name
-    if(query_input.name) {
+    if (query_input.name) {
         queryObj.$or = [
             { "name.en": { $regex: query_input.name, $options: 'i' } },
             { "name.es": { $regex: query_input.name, $options: 'i' } }
         ]
     }
-    
+
     //price_range_min
     //price_range_max
-    if(query_input.price_range_min || query_input.price_range_max) {
+    if (query_input.price_range_min || query_input.price_range_max) {
+        if (!queryObj.listing) {
+            queryObj.listing = {}
+        }
+
         if (query_input.price_range_min && query_input.price_range_max) {
-            queryObj.price_discounted = { $lte: +query_input.price_range_max, $gte: +query_input.price_range_min }
+            queryObj.listing = {
+                $elemMatch: {
+                    ...queryObj.listing.$elemMatch,
+                    price_discounted: {
+                        $gte: +query_input.price_range_min,
+                        $lte: +query_input.price_range_max
+                    }
+                }
+            }
         } else if (query_input.price_range_min) {
-            queryObj.price_discounted = { $gte: +query_input.price_range_min }
+            queryObj.listing = {
+                $elemMatch: {
+                    ...queryObj.listing.$elemMatch,
+                    price_discounted: {
+                        $gte: +query_input.price_range_min
+                    }
+                }
+            }
         } else {
-            queryObj.price_discounted = { $lte: +query_input.price_range_max }
+            queryObj.listing = {
+                $elemMatch: {
+                    ...queryObj.listing.$elemMatch,
+                    price_discounted: {
+                        $lte: +query_input.price_range_max
+                    }
+                }
+            }
         }
     }
-    
+
     //category
     if (query_input.category) {
-        queryObj[`category.${query_input.search_lang}`] = query_input.category
+        queryObj.category_id = +query_input.category
     }
-    
+
     //brand
     if (query_input.brand) {
-        queryObj.brand = query_input.brand
+        queryObj.brand_id = +query_input.brand
     }
-    
+
     //selected_tags
     if (query_input.selected_tags) {
-        queryObj[`tags.${query_input.search_lang}`] = { $all: [...query_input.selected_tags] }
+        queryObj.tag_id = { $all: [...+query_input.selected_tags] }
     }
 
     //discount
     if (query_input.discount) {
-        queryObj.discount = Boolean(query_input.discount)
+        if (!queryObj.listing) {
+            queryObj.listing = {}
+        }
+        queryObj.listing = {
+            $elemMatch: {
+                ...queryObj.listing.$elemMatch,
+                discount: Boolean(query_input.discount)
+            }
+        }
     }
     //featured
-    
+
     if (query_input.featured) {
         queryObj.featured = Boolean(query_input.featured)
     }
 
-    //single vs multiple queries
-    if (Object.keys(queryObj).length > 1) {
-        let andQuery = { $and: []};
-        for (let key in queryObj) {
-            andQuery.$and.push( { [key]: queryObj[key]} )
-        }
-        
-        queryObj = andQuery
-    };
-    
     // sorting option
     let sort = {};
-    switch(query_input.sort_option) {
+    switch (query_input.sort_option) {
         case '9-0':
             sort = { price_discounted: -1 }
             break;
@@ -91,25 +115,85 @@ req.body: {
             break;
         default:
             sort = { price_discounted: 1 }
-    }   
+    }
+
     return [
-        { $addFields: {
-            price_discounted: { $round: [{ $subtract: [ '$price', { $multiply: [ '$price', '$discount_percent' ]}]}, 2] }
-        }},
+        {
+            $addFields: {
+                listing: {
+                    $map: {
+                        input: "$listing",
+                        as: "entry",
+                        in: {
+                            $mergeObjects: [
+                                "$$entry",
+                                {
+                                    price_discounted: {
+                                        $round: [
+                                            { $subtract: ["$$entry.price", { $multiply: ["$$entry.price", "$$entry.discount_percent"] }] }, 2]
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         { $match: queryObj },
-        { $project: {
-            _id: 1,
-            name: 1,
-            price: 1,
-            description: 1,
-            price_discounted: 1,
-            discount_percent: 1,
-            category: 1,
-            brand: 1,
-            tags: 1,
-            images: 1,
-            sku: 1
-        }},
-        { $sort: sort}
+        {
+            $lookup: {
+                from: "categories",
+                localField: "category_id",
+                foreignField: "category_id",
+                as: "category_name"
+            }
+        },
+        {
+            $unwind: "$category_name"
+        },
+        {
+            $lookup: {
+                from: "brands",
+                localField: "brand_id",
+                foreignField: "brand_id",
+                as: "brand_name"
+            }
+        },
+        {
+            $unwind: "$brand_name"
+        },
+        {
+            $lookup: {
+                from: "tags",
+                localField: "tag_id",
+                foreignField: "tag_id",
+                as: "tag_collection"
+            }
+        },
+        {
+            $project: {
+                _id: 1,
+                name: 1,
+                description: 1,
+                reviews: 1,
+                listing: 1,
+                brand_id: 1,
+                category_id: 1,
+                featured: 1,
+                category_name: "$category_name.name",
+                brand_name: "$brand_name.name",
+                tag_array: {
+                    $map: {
+                        input: "$tag_collection",
+                        as: "tag",
+                        in: {
+                            name: "$$tag.name",
+                            tag_id: "$$tag.tag_id"
+                        }
+                    }
+                }
+            }
+        },
+        { $sort: sort }
     ]
 }
