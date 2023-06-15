@@ -160,11 +160,11 @@ html(lang=lang)
             let tags_selected;
             
             if (search_query.selected_tags) {
-                //tags_selected = search_query.selected_tags;
-                tags_selected = tags_db.map((tag) => {return tag.tag_id == search_query.selected_tags})
+                search_query.selected_tags.forEach(entry => { //Si hay seach_session, agrega a tags_selected
+                    tags_selected ? tags_selected.push(...tags_db.filter((tag) => {return tag.tag_id == entry})) : tags_selected = tags_db.filter((tag) => {return tag.tag_id == entry});
+                })
 
-
-                tags_selected.forEach(tagId_selected => {
+                tags_selected.forEach(tagId_selected => { //Si hay seach_session, elimina de unselectedTags
                     unselectedTags = unselectedTags.filter((tag_unselected) => {return tag_unselected.tag_id != tagId_selected.tag_id});
                 })
             } else {

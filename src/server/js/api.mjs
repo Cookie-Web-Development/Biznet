@@ -196,7 +196,10 @@ let apiRoute = function (app) {
     });
 
     app.route('/test').get(async (req, res) => {
-        res.send('aloha')
+        let array = [1, 2, 3, 1, 2, 3]
+        let result = array.filter(num => num == 1)
+        //res.send('aloha')
+        res.json(result)
     });
 
     app.route('/test_db').get(async (req, res) => {
