@@ -9,8 +9,8 @@ import { categories_schema } from './schema/categories_schema.js';
 import { reviews_schema } from './schema/reviews_schema.js';
 import { tags_schema } from './schema/tags_schema.js';
 import { users_schema } from './schema/users_schema.js';
-import { discount_pipeline } from './pipeline/discount.js';
-import { featured_pipeline } from './pipeline/featured.js';
+//import { discount_pipeline } from './pipeline/discount.js'; //FLAGGED FOR DELETION!
+//import { featured_pipeline } from './pipeline/featured.js'; //FLAGGED FOR DELETION!
 import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
 
@@ -97,33 +97,36 @@ let apiRoute = function (app) {
         Tags = productsDB.model('tags', tags_schema);
     let Users = usersDB.model('users', users_schema);
 
-    let formatOptions = { //format currency in USD with two decimal places
+
+    //format currency in USD with two decimal places
+    let formatOptions = { 
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
     };
 
-    app.route(['/', '/home']).get(async (req, res) => {
-        //session lang is req.session.lang
-        let lang = req.session.lang || "es";
-
-        let discount_list = await Products.aggregate(discount_pipeline);
-        let featured_list = await Products.aggregate(featured_pipeline);
-
-        discount_list.forEach(item => { //price formatter
-            item.listing.forEach(entry => {
-                entry.format_price = entry.price.toLocaleString('en-US', formatOptions);
-                entry.format_price_discounted = entry.price_discounted.toLocaleString('en-US', formatOptions);
-            })
-        });
-
-        featured_list.forEach(item => { //price formatter
+    function priceFormatter(product) {
+        product.forEach(item => {
             item.listing.forEach(entry => {
                 entry.format_price = entry.price.toLocaleString('en-US', formatOptions);
                 entry.format_price_discounted = entry.price_discounted.toLocaleString('en-US', formatOptions);
             })
         })
+    }
+
+    app.route(['/', '/home']).get(async (req, res) => {
+        //session lang is req.session.lang
+        let lang = req.session.lang || "es";
+
+        //let discount_list = await Products.aggregate(discount_pipeline);
+        //let featured_list = await Products.aggregate(featured_pipeline);
+
+        let discount_list = await Products.aggregate(search_query({discount: "true"}));
+        let featured_list = await Products.aggregate(search_query({featured: "true"}, {sample: 8}))
+
+        priceFormatter(discount_list);
+        priceFormatter(featured_list);
 
         res.render('home', { discount_list, featured_list, lang, langData })
     });
@@ -154,12 +157,9 @@ let apiRoute = function (app) {
         })
         .post(async (req, res) => {
             let results = await Products.aggregate(search_query(req.body));
-            results.forEach(item => { //price formatter
-                item.listing.forEach(entry => {
-                    entry.format_price = entry.price.toLocaleString('en-US', formatOptions);
-                    entry.format_price_discounted = entry.price_discounted.toLocaleString('en-US', formatOptions);
-                })
-            });
+
+            priceFormatter(results);
+
             res.json({ api_results: results })
         })
 
@@ -171,12 +171,8 @@ let apiRoute = function (app) {
                 let product_id = req.params.id;
                 let result = await Products.aggregate(search_query({ id: product_id }));
 
-                result.forEach(item => { //price formatter
-                    item.listing.forEach(entry => {
-                        entry.format_price = entry.price.toLocaleString('en-US', formatOptions);
-                        entry.format_price_discounted = entry.price_discounted.toLocaleString('en-US', formatOptions);
-                    })
-                });
+                priceFormatter(result)
+
                 res.render('product', { api_results: result[0], lang, langData })
 
             } catch (err) {
@@ -195,11 +191,13 @@ let apiRoute = function (app) {
         res.redirect(referer);
     });
 
+/*############
+DEV ROUTES
+#############*/
+
     app.route('/test').get(async (req, res) => {
-        let array = [1, 2, 3, 1, 2, 3]
-        let result = array.filter(num => num == 1)
-        //res.send('aloha')
-        res.json(result)
+        res.send('aloha')
+        //res.json(result)
     });
 
     app.route('/test_db').get(async (req, res) => {

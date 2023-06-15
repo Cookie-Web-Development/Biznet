@@ -1,7 +1,7 @@
 "use strict";
 import mongoose from 'mongoose';
 
-export default function search_query(query_input) {
+export default function search_query(query_input, option = undefined) {
     /*
     req.body: {
       name: 'Batidora',
@@ -83,7 +83,7 @@ export default function search_query(query_input) {
     if (query_input.selected_tags) {
         //change all elements inside array from string to number
         query_input.selected_tags = query_input.selected_tags.map(entry => +entry);
-        
+
         queryObj.tag_id = { $all: [...query_input.selected_tags] }
     }
 
@@ -121,7 +121,7 @@ export default function search_query(query_input) {
             sort = { price_discounted: 1 }
     }
 
-    return [
+    let pipeline = [
         {
             $addFields: {
                 listing: {
@@ -199,5 +199,26 @@ export default function search_query(query_input) {
             }
         },
         { $sort: sort }
-    ]
+    ];
+
+    if(option) {
+        try {
+            for(let [key, value] of Object.entries(option)) {
+                switch(key) {
+                    case 'sample':
+                        pipeline.push({ $sample: { size: value} });
+                        break;
+                    case 'skip':  // skip: [pageNumber, limitPerPage]
+                        pipeline.push( { $skip: (obj.key[0] - 1) * obj.key[1]});
+                        pipeline.push( { $limit: obj.key[1]});
+                        break;
+                }
+            }
+        }
+        catch (err){
+            return pipeline
+         }
+    }
+
+    return pipeline;
 }

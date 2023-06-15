@@ -46,7 +46,9 @@ html(lang=lang)
             let thumbnail_select = document.querySelectorAll('[data-thumbnail]');
             let thumbnail_target = document.querySelector('[data-thumbnail-target]');
 
-            thumbnail_select[0].classList.add('active')
+            if (thumbnail_select.length > 0) {
+                thumbnail_select[0].classList.add('active')
+            }
             
             thumbnail_select.forEach(thumbnail => {
                 thumbnail.addEventListener('click', (e) => {
