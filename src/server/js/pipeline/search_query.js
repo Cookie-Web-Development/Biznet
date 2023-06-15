@@ -18,6 +18,7 @@ export default function search_query(query_input) {
     */
     let queryObj = {}
     //id
+
     if (query_input.id) {
         queryObj._id = new mongoose.Types.ObjectId(query_input.id);
     }
@@ -80,9 +81,10 @@ export default function search_query(query_input) {
 
     //selected_tags
     if (query_input.selected_tags) {
-        console.log(typeof query_input.selected_tags)
+        //change all elements inside array from string to number
+        query_input.selected_tags = query_input.selected_tags.map(entry => +entry);
+        
         queryObj.tag_id = { $all: [...query_input.selected_tags] }
-        console.log(queryObj.tag_id)
     }
 
     //discount
