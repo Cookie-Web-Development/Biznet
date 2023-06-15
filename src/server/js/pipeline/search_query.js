@@ -80,7 +80,9 @@ export default function search_query(query_input) {
 
     //selected_tags
     if (query_input.selected_tags) {
-        queryObj.tag_id = { $all: [...+query_input.selected_tags] }
+        console.log(typeof query_input.selected_tags)
+        queryObj.tag_id = { $all: [...query_input.selected_tags] }
+        console.log(queryObj.tag_id)
     }
 
     //discount

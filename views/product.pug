@@ -8,27 +8,27 @@ html(lang=lang)
                 if ( !api_results )
                     p Nothig here bro
                 else
-                    if ( api_results.images.length > 1)
+                    if ( api_results.listing[0].images.length > 1)
                         div.thumbnail_display
-                            each image in api_results.images                                    
+                            each image in api_results.listing[0].images                                    
                                 img(class='thumbnail_image', data-thumbnail=image, src='/public/img/products-images/' + image)
                     div.image_display
-                        img(data-thumbnail-target, src='/public/img/products-images/' + api_results.images[0])
+                        img(data-thumbnail-target, src='/public/img/products-images/' + api_results.listing[0].images[0])
                     div.text_display
-                        p.text_container_header #{ api_results.category[lang] } / #{ api_results.brand }
+                        p.text_container_header #{ api_results.category_name[lang] } / #{ api_results.brand_name }
                         h3=api_results.name[lang]
                         //Pending add average rating
                         div.product_display_price_tag
-                            p.price_sell=api_results.format_price_discounted 
-                            if(api_results.discount_percent > 0)
+                            p.price_sell=api_results.listing[0].format_price_discounted 
+                            if(api_results.listing[0].discount_percent > 0)
                                 p.price_discount 
-                                    span.price_before #{api_results.format_price}
-                                    span.discount_percent #{Math.round(api_results.discount_percent * 100)}%
+                                    span.price_before #{api_results.listing[0].format_price}
+                                    span.discount_percent #{Math.round(api_results.listing[0].discount_percent * 100)}%
                         p.product_display_description=api_results.description[lang]
                         //Pending add product variations
                         ul.product_card_tags 
-                            each tag in api_results.tags[lang]
-                                li=tag
+                            each tag in api_results.tag_array
+                                li=tag.name[lang]
             section.same_brand
             section.similar_articles
             section.product_reviews

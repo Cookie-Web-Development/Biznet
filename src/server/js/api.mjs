@@ -165,15 +165,17 @@ let apiRoute = function (app) {
 
     app.route('/product/:id')
         .get(async (req, res) => {
-            //Declara una funcion para similares el cual usara los datos de session para busqueda inicial y en todo caso un fallback de {} con un sample al final. Se debe hacer aqui para que se pueeda utilizar tanto en el try como en el cattch y evitar codigo doble.
+            //Declara una funcion para "productos similares a..."" el cual usara los datos de session para busqueda inicial y en todo caso un fallback de {} con un sample al final. Se debe hacer aqui para que se pueeda utilizar tanto en el try como en el cattch y evitar codigo doble.
             try {
                 let lang = req.session.lang || 'es';
                 let product_id = req.params.id;
                 let result = await Products.aggregate(search_query({ id: product_id }));
 
                 result.forEach(item => { //price formatter
-                    item.format_price = item.price.toLocaleString('en-US', formatOptions);
-                    item.format_price_discounted = item.price_discounted.toLocaleString('en-US', formatOptions);
+                    item.listing.forEach(entry => {
+                        entry.format_price = entry.price.toLocaleString('en-US', formatOptions);
+                        entry.format_price_discounted = entry.price_discounted.toLocaleString('en-US', formatOptions);
+                    })
                 });
                 res.render('product', { api_results: result[0], lang, langData })
 
