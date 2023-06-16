@@ -458,7 +458,7 @@ html(lang=lang)
                         let text_header_anchor_brand = document.createElement('a');
                         let header_brand_encoded = encodeURIComponent(`${product.brand}`)
                         text_header_anchor_brand.setAttribute('href', `/catalog?brand=${header_brand_encoded}`)
-                        text_header_anchor_brand.textContent = `${product.brand}`;
+                        text_header_anchor_brand.textContent = `${product.brand_name}`;
 
                         text_header.appendChild(text_header_anchor_category);
                         text_header.appendChild(document.createTextNode(' / '));

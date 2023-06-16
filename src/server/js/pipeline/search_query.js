@@ -13,7 +13,9 @@ export default function search_query(query_input, option = undefined) {
       discount: 'true',
       featured: 'true',
       search_lang: 'es',
-      sort_option: "0-9"
+      sort_option: "0-9",
+      more_brand: [ product_id, brand_id ]
+      more_similar: [ product_id, result[0].brand_id, {category}, [...tags_id]]
     }
     */
     let queryObj = {}
@@ -100,10 +102,9 @@ export default function search_query(query_input, option = undefined) {
         }
     }
     //featured
-
     if (query_input.featured) {
         queryObj.featured = Boolean(query_input.featured)
-    }
+    };
 
     // sorting option
     let sort = {};
@@ -119,7 +120,30 @@ export default function search_query(query_input, option = undefined) {
             break;
         default:
             sort = { price_discounted: 1 }
+    };
+
+    /*##############################
+    similar query: Only used in /product/:id. Should not be used anywhere else for now
+    ##############################*/
+    //{ more_brand: [product_id, brand_id] }
+    if (query_input.more_brand) {
+        queryObj.$and = [
+            { _id: {$ne: new mongoose.Types.ObjectId(query_input.more_brand[0])} },
+            { brand_id: query_input.more_brand[1] }
+        ]
     }
+    //{ more_similar: [product_id, result[0].brand_id, category_id, [...tags_id]] }
+    if (query_input.more_similar) {
+        queryObj.$and = [
+            { _id: { $ne: new mongoose.Types.ObjectId(query_input.more_similar[0])} },
+            { brand_id: { $ne: query_input.more_similar[1]}} //avoid showing same items on main and more_brand
+        ]
+        queryObj.$and.push( { $or: [
+            { category_id: {$eq: query_input.more_similar[2] } },
+            { tag_id: { $elemMatch: {$in: [...query_input.more_similar[3] ] } } }
+        ] } );
+    }
+
 
     let pipeline = [
         {
@@ -186,6 +210,7 @@ export default function search_query(query_input, option = undefined) {
                 featured: 1,
                 category_name: "$category_name.name",
                 brand_name: "$brand_name.name",
+                tag_id: 1,
                 tag_array: {
                     $map: {
                         input: "$tag_collection",
@@ -201,14 +226,16 @@ export default function search_query(query_input, option = undefined) {
         { $sort: sort }
     ];
 
-    if(option) {
+
+    //display and sample options
+    if(option) { //only used in /product/:id route
         try {
             for(let [key, value] of Object.entries(option)) {
                 switch(key) {
-                    case 'sample':
+                    case 'sample': // { sample: value }
                         pipeline.push({ $sample: { size: value} });
                         break;
-                    case 'skip':  // skip: [pageNumber, limitPerPage]
+                    case 'skip':  // { skip: [pageNumber, limitPerPage] }
                         pipeline.push( { $skip: (obj.key[0] - 1) * obj.key[1]});
                         pipeline.push( { $limit: obj.key[1]});
                         break;

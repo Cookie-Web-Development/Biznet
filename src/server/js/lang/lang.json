@@ -125,7 +125,14 @@
                 "en": "Clear search fields",
                 "es": "Despejar campos de búsqueda"
             }
+        },
+        "similar_brand": {
+            "en": "More products from the same brand",
+            "es": "Más productos de la misma marca"
+        },
+        "similar_other": {
+            "en": "Similar products",
+            "es": "Otros productos similares"
         }
-        
     }
 }

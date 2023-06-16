@@ -170,13 +170,24 @@ let apiRoute = function (app) {
                 let lang = req.session.lang || 'es';
                 let product_id = req.params.id;
                 let result = await Products.aggregate(search_query({ id: product_id }));
+                let more_brand = await Products.aggregate(search_query({ more_brand: [product_id, result[0].brand_id]}, { sample: 8}));
+                let more_similar = await Products.aggregate(search_query({ more_similar: [ product_id, result[0].brand_id, result[0].category_id, [...result[0].tag_id] ] }, { sample: 8 } ) );
 
                 priceFormatter(result)
 
-                res.render('product', { api_results: result[0], lang, langData })
+                if(more_brand.length >= 1) {
+                    priceFormatter(more_brand)
+                }
+                if(more_similar.length >= 1) {
+                    priceFormatter(more_similar)
+                }
+
+                res.render('product', { api_results: result[0], similar: { by_brand: more_brand, by_other: more_similar}, lang, langData })
+                //res.json({similar: {by_brand: more_brand, by_other: more_similar}})
 
             } catch (err) {
                 let lang = req.session.lang || 'es';
+                console.log(err)
                 res.render('product', { api_results: null, lang, langData })
             }
         })
