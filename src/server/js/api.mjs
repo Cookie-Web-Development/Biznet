@@ -207,7 +207,7 @@ DEV ROUTES
 #############*/
 
     app.route('/test').get(async (req, res) => {
-        res.send('aloha')
+        res.send('testerino')
         //res.json(result)
     });
 

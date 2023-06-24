@@ -29,50 +29,13 @@ html(lang=lang)
                         ul.product_card_tags 
                             each tag in api_results.tag_array
                                 li=tag.name[lang]
+            - let api_obj_argument;
             if(similar.by_brand.length > 0)
-                hr.section_divider
-                section.same_brand
-                    h2=langData.main.similar_brand[lang]
-                    div.similar_container 
-                        each item in similar.by_brand 
-                            article(data-product-card='small')
-                                div.image_container
-                                    img(src='/public/img/products-images/' + item.listing[0].images[0])
-                                div.text_container 
-                                    p.text_container_header #{item.category_name[lang]} / #{item.brand_name}
-                                    h3=item.name[lang]
-                                    div.product_card_price_tag
-                                        p.price_sell=item.listing[0].format_price_discounted
-                                        if(item.listing[0].discount_percent > 0)
-                                            p.price_discount 
-                                                span.price_before #{item.listing[0].format_price}
-                                                span.discount_percent #{Math.round(item.listing[0].discount_percent * 100)}%
-                                    p.product_card_description=item.description[lang]
-                                    ul.product_card_tags 
-                                        each tag in item.tag_array 
-                                            li=tag.name[lang]
+                - api_obj_argument = {header_section: 'similar_brand', api_response: similar.by_brand}
+                include include/drag_display.pug
             if(similar.by_other.length > 0)
-                hr.section_divider
-                section.similar_articles
-                    h2=langData.main.similar_other[lang]
-                    div.similar_container 
-                        each item in similar.by_other 
-                            article(data-product-card='small')
-                                div.image_container
-                                    img(src='/public/img/products-images/' + item.listing[0].images[0])
-                                div.text_container 
-                                    p.text_container_header #{item.category_name[lang]} / #{item.brand_name}
-                                    h3=item.name[lang]
-                                    div.product_card_price_tag
-                                        p.price_sell=item.listing[0].format_price_discounted
-                                        if(item.listing[0].discount_percent > 0)
-                                            p.price_discount 
-                                                span.price_before #{item.listing[0].format_price}
-                                                span.discount_percent #{Math.round(item.listing[0].discount_percent * 100)}%
-                                    p.product_card_description=item.description[lang]
-                                    ul.product_card_tags 
-                                        each tag in item.tag_array 
-                                            li=tag.name[lang]
+                - api_obj_argument = {header_section: 'similar_other', api_response: similar.by_other}
+                include include/drag_display.pug
             section.product_reviews
                 //each review in api_results
                 //// ul

@@ -1,0 +1,30 @@
+//- api_obj_argument = {header_section: 'similar_brand', api_response: similar.by_brand}
+hr.section_divider
+section(class= `${api_obj_argument.header_section}`)
+    h2=langData.main[api_obj_argument.header_section][lang]
+    div.similar_container 
+        div(class='drag_display_btn drag_display_prev', data-drag-btn=`${api_obj_argument.header_section}`, data-function='previous')
+            i(class="fa-solid fa-chevron-left fa-xl")
+        div.drag_display_container
+            div(data-drag-display=`${api_obj_argument.header_section}`)
+                each item in api_obj_argument.api_response 
+                    article(data-product-card='small')
+                        div.image_container
+                            img(src='/public/img/products-images/' + item.listing[0].images[0])
+                        div.text_container 
+                            p.text_container_header #{item.category_name[lang]} / #{item.brand_name}
+                            h3=item.name[lang]
+                            div.product_card_price_tag
+                                p.price_sell=item.listing[0].format_price_discounted
+                                if(item.listing[0].discount_percent > 0)
+                                    p.price_discount 
+                                        span.price_before #{item.listing[0].format_price}
+                                        span.discount_percent #{Math.round(item.listing[0].discount_percent * 100)}%
+                            p.product_card_description=item.description[lang]
+                            ul.product_card_tags 
+                                each tag in item.tag_array 
+                                    li=tag.name[lang]
+        div(class='drag_display_btn drag_display_next', data-drag-btn=`${api_obj_argument.header_section}`, data-function='next')
+            i(class="fa-solid fa-chevron-right fa-xl")
+        div.drag_indicator
+        script(src="/public/js/drag_display.js" defer)

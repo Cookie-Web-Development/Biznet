@@ -1,4 +1,4 @@
-.product_display, .similar_container {
+.product_display {
     /*DEV ONLY*/
     width: 1000px;
     height: 350px;
@@ -71,17 +71,4 @@ text_display
     min-height: 300px;
     line-height: 2rem;
     /*DEV ONLY*/
-}
-
-/*###############
-similar_container
-#################*/
-.similar_container {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: 1fr;
-    overflow: hidden;
-    padding: 5px;
-    /*DEV ONLY*/
-    border: red solid 1px;
 }

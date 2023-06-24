@@ -26,6 +26,8 @@ html(lang=lang)
                                         li=tag 
                 else
                     section#product_carousel
+                        div(id='carousel_prev' class='carousel_btn')
+                            i(class="fa-solid fa-chevron-left fa-xl")
                         each item in featured_list  
                             article(data-product-card='medium' data-carousel)
                                 div.image_container
@@ -45,8 +47,6 @@ html(lang=lang)
                                             li=tag.name[lang] 
                         div(id='carousel_next' class='carousel_btn')
                             i(class="fa-solid fa-chevron-right fa-xl")
-                        div(id='carousel_prev' class='carousel_btn')
-                            i(class="fa-solid fa-chevron-left fa-xl")
                         div#carousel_dot_container
                             each item in featured_list 
                                 div.carousel_dot
