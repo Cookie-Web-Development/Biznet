@@ -15,7 +15,8 @@ drag_btn.forEach(button => {
     //Slider indicator
     let slider_indicator = document.querySelector(`[data-drag-indicator=${button.dataset.dragBtn}]`);
 
-    let indicator_width = ((visible_window / max_distance_travel) * 100).toFixed(2);  
+    let indicator_width = ((visible_window / max_distance_travel) * 100);  
+    slider_indicator.parentNode.classList.add('active')
     slider_indicator.style.width = `${indicator_width}%`;
 
 
@@ -37,35 +38,27 @@ function draggingFunction (target, button, slider, distance_to_travel, max_dista
     let distance_with_gap = distance_to_travel + (gap_between / 4);
    
     let slider_current_x = parseFloat(slider.style.left) || 0;
-    let slider_travel = parseFloat(slider.style.width), slider_step;
-
-    //TAKING A BREAK NOTE: Lets make use of left and percentage!!
+    let slider_travel = parseFloat(slider.style.width), slider_steps = 1.5;
 
     switch(button.dataset.function) {
         case "next":
             //distance validator: checks if there is enough. Else, set to distance_to_travel - max_distance
-            current_x - (distance_with_gap * 2) < -max_distance ? 
-
-            travel = distance_with_gap - max_distance - (gap_between / 2) :
-
-            travel = current_x - distance_with_gap ;
+            current_x - (distance_with_gap * 2) < -max_distance 
+            ? (travel = distance_with_gap - max_distance - (gap_between / 2), 
+            slider_travel = 100 - parseFloat(slider.style.width))
+            : (travel = current_x - distance_with_gap,
+            slider_travel = slider_current_x + parseFloat(slider.style.width));
 
             steps = -100;
-
             break;
         case "previous":
             //distance validator: checks if there is enough. Else, set to 0. No idea why this has to be 1.9 but it works as is.
-            current_x + (distance_with_gap * 1.9) > 0 ?
-
-            travel = 0 + (gap_between / 4) :
-
-            travel = current_x + distance_with_gap ;
+            current_x + (distance_with_gap * 1.9) > 0 
+            ? (travel = 0 + (gap_between / 4), slider_travel = 0)
+            : (travel = current_x + distance_with_gap, slider_travel = slider_current_x -(parseFloat(slider.style.width)) );
 
             steps = 100;
-
-            //slider_travel = -(parseFloat(getComputedStyle(slider).width));
-            //slider_step = -50;
-
+            slider_steps = -slider_steps;
             break;
         default: 
             return;
@@ -80,12 +73,16 @@ function draggingFunction (target, button, slider, distance_to_travel, max_dista
         let transform_value = `translateX(${current_x}px)`;
         target.style.transform = transform_value;        
 
+        slider_current_x = slider_current_x + slider_steps;
+        slider.style.left = `${slider_current_x}%`
+
         if(progress > 0) {
             requestAnimationFrame(animation)
         } else {
             transform_value = `translateX(${travel}px)`;
             target.style.transform = transform_value;
 
+            slider.style.left = `${slider_travel}%`
         }
     }
 
