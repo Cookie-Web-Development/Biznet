@@ -50,30 +50,10 @@ html(lang=lang)
                         div#carousel_dot_container
                             each item in featured_list 
                                 div.carousel_dot
+            - let api_obj_argument;
             if (discount_list.length > 0)
-                hr.section_divider
-                h2=langData.main.deals_day[lang]
-                section#product_search_section
-                    div(product_display_container)
-                        div(id='product_result')
-                            each item in discount_list
-                                article(data-product-card='small')
-                                    div.image_container
-                                            img(src='/public/img/products-images/' + item.listing[0].images[0])
-                                    div.text_container   
-                                        p.text_container_header #{item.category_name[lang]} / #{item.brand_name}
-                                        h3=item.name[lang]
-                                        div.product_card_price_tag
-                                            p.price_sell=item.listing[0].format_price_discounted
-                                            if(item.listing[0].discount_percent > 0)
-                                                p.price_discount
-                                                    span.price_before #{item.listing[0].format_price} 
-                                                    span.discount_percent #{Math.round(item.listing[0].discount_percent * 100)}%
-                                        p.product_card_description=item.description[lang]
-                                        ul.product_card_tags
-                                            each tag in item.tag_array
-                                                li=tag.name[lang]
-                        div(id='pagination', data-pagination-type='mini')
+                - api_obj_argument = {header_section: 'deals_day', api_response: discount_list}
+                include include/drag_display.pug
         footer
 
         script.

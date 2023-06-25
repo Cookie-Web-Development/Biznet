@@ -26,5 +26,6 @@ section(class= `${api_obj_argument.header_section}`)
                                     li=tag.name[lang]
         div(class='drag_display_btn drag_display_next', data-drag-btn=`${api_obj_argument.header_section}`, data-function='next')
             i(class="fa-solid fa-chevron-right fa-xl")
-        div.drag_indicator
+        div(class='drag_indicator_container')
+            div(class='drag_indicator_slider', data-drag-indicator=`${api_obj_argument.header_section}`)
         script(src="/public/js/drag_display.js" defer)

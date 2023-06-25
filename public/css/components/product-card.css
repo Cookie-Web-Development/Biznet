@@ -113,7 +113,7 @@ similar_container
 .drag_display_container {
     --display_limit: 5;
     width: calc((var(--card-width-small) + 30px) * var(--display_limit));
-    height: calc(var(--card-height-small) + 20px);
+    height: calc(var(--card-height-small) + 25px);
     position: relative;
     overflow: hidden;
     /*DEV ONLY*/
@@ -126,8 +126,8 @@ similar_container
     gap: 32px;
     position: absolute;
     inset: 0;
-    /*DEV ONLY*/
     padding: 5px 0 0 5px;
+    /*DEV ONLY*/
     /*transform: translateX(-150px);*/
 }
 
@@ -146,9 +146,6 @@ similar_container
     top: 50%;
     transform: translateY(-50%);
     z-index: 10;
-    /*ANIMATION*/
-    animation-duration: 500ms;
-    animation-timing-function: linear;
     /*DEV ONLY*/
 }
 
@@ -160,7 +157,7 @@ similar_container
 
 .drag_display_btn.active.disabled {
     pointer-events: none;
-    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    color: white;
 }
 
 
@@ -178,6 +175,26 @@ similar_container
     right: 0%;
     transform: translateX(120%);
     /*DEV ONLY*/
+}
+
+.drag_indicator_container, .drag_indicator_slider {
+    position: absolute;
+    bottom: 0;
+    height: 10px;
+    border-radius: 15px;
+}
+
+.drag_indicator_container {
+    background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
+    width: 100%;
+    /*DEV ONLY*/
+}
+
+.drag_indicator_slider {
+    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    /*DEV ONLY*/
+    /*width: 1px;
+    transform: translateX(199%);*/
 }
 
 
