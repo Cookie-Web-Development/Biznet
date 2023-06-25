@@ -207,9 +207,9 @@ DEV ROUTES
 #############*/
 
     app.route('/test').get(async (req, res) => {
-        //let db_match = await Products.aggregate([{ $match: {}}, {$sort: { brand_id: 1}}])
-        res.send('testerino')
-        //res.json(db_match)
+        let db_match = await Products.aggregate([{ $match: {}}, {$sort: { brand_id: 1}}])
+        //res.send('testerino')
+        res.json(db_match)
     });
 
     app.route('/test_db').get(async (req, res) => {
