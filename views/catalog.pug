@@ -44,7 +44,7 @@ html(lang=lang)
                         case 'name': 
                             document.querySelector(`input[name='${key}']`).value = search_query[key]
                             break;
-                        case 'sort_option':
+                        //case 'sort_option':
                         case 'category': 
                         case 'brand': 
                             let selectElem = document.querySelector(`select[name='${key}']`);
@@ -514,6 +514,8 @@ html(lang=lang)
                             break;
                         case 'selected_tags':
                             (data[key]) ? data[key].push(value) : data[key] = [value];
+                            break;
+                        case 'sort_option': //SORT_OPTION DISABLED UNTIL SEARCH_QUERY.JS FIXED
                             break;
                         default: 
                             (value != "") ? data[key] = value : undefined;

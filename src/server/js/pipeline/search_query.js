@@ -106,11 +106,11 @@ export default function search_query(query_input, option = undefined) {
         queryObj.featured = Boolean(query_input.featured)
     };
 
-    // sorting option
+    // sorting option NEED FIIXING!
     let sort = {};
     switch (query_input.sort_option) {
         case '9-0':
-            sort = { price_discounted: -1 }
+            sort = { "listing[0].price_discounted": -1 }
             break;
         case 'a-z':
             sort = { name: 1 }
@@ -119,7 +119,7 @@ export default function search_query(query_input, option = undefined) {
             sort = { name: -1 }
             break;
         default:
-            sort = { price_discounted: 1 }
+            sort = { "listing[0].price_discounted": 1 }
     };
 
     /*##############################

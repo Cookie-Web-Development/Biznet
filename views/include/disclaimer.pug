@@ -5,25 +5,36 @@ dialog(id='disclaimer_modal', data-disclaimer-lang = disclaimer_lang)
             li(class='button', data-disclaimer-select='es') Español 
             li(class='button', data-disclaimer-select='en') English
     section(class='disclaimer', data-disclaimer='es')
-        header(class='disclaimer_title') Advertencia
+        header(class='disclaimer_title bold') Advertencia
         p 
             | El sitio web que usted está visitando es un concepto de prueba codificado por 
             a(class='anchor_inline', href='https://engineercookie.github.io/my-portfolio/', target='_blank')
                 i(class='fa-brands fa-github')
                 span EngineerCookie
             |  y utilizado únicamente con fines de demostración. 
-        p Es importante recalcarles que ninguno de los productos encontrados en este sitio web es real. Tampoco podrá realizar ninguna compra o transacción. Toda información encontrada en este sitio, incluyendo detalles de productos, precios y disponibilidad, es ficticia y no representa productos ni servicios reales. 
-        p También se advierte no utilizar ninguna información personal o sensible. Esto incluye, pero no se limita a, descripción personal, credenciales de usuarios existentes, información de tarjetas de crédito y direcciones. 
+            span(class='all_caps warning_red bold') ¡Aún se encuentra en desarrollo!
+        p Es importante recalcarles que 
+            span(class='bold') ninguno de los productos encontrados en este sitio web es real. 
+            | Tampoco podrá realizar ninguna compra o transacción. Toda información encontrada en este sitio, incluyendo detalles de productos, precios y disponibilidad, es ficticia y no representa productos ni servicios reales. 
+        p También se advierte 
+            span(class='bold') no utilizar ninguna información personal o sensible. 
+            | Esto incluye, pero no se limita a, descripción personal, credenciales de usuarios existentes, información de tarjetas de crédito y direcciones. 
         p Al navegar este sitio web, usted reconoce y acepta el uso demostrativo de esta página, y se abstendrá de revelar información personal o sensible. 
         p Muchas gracias por su comprensión y cooperación.
     section(class='disclaimer', data-disclaimer='en')
-        header(class='disclaimer_title') Disclaimer
+        header(class='disclaimer_title bold') Disclaimer
         p The website you are currently browsing is a proof of concept, solely used as a demostration, coded by 
             a(class='anchor_inline', href='https://engineercookie.github.io/my-portfolio/', target='_blank')
                 i(class='fa-brands fa-github')
-                span EngineerCookie. 
-        p It is important to note that none of the products listed on this website are real, and no actual transactions or sales can be made. Please be aware that any information provided, including product details, pricing, and availability, is entirely fictional and does not represent any real-world products or services.
-        p Also, it is strongly advised not to enter any personal or sensitive information. This includes but is not limited to personal details, users credentials, credit card information, and addresses.
+                span EngineerCookie
+            | . 
+            span(class='all_caps warning_red bold') It's still in development!
+        p It is important to note that 
+            span(class='bold') none of the products listed on this website are real
+            | , and no actual transactions or sales can be made. Please be aware that any information provided, including product details, pricing, and availability, is entirely fictional and does not represent any real-world products or services.
+        p Also, it is strongly advised 
+            span(class='bold') not to enter any personal or sensitive information.
+            |  This includes but is not limited to personal details, users credentials, credit card information, and addresses.
         p By using this website, you acknowledge and agree that it is for demonstration purposes only, and you should refrain from disclosing any personal or sensitive information.
         p Thank you for your understanding and cooperation.
     button(class='button btn_modal', type='button', id='disclaimer_close')

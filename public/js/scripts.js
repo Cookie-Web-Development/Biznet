@@ -49,3 +49,21 @@ document.addEventListener('click', function (event) {
         }
     }
 });   
+
+/*DEV ONLY*/
+//DISABLES BUTTONS
+let btn_disabled = Array.from(document.querySelectorAll('button.disabled', 'select.disabled'));
+
+btn_disabled.forEach(btn => {
+    btn.setAttribute('type', 'button')
+
+})
+
+//DISABLES FORMS
+let form_disabled = Array.from(document.querySelectorAll('form.disabled'));
+
+form_disabled.forEach(form => {
+    form.addEventListener('submit', (event) => {
+        event.preventDefault()
+    })
+})

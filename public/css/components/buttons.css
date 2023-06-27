@@ -16,7 +16,6 @@
 .btn_inline {
     height: min-content;
     width: 100%;
-    background-color: green;
 }
 
 .button_pagination {
@@ -40,4 +39,14 @@
 
 .button_forgot_password:hover {
     cursor: pointer;
+}
+
+.lang_selector {
+    width: auto;
+    height: auto;
+    align-self: flex-end;
+}
+
+.lang_selector > button {
+    padding: 1rem;
 }

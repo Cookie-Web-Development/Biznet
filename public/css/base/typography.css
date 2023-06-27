@@ -16,6 +16,18 @@
     text-decoration: underline;
 }
 
+.bold {
+    font-weight: var(--fw-b);
+}
+
+.all_caps {
+    text-transform: uppercase;
+}
+
+.warning_red {
+    color: red;
+}
+
 /*########
 DISCLAIMER
 ##########*/

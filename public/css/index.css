@@ -42,3 +42,9 @@ CSS rules that applies onto elements such as [body] and modifies the position or
 THEME:
 CSS rules that affect theme changes such as [dark-theme]
 */
+
+/*DEV ONLY*/
+.disabled, .disabled:hover {
+    user-select: none;
+    cursor: not-allowed;
+}

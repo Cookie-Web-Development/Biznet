@@ -148,12 +148,6 @@ similar_container
     cursor: pointer;
 }
 
-.drag_display_btn.active.disabled {
-    pointer-events: none;
-    color: white;
-}
-
-
 .drag_display_btn:hover {
     scale: 1.1;
 }
