@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;500;900&display=swap');
 
-:root { 
+:root, ::backdrop { 
 /*VARIABLES*/
     /*TEXT*/
     --font-family: 'Roboto', sans-serif;
@@ -45,6 +45,10 @@
     --color-text-main-s: 100%;
     --color-text-dark-l: 10%;
     --color-text-light-l: 100%;
+    /*## opacity ##*/
+    --color-opacity-high: 0.8;
+    --color-opacity-medium: 0.5;
+    --color-opacity-light: 0.3;
     /*SPACING*/
 }
 

@@ -44,6 +44,8 @@ html(lang=lang)
             dialog#image_display_modal
                 img#modal_image
         footer
+        - let disclaimer_lang = lang
+        include include/disclaimer.pug
 
         script.
             //## Thumbnail selector

@@ -11,6 +11,8 @@ html(lang=lang)
                     div(id='product_result')
                     div(id='pagination', data-pagination-type='normal')
         footer 
+        - let disclaimer_lang = lang
+        include include/disclaimer.pug
 
         script.
             /*### Global_variables ###*/

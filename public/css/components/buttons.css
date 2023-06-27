@@ -16,6 +16,7 @@
 .btn_inline {
     height: min-content;
     width: 100%;
+    background-color: green;
 }
 
 .button_pagination {

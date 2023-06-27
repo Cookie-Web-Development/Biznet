@@ -12,6 +12,34 @@
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
 }
 
+.anchor_inline {
+    text-decoration: underline;
+}
+
+/*########
+DISCLAIMER
+##########*/
+[data-disclaimer-select] {
+    font-size: var(--fs-body);
+}
+
+.disclaimer > header {
+    font-size: var(--fs-title);
+    text-align: center;
+    /*The following code is here cuz I treat them as "line-height"*/
+    padding: 1rem 0;
+}
+
+.disclaimer > p {
+    font-size:  var(--fs-body);
+    text-align: justify;
+    padding-bottom: 1rem;
+}
+
+#disclaimer_close {
+    font-size: var(--fs-body);
+}
+
 /*##########
 INPUT BOXES
 ############*/

@@ -65,6 +65,8 @@ html(lang=lang)
                 - api_obj_argument = {header_section: 'deals_day', api_response: discount_list}
                 include include/drag_display.pug
         footer
+        - let disclaimer_lang = lang
+        include include/disclaimer.pug
 
         script.
             /*###########

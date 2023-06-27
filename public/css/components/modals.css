@@ -1,8 +1,6 @@
-#login_modal {
-    height: 28rem;
-    width: 38rem;
+#login_modal, #disclaimer_modal {
     padding: 1.5rem 2rem;
-    background-color: hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), 0.7);
+    background-color: hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), var(--color-opacity-high));
     backdrop-filter: blur(6px);
     border: none;
     border-radius: 15px;
@@ -11,6 +9,20 @@
     -moz-box-shadow: 0px 0px 40px 20px rgba(89, 89, 89, 0.75);
     position: relative;
 }
+
+#login_modal {
+    height: 28rem;
+    width: 38rem;
+}
+
+#disclaimer_modal {
+    height: min-content;
+    width: 60rem;
+}
+
+/*#########
+LOGIN MODAL
+###########*/
 
 .button_modal_close {
     position: absolute;
@@ -47,3 +59,48 @@
 .show_password_icon.active {
     display: inline;
 }
+
+
+/*#############
+DISCLAIMER MODAL
+################*/
+#disclaimer_modal::backdrop {
+    background-color: hsla(var(--color-grey-h), var(--color-grey-s), var(--color-main-l), var(--color-opacity-high));
+}
+
+.disclaimer_language > ul {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+[data-disclaimer-select] {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+[data-disclaimer-select].active {
+    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
+}
+
+.disclaimer {
+    display: none;
+    padding: 0 1rem;
+}
+
+.disclaimer.active {
+    display: block;
+}
+
+#disclaimer_close {
+    margin-top: 1.5rem;
+    text-align: center;
+}
+
+/*DEV MODE*/
