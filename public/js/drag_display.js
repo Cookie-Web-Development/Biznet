@@ -1,12 +1,12 @@
-//## Drag Display
+/*DRAG DISPLAY*/
 let drag_btn = Array.from(document.querySelectorAll('[data-drag-btn]'));
 let drag_active = false; //touch-click-drag: ensures that the dragging event fires and stops when required
+
 
 drag_btn.forEach(button => {
     let display_target = document.querySelector(`[data-drag-display=${button.dataset.dragBtn}]`);
     let max_distance_travel = display_target.scrollWidth;
     let visible_window = display_target.clientWidth;
-    
     //return if not enough items present.
     if (max_distance_travel <= visible_window) { return };
 

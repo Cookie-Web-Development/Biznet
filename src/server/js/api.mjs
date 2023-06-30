@@ -170,19 +170,30 @@ let apiRoute = function (app) {
                 let lang = req.session.lang || 'es';
                 let product_id = req.params.id;
                 let result = await Products.aggregate(search_query({ id: product_id }));
-                let more_brand = await Products.aggregate(search_query({ more_brand: [product_id, result[0].brand_id]}, { sample: 8}));
-                let more_similar = await Products.aggregate(search_query({ more_similar: [ product_id, result[0].brand_id, result[0].category_id, [...result[0].tag_id] ] }, { sample: 8 } ) );
+                //let more_brand = await Products.aggregate(search_query({ more_brand: [product_id, result[0].brand_id]}, { sample: 8}));
+                //let more_similar = await Products.aggregate(search_query({ more_similar: [ product_id, result[0].brand_id, result[0].category_id, [...result[0].tag_id] ] }, { sample: 8 } ) );
+                
+                let similar = {
+                    by_brand: await Products.aggregate(search_query({ more_brand: [product_id, result[0].brand_id]}, { sample: 8})),
+                    by_other: await Products.aggregate(search_query({ more_similar: [ product_id, result[0].brand_id, result[0].category_id, [...result[0].tag_id] ] }, { sample: 8 } ) )
+                }
+
 
                 priceFormatter(result)
 
-                if(more_brand.length >= 1) {
-                    priceFormatter(more_brand)
+                if(similar.by_brand.length >= 1) {
+                    priceFormatter(similar.by_brand)
                 }
-                if(more_similar.length >= 1) {
-                    priceFormatter(more_similar)
+                if(similar.by_other.length >= 1) {
+                    priceFormatter(similar.by_other)
                 }
 
-                res.render('product', { api_results: result[0], similar: { by_brand: more_brand, by_other: more_similar}, lang, langData })
+                if(similar.by_brand.length == 0 || similar.by_other.length == 0) {
+                    similar.more_products = await Products.aggregate(search_query({ more_product: product_id}, { sample: 10 }))
+                    priceFormatter(similar.more_products)
+                }
+
+                res.render('product', { api_results: result[0], similar, lang, langData })
                 //res.json({similar: {by_brand: more_brand, by_other: more_similar}})
 
             } catch (err) {

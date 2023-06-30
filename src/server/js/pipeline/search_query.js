@@ -144,6 +144,10 @@ export default function search_query(query_input, option = undefined) {
         ] } );
     }
 
+    //{ more_product: product_id }
+    if (query_input.more_product) {
+        queryObj._id = { $ne: query_input.more_product}
+    }
 
     let pipeline = [
         {

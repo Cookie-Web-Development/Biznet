@@ -133,6 +133,10 @@
         "similar_other": {
             "en": "Similar products",
             "es": "Otros productos similares"
+        },
+        "more_products": {
+            "en": "Other products that might interest you",
+            "es": "Otros productos que te podrían interesar"
         }
     }
 }

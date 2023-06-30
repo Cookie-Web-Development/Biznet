@@ -36,6 +36,9 @@ html(lang=lang)
             if(similar.by_other.length > 0)
                 - api_obj_argument = {header_section: 'similar_other', api_response: similar.by_other}
                 include include/drag_display.pug
+            if(similar.by_brand.length == 0 || similar.by_other.length == 0)
+                - api_obj_argument = {header_section: 'more_products', api_response: similar.more_products}
+                include include/drag_display.pug
             section.product_reviews
                 //each review in api_results
                 //// ul
@@ -47,37 +50,7 @@ html(lang=lang)
         - let disclaimer_lang = lang
         include include/disclaimer.pug
 
-        script.
-            //## Thumbnail selector
-            let image_route = '/public/img/products-images/'
-            let thumbnail_select = document.querySelectorAll('[data-thumbnail]');
-            let thumbnail_target = document.querySelector('[data-thumbnail-target]');
+        script(src='/public/js/product_image.js' defer)
+        script(src='/public/js/drag_display.js' defer)
 
-            if (thumbnail_select.length > 0) {
-                thumbnail_select[0].classList.add('active')
-            }
-            
-            thumbnail_select.forEach(thumbnail => {
-                thumbnail.addEventListener('click', (e) => {
-                    thumbnail_target.setAttribute('src', `${image_route}${e.target.dataset.thumbnail}`);
-                    thumbnail_select.forEach(select => {
-                        select.classList.remove('active')
-                    })
-                    e.target.classList.add('active')
-                })
-            });
-
-            //## Image Modal
-            let image_display_modal = document.getElementById('image_display_modal');
-            let modal_image = document.getElementById('modal_image');
-
-            thumbnail_target.addEventListener('click', (e) => {
-                modal_image.setAttribute('src', `${e.target.src}`);
-                image_display_modal.showModal();
-            })
-           
-           // close modal when clicking anywhere
-           image_display_modal.addEventListener('click', () => {
-                image_display_modal.close()
-           })
            
