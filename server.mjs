@@ -6,7 +6,7 @@ import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 import http from 'http';
 import dotenv from 'dotenv';
-import apiRoute from './src/server/js/api.mjs';
+import apiRoute from './src/server/api.mjs';
 import bodyParser from 'body-parser';
 
 const app = express();

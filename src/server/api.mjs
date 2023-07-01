@@ -15,11 +15,11 @@ import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
 
 /*DEV MODE START: DELETE AFTER USE*/
-import { product_import } from '../../../devTool/product_import.js';
-import { devBrand } from '../../../devTool/devPipeline/devBrand.js';
-import { devCategory } from '../../../devTool/devPipeline/devCategory.js';
-import { devTag } from '../../../devTool/devPipeline/devTag.js';
-import { product_update } from '../../../devTool/product_update.js'
+import { product_import } from '../../devTool/product_import.js';
+import { devBrand } from '../../devTool/devPipeline/devBrand.js';
+import { devCategory } from '../../devTool/devPipeline/devCategory.js';
+import { devTag } from '../../devTool/devPipeline/devTag.js';
+import { product_update } from '../../devTool/product_update.js'
 
 
 
@@ -219,8 +219,8 @@ DEV ROUTES
 
     app.route('/test').get(async (req, res) => {
         let db_match = await Products.aggregate([{ $match: {}}, {$sort: { brand_id: 1}}])
-        //res.send('testerino')
-        res.json(db_match)
+        res.send('testerino')
+        //res.json(db_match)
     });
 
     app.route('/test_db').get(async (req, res) => {

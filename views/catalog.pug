@@ -15,8 +15,13 @@ html(lang=lang)
         include include/disclaimer.pug
 
         script.
-            /*### Global_variables ###*/
             let lang = !{JSON.stringify(lang)};
+            let search_fields = !{JSON.stringify(search_fields)};
+            let quick_query = !{JSON.stringify(quick_query)};
+            let api_results;
+            /*
+            //### Global_variables ###
+            let lang = !{JSON.stringify(lang)}; **
             let debounce_delay = 500; //ms
             let eventDispatcherCheck = false; //helps debounce when events are fired multiple times
             let eventAPI = 'sendToAPI'; //Custom event for API Endpoint
@@ -24,13 +29,17 @@ html(lang=lang)
             //Session_variables: this is to save current session values such as language, search values, pagination page, etc
 
             let search_query, save_session = true; //save_session es para evitar guardar quick_querry en search_session storage
+
             //Checks if applying either quick_query or search_session
             if (Object.keys(!{JSON.stringify(quick_query)}).length >= 1) {
+                
                 search_query = !{JSON.stringify(quick_query)};
                 save_session = false;
+
                 if(JSON.parse(sessionStorage.getItem('search_session')).sort_option) {
                     search_query.sort_option = JSON.parse(sessionStorage.getItem('search_session')).sort_option
                 };
+
                 if(search_query.selected_tags){
                     search_query.selected_tags = [search_query.selected_tags]
                 }
@@ -59,7 +68,7 @@ html(lang=lang)
                 }
             }
 
-            /*### PRICE RANGE ###*/
+            //### PRICE RANGE ###
             let min_slider = document.getElementById('min_range_slider');
             let max_slider = document.getElementById('max_range_slider');
             let price_range_display = document.getElementById('price_range_display');
@@ -100,7 +109,7 @@ html(lang=lang)
                 price_range_display.textContent = `$ ${minRange} - $ ${maxRange}`
             };  
 
-            /*### TAGS FILTER ###*/
+            //### TAGS FILTER ###
             let tags_db = !{JSON.stringify(search_fields.tags)};
             let tags_select_container = document.getElementById('selected_tags');
             let tags_dropdown = document.getElementById('tags_dropdown');
@@ -147,7 +156,7 @@ html(lang=lang)
                 let target = tags_dropdown.selectedOptions[0]
                 if(target.dataset.tag) {
 
-                    /*Arrays updater*/
+                    //Arrays updater
                     unselectedTags = unselectedTags.filter(tag => tag.tag_id != target.dataset.tag);
 
                     tags_selected = [...tags_selected, ...tags_db.filter(tag =>tag.tag_id == target.dataset.tag)]
@@ -194,11 +203,11 @@ html(lang=lang)
                 let dropdown_children = Array.from(tags_dropdown.querySelectorAll('[data-tag]'));
                 let tag_select_children = Array.from(tags_select_container.children);
 
-                /*Elements remover*/
+                //Elements remover
                 dropdown_children.forEach(child => { child.remove() });
                 tag_select_children.forEach(child => { child.remove() });
 
-                /*Elements creator*/
+                //Elements creator
                 if(unselectedTags.length > 0){
 
                     unselectedTags.forEach(tag_unselected => {
@@ -235,7 +244,7 @@ html(lang=lang)
 
             };
 
-            /*### RESET SEARCH BUTTON ###*/
+            //### RESET SEARCH BUTTON ###
             let resetBtn = document.getElementById('search_field_reset')
             
             resetBtn.addEventListener('click', () => {
@@ -266,7 +275,7 @@ html(lang=lang)
                             console.log('something wrong with resetBtn')
                     };
 
-                    /*API event Trigger*/
+                    //API event Trigger
                     if(eventDispatcherCheck) { //prevents repeated fire of the dispatch
                         return;
                     } else {
@@ -276,7 +285,7 @@ html(lang=lang)
                 });
             });
 
-            /*### DISPLAY RESULTS ###*/
+            //### DISPLAY RESULTS ###
             let results_container = document.getElementById('product_result');
             let results_pagination = document.getElementById('pagination');
             let item_per_page = 8;
@@ -292,198 +301,199 @@ html(lang=lang)
                 if(!results_arr.length) {
                     let result_text = document.createElement('p');
                     result_text.textContent = 'Nothing here'
-                    results_container.appendChild(result_text)
-                } else { 
-                    //Pagination
-                    let start_index = (active_page - 1) * item_per_page;
-                    let end_index = start_index + item_per_page;
+                    results_container.appendChild(result_text);
+                    return;
+                } 
+                
+                //Pagination
+                let start_index = (active_page - 1) * item_per_page;
+                let end_index = start_index + item_per_page;
 
-                    let active_catalog_page = results_arr.slice(start_index, end_index);
+                let active_catalog_page = results_arr.slice(start_index, end_index);
 
-                    if (results_arr.length > item_per_page) { //create pages UI
-                        let total_pages = Math.ceil(results_arr.length / item_per_page);
-                        results_pagination.style.display = 'flex'; 
+                if (results_arr.length > item_per_page) { //create pages UI
+                    let total_pages = Math.ceil(results_arr.length / item_per_page);
+                    results_pagination.style.display = 'flex'; 
 
-                        let pagination_arr = [];
+                    let pagination_arr = [];
 
-                        if(active_page !== 1) {
-                            pagination_arr.push('prev');
-                        }
+                    if(active_page !== 1) {
+                        pagination_arr.push('prev');
+                    }
 
-                        pagination_arr.push('1')
+                    pagination_arr.push('1')
 
-                        for(let i = -3; i <= 3; i++ ) {
-                            let result = active_page + i;
-                            if ((i === -3 && result > 2) || ( i === 3 && result < total_pages - 1 )) {
-                                pagination_arr.push('...')
-                            } else {
-                                if (result >= 2 && result < total_pages) {
-                                    pagination_arr.push(`${result}`)
-                                }
+                    for(let i = -3; i <= 3; i++ ) {
+                        let result = active_page + i;
+                        if ((i === -3 && result > 2) || ( i === 3 && result < total_pages - 1 )) {
+                            pagination_arr.push('...')
+                        } else {
+                            if (result >= 2 && result < total_pages) {
+                                pagination_arr.push(`${result}`)
                             }
                         }
-
-                        pagination_arr.push(`${total_pages}`)
-
-                        if(active_page !== total_pages) {
-                            pagination_arr.push('next')
-                        }
-                        if(pagination_arr.length > 0) {
-                            pagination_arr.forEach(page => {
-                                let create_elem;
-                                switch(page){
-                                    case `${active_page}`: //Plans for this, later
-                                        create_elem = document.createElement('p');
-                                        create_elem.setAttribute('id', 'page_current');
-                                        break;
-                                    case '...':
-                                        create_elem = document.createElement('p');
-                                        break;
-                                    default: 
-                                        create_elem = document.createElement('button');
-                                        create_elem.classList.add('button', 'button_pagination');
-                                        create_elem.dataset.pageValue = page
-                                }
-                                if (page == "prev" || page == "next") {
-                                    page == 'prev' ? create_elem.innerHTML = "<i class='fa-solid fa-chevron-left'></i>" : create_elem.innerHTML = "<i class='fa-solid fa-chevron-right'></i>"; 
-                                } else {
-                                    create_elem.textContent = page;
-
-                                }
-                                results_pagination.appendChild(create_elem)
-                            })
-                        }
                     }
-                    //Pagination function
-                    results_pagination.querySelectorAll('button').forEach(button => {
-                        button.addEventListener('click', () => {
-                            let page_change_target = button.dataset.pageValue;
-                            switch(page_change_target){
-                                case 'prev':
-                                    page_change_target = active_page - 1;
+
+                    pagination_arr.push(`${total_pages}`)
+
+                    if(active_page !== total_pages) {
+                        pagination_arr.push('next')
+                    }
+                    if(pagination_arr.length > 0) {
+                        pagination_arr.forEach(page => {
+                            let create_elem;
+                            switch(page){
+                                case `${active_page}`: //Plans for this, later
+                                    create_elem = document.createElement('p');
+                                    create_elem.setAttribute('id', 'page_current');
                                     break;
-                                case 'next':
-                                    page_change_target = active_page + 1;
+                                case '...':
+                                    create_elem = document.createElement('p');
                                     break;
                                 default: 
-                                    page_change_target = +page_change_target;
-                            };
-                            active_page = page_change_target;
-                            display_results(results_arr)
+                                    create_elem = document.createElement('button');
+                                    create_elem.classList.add('button', 'button_pagination');
+                                    create_elem.dataset.pageValue = page
+                            }
+                            if (page == "prev" || page == "next") {
+                                page == 'prev' ? create_elem.innerHTML = "<i class='fa-solid fa-chevron-left'></i>" : create_elem.innerHTML = "<i class='fa-solid fa-chevron-right'></i>"; 
+                            } else {
+                                create_elem.textContent = page;
+
+                            }
+                            results_pagination.appendChild(create_elem)
                         })
-                    })
-
-                    //Product cards  creator
-                    active_catalog_page.forEach(product => { //change to active_catalog_page when pagination works; keep results_arr while dev
-                        // product_card PARENT
-                        let product_card = document.createElement('article');
-                        product_card.dataset.productCard = 'small';
-                        
-                        // ## image_container
-                        let image_container = document.createElement('a');
-                        image_container.classList.add('image_container');
-                        image_container.setAttribute('href', `/product/${product._id}`);
-
-                        // #### image
-                        let image_elem = document.createElement('img');
-                        image_elem.setAttribute('src', `/public/img/products-images/${product.listing[0].images[0]}`); //PENDING displayo different variations if necesarry
-
-
-                        image_container.appendChild(image_elem);
-                        product_card.appendChild(image_container); //Append to PARENT
-
-                        // ## text_container
-                        let text_container = document.createElement('div');
-                        text_container.classList.add('text_container');
-
-                        let text_header = document.createElement('p');
-                        text_header.classList.add('text_container_header');
-                        
-                        let text_header_anchor_category = document.createElement('a');
-                        let header_category_encoded = encodeURIComponent(`${product.category_name[lang]}`)
-                        text_header_anchor_category.setAttribute('href', `/catalog?category=${header_category_encoded}`);
-                        text_header_anchor_category.textContent = `${product.category_name[lang]}`
-                        
-                        let text_header_anchor_brand = document.createElement('a');
-                        let header_brand_encoded = encodeURIComponent(`${product.brand}`)
-                        text_header_anchor_brand.setAttribute('href', `/catalog?brand=${header_brand_encoded}`)
-                        text_header_anchor_brand.textContent = `${product.brand_name}`;
-
-                        text_header.appendChild(text_header_anchor_category);
-                        text_header.appendChild(document.createTextNode(' / '));
-                        text_header.appendChild(text_header_anchor_brand);
-                        text_container.appendChild(text_header);
-
-                        let text_name = document.createElement('h3');
-                        let text_name_link = document.createElement('a');
-                        text_name_link.textContent = `${product.name[lang]}`;
-                        text_name_link.setAttribute('href', `/product/${product._id}`)
-
-                        text_name.appendChild(text_name_link);
-                        text_container.appendChild(text_name);
-
-                        // #### price_tag
-                        let price_container = document.createElement('a');
-                        price_container.classList.add('product_card_price_tag');
-                        price_container.setAttribute('href', `/product/${product._id}`)
-
-                        let price_value = document.createElement('p');
-                        price_value.classList.add('price_sell');
-                        price_value.textContent = `${product.listing[0].format_price_discounted}`
-
-                        price_container.appendChild(price_value);
-
-                        if (product.listing[0].discount_percent > 0) {
-                            let price_discount = document.createElement('p');
-                            price_discount.classList.add('price_discount');
-
-                            let price_before = document.createElement('span');
-                            price_before.classList.add('price_before');
-                            price_before.textContent = `${product.listing[0].format_price}`;
-                            
-                            let discount_percent = document.createElement('span');
-                            discount_percent.classList.add('discount_percent');
-                            discount_percent.textContent = `${Math.round(product.listing[0].discount_percent * 100)}%`;
-
-                            price_discount.appendChild(price_before);
-                            price_discount.appendChild(discount_percent);
-
-                            price_container.appendChild(price_discount)
-                        }
-
-                        text_container.appendChild(price_container);
-
-                        // #### text_description
-                        let text_description = document.createElement('p');
-                        text_description.classList.add('product_card_description')
-                        text_description.textContent = `${product.description[lang]}`
-
-                        text_container.appendChild(text_description);
-
-                        // #### tag_list
-                        let tags_list = document.createElement('ul')
-                        tags_list.classList.add('product_card_tags')
-
-                        product.tag_array.forEach(tag => {
-                            let text_tag = document.createElement('li');
-                            let anchor_tag = document.createElement('a');
-                            let encodedTag = encodeURIComponent(tag.tag_id);
-                            anchor_tag.textContent = tag.name[lang];
-                            anchor_tag.setAttribute('href', `/catalog?selected_tags=${encodedTag}`)
-                            text_tag.appendChild(anchor_tag);
-                            tags_list.appendChild(text_tag);
-                        })
-                        
-                        text_container.appendChild(tags_list);
-                        
-                        product_card.appendChild(text_container);
-
-                        results_container.appendChild(product_card);
-                    });
+                    }
                 }
+                //Pagination function
+                results_pagination.querySelectorAll('button').forEach(button => {
+                    button.addEventListener('click', () => {
+                        let page_change_target = button.dataset.pageValue;
+                        switch(page_change_target){
+                            case 'prev':
+                                page_change_target = active_page - 1;
+                                break;
+                            case 'next':
+                                page_change_target = active_page + 1;
+                                break;
+                            default: 
+                                page_change_target = +page_change_target;
+                        };
+                        active_page = page_change_target;
+                        display_results(results_arr)
+                    })
+                })
+
+                //Product cards  creator
+                active_catalog_page.forEach(product => { //change to active_catalog_page when pagination works; keep results_arr while dev
+                    // product_card PARENT
+                    let product_card = document.createElement('article');
+                    product_card.dataset.productCard = 'small';
+                    
+                    // ## image_container
+                    let image_container = document.createElement('a');
+                    image_container.classList.add('image_container');
+                    image_container.setAttribute('href', `/product/${product._id}`);
+
+                    // #### image
+                    let image_elem = document.createElement('img');
+                    image_elem.setAttribute('src', `/public/img/products-images/${product.listing[0].images[0]}`); //PENDING displayo different variations if necesarry
+
+
+                    image_container.appendChild(image_elem);
+                    product_card.appendChild(image_container); //Append to PARENT
+
+                    // ## text_container
+                    let text_container = document.createElement('div');
+                    text_container.classList.add('text_container');
+
+                    let text_header = document.createElement('p');
+                    text_header.classList.add('text_container_header');
+                    
+                    let text_header_anchor_category = document.createElement('a');
+                    let header_category_encoded = encodeURIComponent(`${product.category_name[lang]}`)
+                    text_header_anchor_category.setAttribute('href', `/catalog?category=${header_category_encoded}`);
+                    text_header_anchor_category.textContent = `${product.category_name[lang]}`
+                    
+                    let text_header_anchor_brand = document.createElement('a');
+                    let header_brand_encoded = encodeURIComponent(`${product.brand}`)
+                    text_header_anchor_brand.setAttribute('href', `/catalog?brand=${header_brand_encoded}`)
+                    text_header_anchor_brand.textContent = `${product.brand_name}`;
+
+                    text_header.appendChild(text_header_anchor_category);
+                    text_header.appendChild(document.createTextNode(' / '));
+                    text_header.appendChild(text_header_anchor_brand);
+                    text_container.appendChild(text_header);
+
+                    let text_name = document.createElement('h3');
+                    let text_name_link = document.createElement('a');
+                    text_name_link.textContent = `${product.name[lang]}`;
+                    text_name_link.setAttribute('href', `/product/${product._id}`)
+
+                    text_name.appendChild(text_name_link);
+                    text_container.appendChild(text_name);
+
+                    // #### price_tag
+                    let price_container = document.createElement('a');
+                    price_container.classList.add('product_card_price_tag');
+                    price_container.setAttribute('href', `/product/${product._id}`)
+
+                    let price_value = document.createElement('p');
+                    price_value.classList.add('price_sell');
+                    price_value.textContent = `${product.listing[0].format_price_discounted}`
+
+                    price_container.appendChild(price_value);
+
+                    if (product.listing[0].discount_percent > 0) {
+                        let price_discount = document.createElement('p');
+                        price_discount.classList.add('price_discount');
+
+                        let price_before = document.createElement('span');
+                        price_before.classList.add('price_before');
+                        price_before.textContent = `${product.listing[0].format_price}`;
+                        
+                        let discount_percent = document.createElement('span');
+                        discount_percent.classList.add('discount_percent');
+                        discount_percent.textContent = `${Math.round(product.listing[0].discount_percent * 100)}%`;
+
+                        price_discount.appendChild(price_before);
+                        price_discount.appendChild(discount_percent);
+
+                        price_container.appendChild(price_discount)
+                    }
+
+                    text_container.appendChild(price_container);
+
+                    // #### text_description
+                    let text_description = document.createElement('p');
+                    text_description.classList.add('product_card_description')
+                    text_description.textContent = `${product.description[lang]}`
+
+                    text_container.appendChild(text_description);
+
+                    // #### tag_list
+                    let tags_list = document.createElement('ul')
+                    tags_list.classList.add('product_card_tags')
+
+                    product.tag_array.forEach(tag => {
+                        let text_tag = document.createElement('li');
+                        let anchor_tag = document.createElement('a');
+                        let encodedTag = encodeURIComponent(tag.tag_id);
+                        anchor_tag.textContent = tag.name[lang];
+                        anchor_tag.setAttribute('href', `/catalog?selected_tags=${encodedTag}`)
+                        text_tag.appendChild(anchor_tag);
+                        tags_list.appendChild(text_tag);
+                    })
+                    
+                    text_container.appendChild(tags_list);
+                    
+                    product_card.appendChild(text_container);
+
+                    results_container.appendChild(product_card);
+                });
             }
 
-            /*### API ENDPOINT ##*/
+            //### API ENDPOINT ##
             let search_form = document.getElementById('catalog_seach_form');
             let input_fields = Array.from(search_form.querySelectorAll('input[name], select'));
 
@@ -554,3 +564,6 @@ html(lang=lang)
             });
 
             document.addEventListener("DOMContentLoaded", debounce(submitForm, debounce_delay))
+            */
+        script(src='/public/js/search_fields.js' defer)
+        script(src='/public/js/search_results.js' defer)
