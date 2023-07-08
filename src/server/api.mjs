@@ -118,10 +118,6 @@ let apiRoute = function (app) {
     app.route(['/', '/home']).get(async (req, res) => {
         //session lang is req.session.lang
         let lang = req.session.lang || "es";
-
-        //let discount_list = await Products.aggregate(discount_pipeline);
-        //let featured_list = await Products.aggregate(featured_pipeline);
-
         let discount_list = await Products.aggregate(search_query({discount: "true"}));
         let featured_list = await Products.aggregate(search_query({featured: "true"}, {sample: 8}))
 
@@ -156,28 +152,35 @@ let apiRoute = function (app) {
             //res.json(search_fields)
         })
         .post(async (req, res) => {
-            let results = await Products.aggregate(search_query(req.body));
+            let active_page = +req.body.active_page || 1;
+            let items_per_page = +req.body.items_per_page || 8;
+            let results = await Products.aggregate(search_query(req.body, { skip: [ active_page, items_per_page]}));
+            /*When used with pagination!!!
+            paginasion tiene que oocurrir aqui!!!
+            let active_page
 
-            priceFormatter(results);
+
+            search_query(req.body, { skip: [page_number, limit_per_page] }),
+                returns results = [ 
+                    { results_arr: [{...}, {...}, ...], 
+                    { results_total: total }
+                }]
+            */
+            priceFormatter(results[0].results_arr);
 
             res.json({ api_results: results })
         })
 
     app.route('/product/:id')
         .get(async (req, res) => {
-            //Declara una funcion para "productos similares a..."" el cual usara los datos de session para busqueda inicial y en todo caso un fallback de {} con un sample al final. Se debe hacer aqui para que se pueeda utilizar tanto en el try como en el cattch y evitar codigo doble.
             try {
                 let lang = req.session.lang || 'es';
                 let product_id = req.params.id;
-                let result = await Products.aggregate(search_query({ id: product_id }));
-                //let more_brand = await Products.aggregate(search_query({ more_brand: [product_id, result[0].brand_id]}, { sample: 8}));
-                //let more_similar = await Products.aggregate(search_query({ more_similar: [ product_id, result[0].brand_id, result[0].category_id, [...result[0].tag_id] ] }, { sample: 8 } ) );
-                
+                let result = await Products.aggregate(search_query({ id: product_id }));                
                 let similar = {
                     by_brand: await Products.aggregate(search_query({ more_brand: [product_id, result[0].brand_id]}, { sample: 8})),
                     by_other: await Products.aggregate(search_query({ more_similar: [ product_id, result[0].brand_id, result[0].category_id, [...result[0].tag_id] ] }, { sample: 8 } ) )
                 }
-
 
                 priceFormatter(result)
 
@@ -218,9 +221,11 @@ DEV ROUTES
 #############*/
 
     app.route('/test').get(async (req, res) => {
-        let db_match = await Products.aggregate([{ $match: {}}, {$sort: { brand_id: 1}}])
+        const lang = 'es'
+        //let db_match = await Products.aggregate([{ $match: {}}, {$sort: { brand_id: 1}}])
+        let count_test = await Products.aggregate(search_query({ category: 9}, { skip: [1, 3]}));
+        priceFormatter(count_test[0].results_arr)
         res.send('testerino')
-        //res.json(db_match)
     });
 
     app.route('/test_db').get(async (req, res) => {
@@ -229,8 +234,11 @@ DEV ROUTES
     });
 
     app.route('/test_product').get(async (req, res) => {
-        let products = await Products.aggregate([{ $match: {} }])
-        res.json(products)
+        //let products = await Products.aggregate([{ $match: {} }])
+        //res.json(products)
+        let count_test = await Products.aggregate(search_query({ category: 9}, { skip: [1, 3]}));
+        priceFormatter(count_test[0].results_arr)
+        res.json(count_test)
     })
 };
 

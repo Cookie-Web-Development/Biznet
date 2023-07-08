@@ -45,7 +45,7 @@ function displayPriceRange(minRange = min_slider.value, maxRange = max_slider.va
 };  
 
 //### TAGS FILTER ###
-let tags_db = earch_fields.tags;
+let tags_db = search_fields.tags;
 let tags_select_container = document.getElementById('selected_tags');
 let tags_dropdown = document.getElementById('tags_dropdown');
 let tags_text_filter = document.getElementById('tags_filter_input')
@@ -176,5 +176,39 @@ function tagListCreator() {
             tags_select_container.appendChild(selection_item);
         });
     };
-
 };
+
+//### RESET SEARCH BUTTON ###
+let resetBtn = document.getElementById('search_field_reset')
+            
+resetBtn.addEventListener('click', () => {
+    let inputElements = Array.from(document.querySelectorAll('[data-reset]'))
+    unselectedTags = [...tags_db];
+    tags_selected = [];
+    tagListCreator();
+    inputElements.forEach(input => {
+        switch(input.dataset.reset){
+            case 'text':
+                input.value = '';
+                break;
+            case 'select':
+                input.selectedIndex = 0;
+                break;
+            case 'checkbox':
+                input.checked = false;
+                break;
+            case 'range_min':
+                input.value = price_range_db.min;
+                displayPriceRange();
+                break;
+            case 'range_max':
+                input.value = price_range_db.max;
+                displayPriceRange();
+                break;
+            default:
+                console.log('something wrong with resetBtn')
+        };
+
+        input.dispatchEvent(new Event('input'))
+    });
+});

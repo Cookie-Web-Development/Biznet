@@ -5,6 +5,11 @@
     border-radius: 10px;
 }
 
+.button > i {
+    pointer-events: none;
+}
+
+
 .btn_main {
     width: 6rem;
 }
@@ -28,6 +33,10 @@
 .button:hover {
     cursor: pointer;
     background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
+}
+
+.button:hover > * {
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
 }
 

@@ -15,7 +15,9 @@ dotenv.config({ path: './.env' });
 
 app.set('view engine', 'pug');
 app.set('views', './views');
+
 app.use('/public', express.static(process.cwd() + '/public'));
+app.use('/src', express.static(process.cwd() + '/src'));
 
 
 const sessionDB = mongoose.createConnection(process.env.URI_SESSION, { useNewUrlParser: true, useUnifiedTopology: true });

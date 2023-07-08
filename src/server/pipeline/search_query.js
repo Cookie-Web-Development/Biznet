@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 
 export default function search_query(query_input, option = undefined) {
     /*
-    req.body: {
+    query_input: { //A.K.A req.body
       name: 'Batidora',
       price_range_min: '164',
       price_range_max: '785',
@@ -16,7 +16,15 @@ export default function search_query(query_input, option = undefined) {
       sort_option: "0-9",
       more_brand: [ product_id, brand_id ]
       more_similar: [ product_id, result[0].brand_id, {category}, [...tags_id]]
+    },
+
+    option: {
+        sample: sample_number || skip: [ page_number, limit_per_page ]
     }
+
+    sample: only shows limited amount, randomly selectec from pool of documents.
+    skip: only shows limit_per_page, from a specific number. Used for pagination.
+
     */
     let queryObj = {}
     //id
@@ -240,8 +248,22 @@ export default function search_query(query_input, option = undefined) {
                         pipeline.push({ $sample: { size: value} });
                         break;
                     case 'skip':  // { skip: [pageNumber, limitPerPage] }
-                        pipeline.push( { $skip: (obj.key[0] - 1) * obj.key[1]});
-                        pipeline.push( { $limit: obj.key[1]});
+                        pipeline.push( {
+                            $facet: {
+                                results_arr: [ 
+                                    { $skip: ( value[0] - 1 ) * value[1] },
+                                    { $limit: value[1] }
+                                ],
+                                results_total: [ { $count: 'total' }]
+                            }
+                        });
+
+                        pipeline.push( {
+                            $project: {
+                                results_arr: 1,
+                                results_total: { $arrayElemAt: ["$results_total.total", 0]}
+                            }
+                        });
                         break;
                 }
             }
