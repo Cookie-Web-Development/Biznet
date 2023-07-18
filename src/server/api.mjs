@@ -1,7 +1,7 @@
 'use strict';
 
 import mongoose from 'mongoose';
-import langData from './lang/lang.json' assert { type: "json" };
+import langData from '../../src/server/lang/lang.json' assert { type: "json" };
 import { products_schema } from './schema/products_schema.js';
 //import { product_variations_schema } from './schema/product_variations_schema.js';
 import { brands_schema } from './schema/brands_schema.js';
@@ -13,15 +13,6 @@ import { users_schema } from './schema/users_schema.js';
 //import { featured_pipeline } from './pipeline/featured.js'; //FLAGGED FOR DELETION!
 import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
-
-/*DEV MODE START: DELETE AFTER USE*/
-import { product_import } from '../../devTool/product_import.js';
-import { devBrand } from '../../devTool/devPipeline/devBrand.js';
-import { devCategory } from '../../devTool/devPipeline/devCategory.js';
-import { devTag } from '../../devTool/devPipeline/devTag.js';
-import { product_update } from '../../devTool/product_update.js'
-
-
 
 //import crypto from 'crypto';
 

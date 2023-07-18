@@ -3,16 +3,18 @@
   "version": "1.0.0",
   "description": "Prototype web for proof of concept",
   "main": "server.mjs",
-  "type": "module",
   "scripts": {
     "start": "nodemon server.mjs",
-    "test": "mocha --ui tdd --exit tests/"
+    "test": "mocha --ui tdd --exit tests/",
+    "babel-build": "babel src server.mjs --out-dir dist",
+    "babel-start": "nodemon dist/server.js"
   },
   "author": "EngineerCookie",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.20.2",
     "connect-mongo": "^5.0.0",
+    "core-js": "^3.31.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
@@ -20,6 +22,11 @@
     "pug": "^3.0.2"
   },
   "devDependencies": {
+    "@babel/cli": "^7.22.9",
+    "@babel/core": "^7.22.9",
+    "@babel/plugin-syntax-import-attributes": "^7.22.5",
+    "@babel/plugin-transform-arrow-functions": "^7.22.5",
+    "@babel/preset-env": "^7.22.9",
     "nodemon": "^2.0.21"
   }
 }
