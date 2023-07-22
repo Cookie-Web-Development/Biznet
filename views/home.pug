@@ -31,8 +31,6 @@ html(lang=lang)
                                             a(href='')=tag 
                 else
                     section#product_carousel
-                        div(id='carousel_prev' class='carousel_btn')
-                            i(class="fa-solid fa-chevron-left fa-xl")
                         each item in featured_list  
                             article(data-product-card='medium' data-carousel)
                                 a(class="image_container", href=`/product/${item._id}`)
@@ -55,6 +53,8 @@ html(lang=lang)
                                         each tag in item.tag_array
                                             li
                                                 span(href=`/product?selected_tags=${tag.name[lang]}`)=tag.name[lang] 
+                        div(id='carousel_prev' class='carousel_btn')
+                            i(class="fa-solid fa-chevron-left fa-xl")
                         div(id='carousel_next' class='carousel_btn')
                             i(class="fa-solid fa-chevron-right fa-xl")
                         div#carousel_dot_container

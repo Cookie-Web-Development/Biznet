@@ -1,7 +1,7 @@
 #product_carousel {
     position: relative;
-    width: 750px;
-    height: 350px;
+    width: var(--rwd-carousel-width);
+    height: var(--rwd-carousel-height);
     overflow: hidden;
     background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
 }
@@ -74,7 +74,7 @@
     position: absolute;
     bottom: 0;
     height: 20px;
-    width: 750px;
+    width: var(--rwd-carousel-width);
     z-index: 30;
     display: flex;
     flex-direction: row;
@@ -133,3 +133,7 @@
         translate: 0 -100%;
     }
 }
+
+/*###################
+RESPONSIVE WEB DESIGN
+#####################*/

@@ -59,10 +59,13 @@
 /* RESPONSIVE WEB DESIGN (rwd) */
     --rwd-full-width: 85vw;
     /* HEADER */
-    /*## (rwd) HEADER_TOP ##*/
     /*## (rwd) NAVBAR ##*/
     --rwd-navbar-decor: 100px;
-
+    /* MAIN */
+    /* ## (rwd) CAROUSEL ##*/
+    --rwd-carousel-width: 750px;
+    --rwd-carousel-height: 350px;
+    
 }
 
 body {
@@ -87,8 +90,16 @@ RESPONSIVE WEB DESIGN
 
 
 @media (max-width: 780px) {
-    
+
 }
+
+@media (max-width: 749px) {
+    :root {
+        --rwd-carousel-width: 400px;
+        --rwd-carousel-height: 350px;
+    }
+}
+
 
 @media (max-width: 640px) {
 
@@ -104,6 +115,14 @@ RESPONSIVE WEB DESIGN
 @media (max-width: 480px) {
     
 }    
+
+@media (max-width: 419px) {
+    :root {
+        --rwd-carousel-width: 100vw;
+        --rwd-carousel-height: 100vw;
+        
+    }
+}
 
 
 
