@@ -1,5 +1,6 @@
 .button {
     height: 3rem;
+    min-width: 3rem;
     background-color: transparent;
     border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
     border-radius: 10px;
@@ -14,13 +15,12 @@
     width: 6rem;
 }
 
-.btn_modal {
+.btn_modal, .btn_inline {
     width: 100%;
 }
 
 .btn_inline {
     height: min-content;
-    width: 100%;
 }
 
 .button_pagination {
@@ -50,6 +50,8 @@
     cursor: pointer;
 }
 
+/*
+
 .lang_selector {
     width: auto;
     height: auto;
@@ -58,4 +60,4 @@
 
 .lang_selector > button {
     padding: 1rem;
-}
+}*/

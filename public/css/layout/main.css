@@ -12,7 +12,7 @@ main {
  }
 
 .section_divider {
-    width: 80vw;
+    width: var(--rwd-full-width);
     color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
     border-radius: 50%;
 }

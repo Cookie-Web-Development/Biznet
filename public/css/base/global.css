@@ -49,9 +49,64 @@
     --color-opacity-high: 0.8;
     --color-opacity-medium: 0.5;
     --color-opacity-light: 0.3;
-    /*SPACING*/
+    /* PRODUCT-CARD*/
+    --card-width: 1000px; /*PLACEHOLDER*/
+    --card-height: 1000px; /*PLACEHOLDER*/
+    --card-width-medium: 650px;
+    --card-height-medium: 300px;
+    --card-width-small: 200px;
+    --card-height-small: 320px;
+/* RESPONSIVE WEB DESIGN (rwd) */
+    --rwd-full-width: 85vw;
+    /* HEADER */
+    /*## (rwd) HEADER_TOP ##*/
+    /*## (rwd) NAVBAR ##*/
+    --rwd-navbar-decor: 100px;
+
 }
 
 body {
     background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l))
 }
+
+/*###################
+RESPONSIVE WEB DESIGN
+#####################*/
+
+@media (max-width: 1250px) {
+    :root {
+        --rwd-full-width: 90vw;
+    }
+}
+
+@media (max-width: 980px) {
+    :root {
+        --rwd-full-width: 100vw;
+    }
+}
+
+
+@media (max-width: 780px) {
+    
+}
+
+@media (max-width: 640px) {
+
+}
+
+@media (max-width: 540px) {
+    :root {
+        --rwd-navbar-decor: 50px;
+    }
+}    
+
+
+@media (max-width: 480px) {
+    
+}    
+
+
+
+@media (max-width: 320px) {
+    
+}    

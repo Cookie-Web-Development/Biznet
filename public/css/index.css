@@ -15,13 +15,9 @@ Visible apperances such as [sizes] and [color] for individual components.
 @import './components/carousel.css'; 
 @import './components/filter-and-result.css'; 
 @import './components/input-box.css';
-@import './components/logo.css'; 
 @import './components/modals.css'; 
 @import './components/product-card.css';
 @import './components/product-list.css';
-@import './components/search-bar.css'; 
-
-
 
 /* 
 LAYOUT: 
@@ -47,4 +43,8 @@ CSS rules that affect theme changes such as [dark-theme]
 .disabled, .disabled:hover {
     user-select: none;
     cursor: not-allowed;
+}
+
+footer {
+    display: none;
 }
