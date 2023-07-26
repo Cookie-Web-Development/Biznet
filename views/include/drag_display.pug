@@ -1,11 +1,11 @@
 //- api_obj_argument = {header_section: 'similar_brand', api_response: similar.by_brand}
 hr.section_divider
-section(class= `${api_obj_argument.header_section}`)
+section(class= `similar_product_section ${api_obj_argument.header_section}`)
     h2=langData.main[api_obj_argument.header_section][lang]
     div.similar_container 
         div(class='drag_display_btn drag_display_prev', data-drag-btn=`${api_obj_argument.header_section}`, data-function='previous')
             i(class="fa-solid fa-chevron-left fa-xl")
-        div.drag_display_container
+        div(class='drag_display_container')
             div(data-drag-display=`${api_obj_argument.header_section}`)
                 each item in api_obj_argument.api_response 
                     article(data-product-card='small')

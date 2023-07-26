@@ -54,8 +54,8 @@
     --card-height: 1000px; /*PLACEHOLDER*/
     --card-width-medium: 650px;
     --card-height-medium: 300px;
-    --card-width-small: 200px;
-    --card-height-small: 320px;
+    --card-width-small: 240px;
+    --card-height-small: 350px;
 /* RESPONSIVE WEB DESIGN (rwd) */
     --rwd-full-width: 85vw;
     /* HEADER */
@@ -65,7 +65,7 @@
     /* ## (rwd) CAROUSEL ##*/
     --rwd-carousel-width: 750px;
     --rwd-carousel-height: 350px;
-    
+
 }
 
 body {
@@ -108,24 +108,31 @@ RESPONSIVE WEB DESIGN
 @media (max-width: 540px) {
     :root {
         --rwd-navbar-decor: 50px;
+        --card-height-small: 300px;
     }
 }    
 
 
-@media (max-width: 480px) {
-    
+@media (max-width: 510px) {
+    :root {
+        --card-width-small: 200px; 
+    }
 }    
 
-@media (max-width: 419px) {
+@media (max-width: 420px) {
     :root {
         --rwd-carousel-width: 100vw;
         --rwd-carousel-height: 100vw;
-        
+        --card-width-small: 180px; 
+        --card-height-small: 210px;
     }
 }
 
 
 
-@media (max-width: 320px) {
-    
+@media (max-width: 380px) {
+    :root {
+        --card-width-small: auto;
+        --card-height-small: auto;
+    }
 }    
