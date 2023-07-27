@@ -208,12 +208,19 @@ RESPONSIVE WEB DESIGN
         width: 100%;
     }
 
-    [data-product-card='medium'] > .text_container > * {
+    [data-product-card='medium'] > .text_container > .text_container_header,
+    [data-product-card='medium'] > .text_container > .product_card_price_tag > .price_sell,
+    [data-product-card='medium'] > .text_container > .product_card_price_tag > .price_discount > .price_before,
+    [data-product-card='medium'] > .text_container > .product_card_description,
+    [data-product-card='medium'] > .text_container > .product_card_tags  {
         display: none;
     }
 
-    [data-product-card='medium'] > .text_container > h3 {
-        display: block;
+    [data-product-card='medium'] > .text_container > .product_card_price_tag > .price_discount > .discount_percent {
+        --fs-note: 1.5rem;
+        position: absolute;
+        top: -1.5rem; 
+        left: 0.5rem;
     }
 }
 
@@ -280,7 +287,6 @@ RESPONSIVE WEB DESIGN
     }
 
 }
-
 
 @media (max-width: 420px) {
     [data-product-card='medium'] {
