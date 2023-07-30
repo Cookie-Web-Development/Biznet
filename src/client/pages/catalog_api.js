@@ -47,7 +47,7 @@ for (let key in search_query) {
 };
 
 //### API ENDPOINT ##
-let search_form = document.getElementById('catalog_seach_form');
+let search_form = document.getElementById('catalog_search_form');
 let input_fields = Array.from(search_form.querySelectorAll('input[name], select'));
 let product_results_container = document.getElementById('product_result');
 let pagination_container = document.getElementById('pagination');
@@ -55,7 +55,7 @@ let debounce_delay = 500; //ms
 let eventAPI = 'sendToAPI'; //Custom event for API Endpoint
 let eventDispatcherCheck = false; //helps debounce when events are fired multiple times
 let active_page;
-let items_per_page = 8 ;//Goes hand-in-hand with CSS filter-and-results.css #product_result grid-tempalet. Must change according to window width.
+let items_per_page = 12 ;//Goes hand-in-hand with CSS filter-and-results.css #product_result grid-tempalet. Must change according to window width.
 
 input_fields.forEach(input => {
     input.addEventListener(eventAPI, debounce(sendToServer, debounce_delay));

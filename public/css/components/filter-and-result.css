@@ -1,53 +1,37 @@
 /* [input_box]es are in components/input-box.css */
 
 #product_search_section {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    width: 100%;
-    padding: 0 2rem;
-    /*DEV ONLY*/
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  margin: 0 auto;
+  gap: var(--rwd-grid-gap);
+  /*DEV ONLY*/
 }
 
 /*### SEARCH FIELDS ###*/
 .product_filter_container {
   flex: 0.2 2 10%;
   min-width: 250px;
-  padding: 0 1rem;
   position: relative;
-  /*DEV ONLY*/
+  top: 0;
+  border-right: 2px transparent solid;
+  border-image: var(--rwd-search-form-border);
 }
 
-.product_filter_container::after {
-  content: "";
-  position: absolute;
-  height:  85%;
-  width: 0;
-  top : 50%;
-  right: 0;
-  translate: 0 -50%;
-  border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
-  border-radius: 50%;
+#catalog_search_form {
+  position: sticky;
+  top: 0;
+  padding-right: 20px;
 }
 
-.product_filter_container > form > * {
+#catalog_search_form > * {
   padding: 0.5rem 0;
 }
 
 .search_container {
   position: relative;
-  /*margin: 0.5rem 0;*/
-}
-
-.search_container::after {
-  content: '';
-  height: 0px;
-  width: 100%;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
-  border-radius: 50%;
+  border-bottom: 2px transparent solid;
+  border-image: var(--rwd-search-form-border)
 }
 
 /*vvv Price Range Selector vvv*/
@@ -176,12 +160,36 @@ input[type="range"]::-o-range-thumb {
 #product_result {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  padding: 0 2rem;
-  gap: 15px;
-  /*DEV ONLY*/
+  grid-template-columns: repeat(var(--rwd-results-columns), 1fr);
 }
 
+/*### SEARCH TOGGLEE BTN ###*/
+#search_fields_toggle {
+  display: none;
+  cursor: pointer;
+  width: var(--rwd-toggle-size-y);
+  height: var(--rwd-toggle-size-x);
+  bottom: var(--rwd-toggle-pos-x);
+  right: var(--rwd-toggle-pos-y);
+  transform: var(--rwd-toggle-transform);
+  border: 2px solid hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+  border-radius: var(--rwd-toggle-border-radius);
+  background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+  position: absolute;
+}
+
+#search_fields_toggle > i {
+  color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+  font-size: 1.1rem;
+}
+
+#search_fields_toggle.active, #search_fields_toggle:hover {
+  background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+}
+
+#search_fields_toggle.active > i, #search_fields_toggle:hover > i{
+  color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+}
 
 /*### PAGINATION ###*/
 /*pagination button in buttons.css*/
@@ -201,3 +209,64 @@ input[type="range"]::-o-range-thumb {
   position: relative;
   /*cursor: pointer; turned off until 'jump to' function is working*/
 } 
+
+/*###################
+RESPONSIVE WEB DESIGN
+#####################*/
+
+@media (max-width: 1010px) {
+  #product_search_section {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    position: relative;
+  }
+
+  .product_filter_container {
+    position: sticky;
+    z-index: 10;
+    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    width: 100%;
+    border-right: unset;
+    border-bottom: 2px transparent solid;
+    margin-bottom: 1rem;
+  }
+
+  #catalog_search_form {
+    display: none;
+    padding-right: unset;
+    padding-bottom: 20px;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  #catalog_search_form.active {
+    display: grid;
+  }
+
+  .search_container {
+    border-bottom: solid 1px black;
+    border-image: unset;
+  }
+
+  #search_field_reset {
+    grid-column: 1 / -1;
+  }
+
+  #search_fields_toggle {
+    display: block;
+  }
+
+}
+
+@media (max-width: 740px) {
+  #catalog_search_form {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 380px) {
+  #catalog_search_form {
+    padding: 1rem;
+  }
+}

@@ -73,7 +73,7 @@ for (var key in search_query) {
 ;
 
 //### API ENDPOINT ##
-var search_form = document.getElementById('catalog_seach_form');
+var search_form = document.getElementById('catalog_search_form');
 var input_fields = Array.from(search_form.querySelectorAll('input[name], select'));
 var product_results_container = document.getElementById('product_result');
 var pagination_container = document.getElementById('pagination');

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;500;900&display=swap');
 
-:root, ::backdrop { 
+:root { 
 /*VARIABLES*/
     /*TEXT*/
     --font-family: 'Roboto', sans-serif;
@@ -65,7 +65,21 @@
     /* ## (rwd) CAROUSEL ##*/
     --rwd-carousel-width: 750px;
     --rwd-carousel-height: 350px;
-
+    /* ## (rwd) CATALOG ##*/
+    --rwd-grid-gap: 1.5rem;
+    --rwd-results-columns: 4;
+    /* ## (rwd) SEARCH FIELDS ##*/
+    --rwd-search-form-border: linear-gradient(to bottom, 
+    hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l)), 
+    hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l)), 
+    hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l))
+    ) 1;
+    --rwd-toggle-size-x: 2rem;
+    --rwd-toggle-size-y: 2.5rem;
+    --rwd-toggle-pos-x: -2rem;
+    --rwd-toggle-pos-y: 50%;
+    --rwd-toggle-transform: translateX(50%);
+    --rwd-toggle-border-radius: 0 0 25% 25%;
 }
 
 body {
@@ -76,9 +90,25 @@ body {
 RESPONSIVE WEB DESIGN
 #####################*/
 
+@media (max-width: 1320px) {
+    :root {
+        --rwd-results-columns: 3;
+    }
+}
+
 @media (max-width: 1250px) {
     :root {
         --rwd-full-width: 90vw;
+    }
+}
+
+@media (max-width: 1010px) {
+    :root {
+        --rwd-search-form-border: linear-gradient(to right, 
+        hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l)), 
+        hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l)), 
+        hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l))
+        ) 1;
     }
 }
 
@@ -101,8 +131,10 @@ RESPONSIVE WEB DESIGN
 }
 
 
-@media (max-width: 640px) {
-
+@media (max-width: 740px) {
+    :root {
+        --rwd-results-columns: 2;
+    }
 }
 
 @media (max-width: 540px) {

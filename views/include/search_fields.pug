@@ -1,6 +1,6 @@
 div.product_filter_container
-    form(id='catalog_seach_form' action='/catalog' method='post')
-        div.sorting_container
+    form(id='catalog_search_form' action='/catalog' method='post')
+        div.search_container
             label(for="sort_option")
                 p.search_container_title=langData.main.search_filter.sort_title[lang] 
             select(id="sort_option", class='input_box disabled', name='sort_option')
@@ -50,4 +50,6 @@ div.product_filter_container
                 p.search_container_title=langData.main.search_filter.best_seller[lang]
             input(type='checkbox', value="true", name='featured', data-reset='checkbox', id='featured_checkbox')
         input(type='hidden', name='search_lang', value=lang)
-        button(type='button', class='button btn_inline', id='search_field_reset')=langData.main.search_filter.clear_fields[lang]    
+        button(type='button', class='button btn_inline', id='search_field_reset')=langData.main.search_filter.clear_fields[lang]
+    button(type='button', id='search_fields_toggle')
+        i(class='fa-solid fa-sliders')

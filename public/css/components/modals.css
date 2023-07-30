@@ -65,7 +65,7 @@ LOGIN MODAL
 DISCLAIMER MODAL
 ################*/
 #disclaimer_modal::backdrop {
-    background-color: hsla(var(--color-grey-h), var(--color-grey-s), var(--color-main-l), var(--color-opacity-high));
+    background-color: hsla(360, 0%, 10%, 0.8);
 }
 
 .disclaimer_language > ul {

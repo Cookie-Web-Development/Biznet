@@ -144,7 +144,7 @@ let apiRoute = function (app) {
         })
         .post(async (req, res) => {
             let active_page = +req.body.active_page || 1;
-            let items_per_page = +req.body.items_per_page || 8;
+            let items_per_page = +req.body.items_per_page || 12;
             let results = await Products.aggregate(search_query(req.body, { skip: [ active_page, items_per_page]}));
             /*When used with pagination!!!
             paginasion tiene que oocurrir aqui!!!
