@@ -34,9 +34,9 @@ app.use(session({ //from ChatGPT
     resave: false,
     saveUninitialized: false,
     cookie: {
-      sameSite: 'none',
+      sameSite: 'lax', //Set none for Production. lax for dev
       httpOnly: true, //Prevent client-side scripting
-      secure: false, //Sends cookies only HTTPS, false during testing
+      secure: false, //Sends cookies only HTTPS. true for Production. false for dev
       maxAge: 300000 //5min FOR DEV ONLY!
     },
     store: store
