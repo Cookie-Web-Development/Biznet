@@ -241,3 +241,11 @@ resetBtn.addEventListener('click', function () {
     input.dispatchEvent(new Event('input'));
   });
 });
+
+//### SEARCH TOGGLE ###
+var search_fields_toggle_target = document.getElementById('catalog_search_form');
+var search_fields_toggle_btn = document.getElementById('search_fields_toggle');
+search_fields_toggle_btn.addEventListener('click', function () {
+  search_fields_toggle_btn.classList.toggle('active');
+  search_fields_toggle_target.classList.toggle('active');
+});

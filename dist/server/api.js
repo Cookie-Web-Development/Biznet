@@ -339,7 +339,7 @@ var apiRoute = function apiRoute(app) {
         while (1) switch (_context6.prev = _context6.next) {
           case 0:
             active_page = +req.body.active_page || 1;
-            items_per_page = +req.body.items_per_page || 8;
+            items_per_page = +req.body.items_per_page || 12;
             _context6.next = 4;
             return Products.aggregate((0, _search_query.default)(req.body, {
               skip: [active_page, items_per_page]

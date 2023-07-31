@@ -81,7 +81,7 @@ var debounce_delay = 500; //ms
 var eventAPI = 'sendToAPI'; //Custom event for API Endpoint
 var eventDispatcherCheck = false; //helps debounce when events are fired multiple times
 var active_page;
-var items_per_page = 8; //Goes hand-in-hand with CSS filter-and-results.css #product_result grid-tempalet. Must change according to window width.
+var items_per_page = 12; //Goes hand-in-hand with CSS filter-and-results.css #product_result grid-tempalet. Must change according to window width.
 
 input_fields.forEach(function (input) {
   input.addEventListener(eventAPI, debounce(sendToServer, debounce_delay));
