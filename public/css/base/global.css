@@ -65,6 +65,8 @@
     /* ## (rwd) CAROUSEL ##*/
     --rwd-carousel-width: 750px;
     --rwd-carousel-height: 350px;
+    /* ## (rwd) PRODUCT CARD ##*/
+    --display_limit: 5;
     /* ## (rwd) CATALOG ##*/
     --rwd-grid-gap: 1.5rem;
     --rwd-results-columns: 4;
@@ -93,12 +95,19 @@ RESPONSIVE WEB DESIGN
 @media (max-width: 1320px) {
     :root {
         --rwd-results-columns: 3;
+        --display_limit: 4;
     }
 }
 
 @media (max-width: 1250px) {
     :root {
         --rwd-full-width: 90vw;
+    }
+}
+
+@media (max-width: 1050px) {
+    :root {
+        --display_limit: 3;
     }
 }
 
@@ -119,8 +128,10 @@ RESPONSIVE WEB DESIGN
 }
 
 
-@media (max-width: 780px) {
-
+@media (max-width: 820px) {
+    :root {
+        --display_limit: 2;
+    }
 }
 
 @media (max-width: 749px) {

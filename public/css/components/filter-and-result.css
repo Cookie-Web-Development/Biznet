@@ -206,9 +206,16 @@ input[type="range"]::-o-range-thumb {
 
 #page_current {
   font-size: var(--fs-price-main);
+  width: fit-content;
   position: relative;
+  display: flex;
+  flex-direction: row;
   /*cursor: pointer; turned off until 'jump to' function is working*/
-} 
+}
+
+[data-pagination-responsive='mobile'] {
+  display: none;
+}
 
 /*###################
 RESPONSIVE WEB DESIGN
@@ -264,6 +271,17 @@ RESPONSIVE WEB DESIGN
     grid-template-columns: 1fr;
   }
 }
+
+@media (max-width: 640px) {
+  [data-pagination-responsive='mobile'] {
+    display: block;
+  }
+
+  [data-pagination-responsive='desktop'] {
+    display: none;
+  }
+}
+
 
 @media (max-width: 380px) {
   #catalog_search_form {

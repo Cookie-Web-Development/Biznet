@@ -45,18 +45,22 @@ export function display_pagination ( active_page, total_pages, pagination_contai
         switch(page){
             case pagination_active_page: //Plans for this, later
                 create_elem = new HTML_ELEM('p');
-                create_elem.addAttribute('id', 'page_current')
-                create_elem.addText(page)
+                create_elem.addAttribute('id', 'page_current');
+                create_elem.addText(page);
+                let mobile_pagination_span = create_elem.addElement('span');
+                mobile_pagination_span.addAttribute('data-pagination-responsive', 'mobile');
+                mobile_pagination_span.addText(`/${total_pages}`)
                 break;
             case '...':
                 create_elem = new HTML_ELEM('p');
+                create_elem.addAttribute('data-pagination-responsive', 'desktop');
                 create_elem.addText(page);
                 break;
             default: 
                 create_elem = new HTML_ELEM('button');
-                create_elem.addClass('button')
+                create_elem.addClass('button');
                 create_elem.addClass('button_pagination');
-                create_elem.addAttribute('type', 'button')
+                create_elem.addAttribute('type', 'button');
                 create_elem.addAttribute('data-page-value', page);
                 if (page == "prev" || page == "next") {
                     let arrow = create_elem.addElement('i');
@@ -64,6 +68,7 @@ export function display_pagination ( active_page, total_pages, pagination_contai
                     (page == 'prev') ? arrow.addClass('fa-chevron-left') : arrow.addClass('fa-chevron-right')
                 } else {
                     create_elem.addText(page);
+                    create_elem.addAttribute('data-pagination-responsive', 'desktop');
                 }
         }
         pagination_container.appendChild(create_elem.getElement())

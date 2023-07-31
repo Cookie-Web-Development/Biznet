@@ -98,10 +98,12 @@ similar_container
 .similar_container{
     position: relative;
     margin-bottom: 30px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
 .drag_display_container {
-    --display_limit: 5;
     width: calc(var(--card-width-small) * var(--display_limit));
     height: calc(var(--card-height-small) + 20px);
     position: relative;
@@ -178,24 +180,6 @@ similar_container
 /*###################
 RESPONSIVE WEB DESIGN
 #####################*/
-@media (max-width: 1300px) {
-    .drag_display_container {
-        --display_limit: 4;
-    }
-}
-
-@media (max-width: 1050px) {
-    .drag_display_container {
-        --display_limit: 3;
-    }
-}
-
-@media (max-width: 820px) {
-    .drag_display_container {
-        --display_limit: 2;
-    }
-}
-
 @media (max-width: 749px) {
     [data-product-card='medium'] {
         background-color: white;
@@ -223,7 +207,7 @@ RESPONSIVE WEB DESIGN
     }
 }
 
-@media (max-width: 580px) {
+@media (max-width: 680px) {
     .similar_product_section {
         display: relative;
         width: 100%;

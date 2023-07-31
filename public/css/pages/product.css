@@ -1,14 +1,17 @@
 .product_display {
     /*DEV ONLY*/
-    width: 1000px;
-    height: 350px;
+    /*width: 1000px;
+    height: 350px;*/
+    width: 100%;
+    height: 40vh;
+    max-height: 350px;
 }
 
 .product_display {
     display: flex;
     flex-direction: row; /*MUST CHAGE FOR MOBILE*/
-    align-items: flex-start;
-    justify-content: space-around;
+    align-items: center;
+    justify-content: center;
     gap: 2rem;
     position: relative;
     margin-top: 2rem;
@@ -66,9 +69,34 @@ text_display
 ############*/
 .text_display {
     position: relative;
-    flex-grow: 1;
     height: 100%;
     min-height: 300px;
     line-height: 2rem;
     /*DEV ONLY*/
+    padding: 1rem;
+}
+
+/*###################
+RESPONSIVE WEB DESIGN
+#####################*/
+@media (max-width: 780px) {
+    .product_display {
+        flex-direction: column;
+        height: auto;
+        max-height: fit-content;
+    }
+
+    .thumbnail_display {
+        flex-direction: row;
+        order: 2;
+    }
+
+    .image_display {
+        order: 1;
+    }
+
+    .text_display {
+        flex-grow: 1;
+        order: 3;
+    }
 }
