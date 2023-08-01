@@ -15,10 +15,6 @@
     width: 38rem;
 }
 
-#disclaimer_modal {
-    height: min-content;
-    width: 60rem;
-}
 
 /*#########
 LOGIN MODAL
@@ -64,6 +60,12 @@ LOGIN MODAL
 /*#############
 DISCLAIMER MODAL
 ################*/
+#disclaimer_modal {
+    position: fixed;
+    height: min-content;
+    width: 60rem;
+}
+
 #disclaimer_modal::backdrop {
     background-color: hsla(360, 0%, 10%, 0.8);
 }
@@ -103,4 +105,18 @@ DISCLAIMER MODAL
     text-align: center;
 }
 
-/*DEV MODE*/
+/*###################
+RESPONSIVE WEB DESIGN
+#####################*/
+
+@media (max-width: 580px) {
+    .disclaimer {
+        padding: unset;
+    }
+}
+
+@media (max-width: 480px) {
+    #disclaimer_modal {
+        padding: 1.5rem 1rem;
+    }
+}
