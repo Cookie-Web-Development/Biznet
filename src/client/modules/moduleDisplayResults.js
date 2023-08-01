@@ -11,7 +11,7 @@ export function display_results (result_arr, lang, result_container) {
         child.remove()
     });
 
-    if(!result_arr) { //PENDING HTML_ELEM
+    if(result_arr.length === 0) { //PENDING HTML_ELEM
         const nothing_here = new HTML_ELEM('p');
         nothing_here.addText('Nothing Here');
         result_container.appendChild(nothing_here.getElement())

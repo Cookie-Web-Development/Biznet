@@ -138,15 +138,10 @@ function apiCall(data) {
                 save_session = true;
             }
             let response = JSON.parse(xhr.responseText);
-            let pagination_pages = Math.ceil(response.api_results[0].results_total / items_per_page);
-            
+            let pagination_pages = Math.ceil(response.api_results[0].results_total / items_per_page) || 1;
+
             display_results(response.api_results[0].results_arr, lang, product_results_container); 
-
-            if (pagination_pages >= 2) {
-                if (!active_page) { active_page = 1};
-                display_pagination (active_page, pagination_pages, pagination_container);
-            }
-
+            display_pagination (active_page, pagination_pages, pagination_container);
 
         } else {
             console.error(xhr.statusText);
