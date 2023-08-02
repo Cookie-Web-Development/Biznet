@@ -3,9 +3,11 @@
 import { HTML_ELEM } from './moduleHTMLElemMaker.js';
 
 export function display_pagination ( active_page, total_pages, pagination_container, pagination_type = undefined ) {
-
+    
     //element remover
     Array.from(pagination_container.children).forEach(child => child.remove());
+    
+    if(total_pages < 2 || !total_pages) {return};
 
     let pagination_active_page = active_page || 1;
 
