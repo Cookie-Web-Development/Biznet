@@ -178,15 +178,9 @@ function apiCall(data) {
         save_session = true;
       }
       var response = JSON.parse(xhr.responseText);
-      var pagination_pages = Math.ceil(response.api_results[0].results_total / items_per_page);
+      var pagination_pages = Math.ceil(response.api_results[0].results_total / items_per_page) || 1;
       (0, _moduleDisplayResults.display_results)(response.api_results[0].results_arr, lang, product_results_container);
-      if (pagination_pages >= 2) {
-        if (!active_page) {
-          active_page = 1;
-        }
-        ;
-        (0, _moduleDisplayPagination.display_pagination)(active_page, pagination_pages, pagination_container);
-      }
+      (0, _moduleDisplayPagination.display_pagination)(active_page, pagination_pages, pagination_container);
     } else {
       console.error(xhr.statusText);
     }

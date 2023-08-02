@@ -18,7 +18,7 @@ function display_results(result_arr, lang, result_container) {
   Array.from(result_container.children).forEach(function (child) {
     child.remove();
   });
-  if (!result_arr) {
+  if (result_arr.length === 0) {
     //PENDING HTML_ELEM
     var nothing_here = new _moduleHTMLElemMaker.HTML_ELEM('p');
     nothing_here.addText('Nothing Here');

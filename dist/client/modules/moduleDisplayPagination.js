@@ -15,6 +15,10 @@ function display_pagination(active_page, total_pages, pagination_container) {
   Array.from(pagination_container.children).forEach(function (child) {
     return child.remove();
   });
+  if (total_pages < 2 || !total_pages) {
+    return;
+  }
+  ;
   var pagination_active_page = active_page || 1;
   var pagination_arr = [];
   if (pagination_active_page !== 1) {
