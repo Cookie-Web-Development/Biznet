@@ -31,7 +31,7 @@ for (let key in search_query) {
             case 'name': 
                 document.querySelector(`input[name='${key}']`).value = search_query[key]
                 break;
-            //case 'sort_option':
+            case 'sort_option':
             case 'category': 
             case 'brand': 
                 let selectElem = document.querySelector(`select[name='${key}']`);
@@ -105,8 +105,8 @@ function sendToServer ( set_active_page = undefined ) {
             case 'selected_tags':
                 (data[key]) ? data[key].push(value) : data[key] = [value];
                 break;
-            case 'sort_option': //SORT_OPTION DISABLED UNTIL SEARCH_QUERY.JS FIXED
-                break;
+            //case 'sort_option': //SORT_OPTION DISABLED UNTIL SEARCH_QUERY.JS FIXED
+                //break;
             default: 
                 (value != "") ? data[key] = value : undefined;
         }

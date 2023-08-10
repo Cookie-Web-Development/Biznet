@@ -114,20 +114,21 @@ export default function search_query(query_input, option = undefined) {
         queryObj.featured = Boolean(query_input.featured)
     };
 
-    // sorting option NEED FIIXING!
+    // sorting option
     let sort = {};
+    let sort_name = `name.${query_input.search_lang}`;
     switch (query_input.sort_option) {
         case '9-0':
-            sort = { "listing[0].price_discounted": -1 }
+            sort = { "listing.price_discounted": -1 }
             break;
         case 'a-z':
-            sort = { name: 1 }
+            sort = { [sort_name]: 1 }
             break;
         case 'z-a':
-            sort = { name: -1 }
+            sort = { [sort_name]: -1 }
             break;
         default:
-            sort = { "listing[0].price_discounted": 1 }
+            sort = { "listing.price_discounted": 1 }
     };
 
     /*##############################
@@ -272,6 +273,5 @@ export default function search_query(query_input, option = undefined) {
             return pipeline
          }
     }
-
     return pipeline;
 }

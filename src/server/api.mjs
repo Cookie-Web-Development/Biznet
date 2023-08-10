@@ -158,7 +158,6 @@ let apiRoute = function (app) {
                 }]
             */
             priceFormatter(results[0].results_arr);
-
             res.json({ api_results: results })
         })
 
@@ -213,9 +212,15 @@ DEV ROUTES
 
     app.route('/test').get(async (req, res) => {
         const lang = 'es'
+        let test_body = {
+            sort_option: '0-9',        
+            price_range_max: '1094.81',
+            search_lang: 'es',
+            items_per_page: 12
+          }
         //let db_match = await Products.aggregate([{ $match: {}}, {$sort: { brand_id: 1}}])
-        let count_test = await Products.aggregate(search_query({ category: 9}, { skip: [1, 3]}));
-        priceFormatter(count_test[0].results_arr)
+        let test_result = await Products.aggregate(search_query(test_body))
+        priceFormatter(test_result)
         res.send('testerino')
     });
 

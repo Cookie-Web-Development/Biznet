@@ -3,7 +3,7 @@ div.product_filter_container
         div.search_container
             label(for="sort_option")
                 p.search_container_title=langData.main.search_filter.sort_title[lang] 
-            select(id="sort_option", class='input_box disabled', name='sort_option')
+            select(id="sort_option", class='input_box', name='sort_option')
                 option(value='0-9')=langData.main.search_filter.sort_options.price_ascending[lang] 
                 option(value='9-0')=langData.main.search_filter.sort_options.price_descending[lang] 
                 option(value='a-z')=langData.main.search_filter.sort_options.alphabetical_ascending[lang]
