@@ -38,22 +38,23 @@
 .range_container {
   position: relative;
   height: 1.5rem;
+  margin: 0 1rem 0 0;
 }
 
 #range_slider_visual {
   position: absolute;
   height: 3px;
-  width: 180px;
-  left: 10px;
+  width: 100%;
   top: 0.6rem;
 }
 
 .price_range_input {
   position: absolute;
   background: transparent;
-  width: 200px;
+  width: 100%;
   appearance: none;
   pointer-events: none;
+  margin-left: 0;
 }
 
 input[type="range"]::-webkit-slider-thumb { /*Tried grouping them; didnt work*/
