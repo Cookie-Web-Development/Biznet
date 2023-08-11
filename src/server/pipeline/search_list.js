@@ -30,7 +30,7 @@ export let search_list = {
                         input: "$listing",
                         as: "entry",
                         in: {
-                            $round: [{ $subtract: ["$$entry.price", { $multiply: ["$$entry.price", "$$entry.discount_percent"] }] }, 2]
+                            $round: [{ $subtract: ["$$entry.price", { $multiply: ["$$entry.price", "$$entry.discount_percent"] }] }, 0]
                         }
                     }
                 }
@@ -51,10 +51,10 @@ export let search_list = {
             $project: {
                 _id: 0,
                 max: {
-                    $max: "$price_list"
+                    $add: [ { $max: "$price_list" } , 1]
                 },
                 min: {
-                    $min: "$price_list"
+                    $subtract: [ { $min: "$price_list" } , 1]
                 }
             }
         }

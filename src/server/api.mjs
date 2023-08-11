@@ -211,21 +211,24 @@ DEV ROUTES
 #############*/
 
     app.route('/test').get(async (req, res) => {
-        const lang = 'es'
-        let test_body = {
-            sort_option: '0-9',        
-            price_range_max: '1094.81',
-            search_lang: 'es',
-            items_per_page: 12
-          }
-        //let db_match = await Products.aggregate([{ $match: {}}, {$sort: { brand_id: 1}}])
-        let test_result = await Products.aggregate(search_query(test_body))
-        priceFormatter(test_result)
-        res.send('testerino')
+        let lang = req.session.lang || 'es';
+        let tags = await Tags.aggregate(search_list.multi_lang(lang)),
+            categories = await Categories.aggregate(search_list.multi_lang(lang)),
+            brands = await Brands.aggregate(search_list.brand),
+            price_range = await Products.aggregate(search_list.price_range);
+        // price_range returns [{max, min}]
+
+        let search_fields = {
+            tags: [...tags],
+            categories: [...categories],
+            brands: [...brands],
+            price_range: price_range[0]
+        }
+        res.send(search_fields)
     });
 
     app.route('/test_db').get(async (req, res) => {
-        let db = await Brands.aggregate([{ $match: {} }, { $sort: { tag_id: 1 } }])
+        let db = await Products.aggregate([{ $match: {} }, {$project: {listing: 1}}, {$sort: { "listing.price": -1} }])
         res.json(db)
     });
 
