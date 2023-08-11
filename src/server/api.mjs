@@ -158,7 +158,6 @@ let apiRoute = function (app) {
                 }]
             */
             priceFormatter(results[0].results_arr);
-
             res.json({ api_results: results })
         })
 
@@ -212,15 +211,24 @@ DEV ROUTES
 #############*/
 
     app.route('/test').get(async (req, res) => {
-        const lang = 'es'
-        //let db_match = await Products.aggregate([{ $match: {}}, {$sort: { brand_id: 1}}])
-        let count_test = await Products.aggregate(search_query({ category: 9}, { skip: [1, 3]}));
-        priceFormatter(count_test[0].results_arr)
-        res.send('testerino')
+        let lang = req.session.lang || 'es';
+        let tags = await Tags.aggregate(search_list.multi_lang(lang)),
+            categories = await Categories.aggregate(search_list.multi_lang(lang)),
+            brands = await Brands.aggregate(search_list.brand),
+            price_range = await Products.aggregate(search_list.price_range);
+        // price_range returns [{max, min}]
+
+        let search_fields = {
+            tags: [...tags],
+            categories: [...categories],
+            brands: [...brands],
+            price_range: price_range[0]
+        }
+        res.send(search_fields)
     });
 
     app.route('/test_db').get(async (req, res) => {
-        let db = await Brands.aggregate([{ $match: {} }, { $sort: { tag_id: 1 } }])
+        let db = await Products.aggregate([{ $match: {} }, {$project: {listing: 1}}, {$sort: { "listing.price": -1} }])
         res.json(db)
     });
 
