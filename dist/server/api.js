@@ -467,87 +467,36 @@ var apiRoute = function apiRoute(app) {
   /*############
   DEV ROUTES
   #############*/
-
-  app.route('/test').get( /*#__PURE__*/function () {
-    var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
-      var lang, count_test;
-      return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-        while (1) switch (_context8.prev = _context8.next) {
-          case 0:
-            lang = 'es'; //let db_match = await Products.aggregate([{ $match: {}}, {$sort: { brand_id: 1}}])
-            _context8.next = 3;
-            return Products.aggregate((0, _search_query.default)({
-              category: 9
-            }, {
-              skip: [1, 3]
-            }));
-          case 3:
-            count_test = _context8.sent;
-            priceFormatter(count_test[0].results_arr);
-            res.send('testerino');
-          case 6:
-          case "end":
-            return _context8.stop();
-        }
-      }, _callee8);
-    }));
-    return function (_x12, _x13) {
-      return _ref8.apply(this, arguments);
-    };
-  }());
-  app.route('/test_db').get( /*#__PURE__*/function () {
-    var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
-      var db;
-      return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-        while (1) switch (_context9.prev = _context9.next) {
-          case 0:
-            _context9.next = 2;
-            return Brands.aggregate([{
-              $match: {}
-            }, {
-              $sort: {
-                tag_id: 1
-              }
-            }]);
-          case 2:
-            db = _context9.sent;
-            res.json(db);
-          case 4:
-          case "end":
-            return _context9.stop();
-        }
-      }, _callee9);
-    }));
-    return function (_x14, _x15) {
-      return _ref9.apply(this, arguments);
-    };
-  }());
-  app.route('/test_product').get( /*#__PURE__*/function () {
-    var _ref10 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee10(req, res) {
-      var count_test;
-      return _regeneratorRuntime().wrap(function _callee10$(_context10) {
-        while (1) switch (_context10.prev = _context10.next) {
-          case 0:
-            _context10.next = 2;
-            return Products.aggregate((0, _search_query.default)({
-              category: 9
-            }, {
-              skip: [1, 3]
-            }));
-          case 2:
-            count_test = _context10.sent;
-            priceFormatter(count_test[0].results_arr);
-            res.json(count_test);
-          case 5:
-          case "end":
-            return _context10.stop();
-        }
-      }, _callee10);
-    }));
-    return function (_x16, _x17) {
-      return _ref10.apply(this, arguments);
-    };
-  }());
+  /*
+      app.route('/test').get(async (req, res) => {
+          let lang = req.session.lang || 'es';
+          let tags = await Tags.aggregate(search_list.multi_lang(lang)),
+              categories = await Categories.aggregate(search_list.multi_lang(lang)),
+              brands = await Brands.aggregate(search_list.brand),
+              price_range = await Products.aggregate(search_list.price_range);
+          // price_range returns [{max, min}]
+  
+          let search_fields = {
+              tags: [...tags],
+              categories: [...categories],
+              brands: [...brands],
+              price_range: price_range[0]
+          }
+          res.send(search_fields)
+      });
+  
+      app.route('/test_db').get(async (req, res) => {
+          let db = await Products.aggregate([{ $match: {} }, {$project: {listing: 1}}, {$sort: { "listing.price": -1} }])
+          res.json(db)
+      });
+  
+      app.route('/test_product').get(async (req, res) => {
+          //let products = await Products.aggregate([{ $match: {} }])
+          //res.json(products)
+          let count_test = await Products.aggregate(search_query({ category: 9}, { skip: [1, 3]}));
+          priceFormatter(count_test[0].results_arr)
+          res.json(count_test)
+      })*/
 };
 var _default = apiRoute;
 exports.default = _default;

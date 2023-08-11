@@ -51,7 +51,7 @@ var _loop = function _loop(key) {
       case 'name':
         document.querySelector("input[name='".concat(key, "']")).value = search_query[key];
         break;
-      //case 'sort_option':
+      case 'sort_option':
       case 'category':
       case 'brand':
         var selectElem = document.querySelector("select[name='".concat(key, "']"));
@@ -80,6 +80,7 @@ var pagination_container = document.getElementById('pagination');
 var debounce_delay = 500; //ms
 var eventAPI = 'sendToAPI'; //Custom event for API Endpoint
 var eventDispatcherCheck = false; //helps debounce when events are fired multiple times
+var resultAutoScroll = false; //triggers autoscroll when using pagination
 var active_page;
 var items_per_page = 12; //Goes hand-in-hand with CSS filter-and-results.css #product_result grid-tempalet. Must change according to window width.
 
@@ -113,6 +114,7 @@ pagination_container.addEventListener('click', function (event) {
         active_page = +event.target.dataset.pageValue;
     }
     debounce(sendToServer(active_page), debounce_delay);
+    resultAutoScroll = true;
   }
 });
 document.addEventListener("DOMContentLoaded", debounce(sendToServer, debounce_delay));
@@ -138,9 +140,6 @@ function sendToServer() {
           break;
         case 'selected_tags':
           data[_key] ? data[_key].push(value) : data[_key] = [value];
-          break;
-        case 'sort_option':
-          //SORT_OPTION DISABLED UNTIL SEARCH_QUERY.JS FIXED
           break;
         default:
           value != "" ? data[_key] = value : undefined;
@@ -181,6 +180,15 @@ function apiCall(data) {
       var pagination_pages = Math.ceil(response.api_results[0].results_total / items_per_page) || 1;
       (0, _moduleDisplayResults.display_results)(response.api_results[0].results_arr, lang, product_results_container);
       (0, _moduleDisplayPagination.display_pagination)(active_page, pagination_pages, pagination_container);
+
+      //auto scrolling trigger
+      if (resultAutoScroll) {
+        product_results_container.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+        resultAutoScroll = false; //back to default
+      }
     } else {
       console.error(xhr.statusText);
     }

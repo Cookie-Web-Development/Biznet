@@ -33,11 +33,11 @@ app.use((0, _expressSession.default)({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    sameSite: 'none',
+    sameSite: 'lax',
     //Set none for Production. lax for dev
     httpOnly: true,
     //Prevent client-side scripting
-    secure: true,
+    secure: false,
     //Sends cookies only HTTPS. true for Production. false for dev
     maxAge: 300000 //5min FOR DEV ONLY!
   },

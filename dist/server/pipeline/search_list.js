@@ -48,7 +48,7 @@ var search_list = {
               $subtract: ["$$entry.price", {
                 $multiply: ["$$entry.price", "$$entry.discount_percent"]
               }]
-            }, 2]
+            }, 0]
           }
         }
       }
@@ -66,10 +66,14 @@ var search_list = {
     $project: {
       _id: 0,
       max: {
-        $max: "$price_list"
+        $add: [{
+          $max: "$price_list"
+        }, 1]
       },
       min: {
-        $min: "$price_list"
+        $subtract: [{
+          $min: "$price_list"
+        }, 1]
       }
     }
   }]

@@ -209,7 +209,7 @@ let apiRoute = function (app) {
 /*############
 DEV ROUTES
 #############*/
-
+/*
     app.route('/test').get(async (req, res) => {
         let lang = req.session.lang || 'es';
         let tags = await Tags.aggregate(search_list.multi_lang(lang)),
@@ -238,7 +238,7 @@ DEV ROUTES
         let count_test = await Products.aggregate(search_query({ category: 9}, { skip: [1, 3]}));
         priceFormatter(count_test[0].results_arr)
         res.json(count_test)
-    })
+    })*/
 };
 
 export default apiRoute;

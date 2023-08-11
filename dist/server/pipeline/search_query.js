@@ -161,27 +161,24 @@ function search_query(query_input) {
   }
   ;
 
-  // sorting option NEED FIIXING!
+  // sorting option
   var sort = {};
+  var sort_name = "name.".concat(query_input.search_lang);
   switch (query_input.sort_option) {
     case '9-0':
       sort = {
-        "listing[0].price_discounted": -1
+        "listing.price_discounted": -1
       };
       break;
     case 'a-z':
-      sort = {
-        name: 1
-      };
+      sort = _defineProperty({}, sort_name, 1);
       break;
     case 'z-a':
-      sort = {
-        name: -1
-      };
+      sort = _defineProperty({}, sort_name, -1);
       break;
     default:
       sort = {
-        "listing[0].price_discounted": 1
+        "listing.price_discounted": 1
       };
   }
   ;
