@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "Prototype web for proof of concept",
   "main": "server.mjs",
-  "type": "commonjs",
+  "type": "module",
   "scripts": {
     "start": "nodemon src/server.mjs",
     "test": "mocha --ui tdd --exit tests/",
