@@ -8,13 +8,14 @@ import { brands_schema } from './schema/brands_schema.js';
 import { categories_schema } from './schema/categories_schema.js';
 import { reviews_schema } from './schema/reviews_schema.js';
 import { tags_schema } from './schema/tags_schema.js';
+import { session_schema } from './schema/session_schema.js'
 import { users_schema } from './schema/users_schema.js';
-//import { discount_pipeline } from './pipeline/discount.js'; //FLAGGED FOR DELETION!
-//import { featured_pipeline } from './pipeline/featured.js'; //FLAGGED FOR DELETION!
 import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
+import bcrypt from 'bcrypt';
 
 //import crypto from 'crypto';
+//import {cookieParser} from 'cookie-parser';
 
 //const key = crypto.randomBytes(32).toString('hex');
 //console.log(key);
@@ -31,6 +32,7 @@ let apiRoute = function (app) {
     };
 
     const productsDB = mongoose.createConnection(process.env.URI_PRODUCTS, connectionSettings);
+    const sessionDB = mongoose.createConnection(process.env.URI_SESSION, connectionSettings)
     const usersDB = mongoose.createConnection(process.env.URI_USERS, connectionSettings);
 
     /*pre-hooks for schemas: used to assign customs_ids before saving*/
@@ -86,6 +88,7 @@ let apiRoute = function (app) {
         Categories = productsDB.model('categories', categories_schema),
         Reviews = productsDB.model('reviews', reviews_schema),
         Tags = productsDB.model('tags', tags_schema);
+    let Sessions = sessionDB.model('sessions', session_schema);
     let Users = usersDB.model('users', users_schema);
 
 
@@ -114,6 +117,8 @@ let apiRoute = function (app) {
 
         priceFormatter(discount_list);
         priceFormatter(featured_list);
+
+        console.log('SessionID from API', req.sessionID)
 
         res.render('home', { discount_list, featured_list, lang, langData })
     });
@@ -146,25 +151,15 @@ let apiRoute = function (app) {
             let active_page = +req.body.active_page || 1;
             let items_per_page = +req.body.items_per_page || 12;
             let results = await Products.aggregate(search_query(req.body, { skip: [ active_page, items_per_page]}));
-            /*When used with pagination!!!
-            paginasion tiene que oocurrir aqui!!!
-            let active_page
 
-
-            search_query(req.body, { skip: [page_number, limit_per_page] }),
-                returns results = [ 
-                    { results_arr: [{...}, {...}, ...], 
-                    { results_total: total }
-                }]
-            */
             priceFormatter(results[0].results_arr);
             res.json({ api_results: results })
         })
 
     app.route('/product/:id')
         .get(async (req, res) => {
+            let lang = req.session.lang || 'es';
             try {
-                let lang = req.session.lang || 'es';
                 let product_id = req.params.id;
                 let result = await Products.aggregate(search_query({ id: product_id }));                
                 let similar = {
@@ -187,10 +182,8 @@ let apiRoute = function (app) {
                 }
 
                 res.render('product', { api_results: result[0], similar, lang, langData })
-                //res.json({similar: {by_brand: more_brand, by_other: more_similar}})
 
             } catch (err) {
-                let lang = req.session.lang || 'es';
                 console.log(err)
                 res.render('product', { api_results: null, lang, langData })
             }
@@ -239,6 +232,16 @@ DEV ROUTES
         priceFormatter(count_test[0].results_arr)
         res.json(count_test)
     })*/
+    app.route('/test_cookie').get(async (req, res) => {
+        let dateNow = new Date().toUTCString();
+        console.log(dateNow)
+        let cookie = await req.cookies
+        let regex = /:(\w+)\./
+        //let session_id_cookie = cookie["connect.sid"].match(regex)[1]
+        //let session_db_search = await Sessions.findOneAndUpdate({_id: session_id_cookie}, { testerino: ""})
+        res.json(cookie)
+    })
+
 };
 
 export default apiRoute;

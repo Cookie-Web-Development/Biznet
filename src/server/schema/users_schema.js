@@ -15,5 +15,9 @@ export let users_schema = mongoose.Schema({
     profile_pic: {
         type: String,
         default: ''
+    },
+    user_control_id: {
+        type: String,
+        unique: true
     }
 })
