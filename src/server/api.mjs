@@ -22,19 +22,7 @@ import bcrypt from 'bcrypt';
 //import product_variation from '../../../devTool/product_object';
 /*DEV MODE END*/
 
-let apiRoute = function (app) {
-    mongoose.set('strictQuery', true);
-
-    /*Mongoose Connections*/
-    const connectionSettings = {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    };
-
-    const productsDB = mongoose.createConnection(process.env.URI_PRODUCTS, connectionSettings);
-    const sessionDB = mongoose.createConnection(process.env.URI_SESSION, connectionSettings)
-    const usersDB = mongoose.createConnection(process.env.URI_USERS, connectionSettings);
-
+let apiRoute = function (app, db) {
     /*pre-hooks for schemas: used to assign customs_ids before saving*/
 
     //brand
@@ -82,14 +70,14 @@ let apiRoute = function (app) {
     }
 
     /*Models*/
-    let Products = productsDB.model('products', products_schema),
+    let Products = db.model('products', products_schema),
         //Product_Variations = productsDB.model('variations', product_variations_schema),
-        Brands = productsDB.model('brands', brands_schema),
-        Categories = productsDB.model('categories', categories_schema),
-        Reviews = productsDB.model('reviews', reviews_schema),
-        Tags = productsDB.model('tags', tags_schema);
-    let Sessions = sessionDB.model('sessions', session_schema);
-    let Users = usersDB.model('users', users_schema);
+        Brands = db.model('brands', brands_schema),
+        Categories = db.model('categories', categories_schema),
+        Reviews = db.model('reviews', reviews_schema),
+        Tags = db.model('tags', tags_schema);
+    let Sessions = db.model('sessions', session_schema);
+    let Users = db.model('users', users_schema);
 
 
     //format currency in USD with two decimal places

@@ -4,12 +4,14 @@ import express from 'express';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
+import passport from 'passport';
 import http from 'http';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
 import apiRoute from './server/api.mjs';
+//import auth from './server/auth.js'
 import { session_schema } from './server/schema/session_schema.js'
 
 const app = express();
@@ -23,14 +25,42 @@ app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/src', express.static(process.cwd() + '/src'));
 
 
-const sessionDB = mongoose.createConnection(process.env.URI_SESSION, { useNewUrlParser: true, useUnifiedTopology: true });
+/*###########
+DB connection
+#############*/
+mongoose.set('strictQuery', true);
+mongoose.Promise = global.Promise;
 
+const connection_settings = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+}
+
+const DB = mongoose.createConnection(process.env.URI_DB, connection_settings);
 
 const store = MongoStore.create({
-  mongoUrl: process.env.URI_SESSION,
-  mongooseConnection: sessionDB,
+  mongoUrl: process.env.URI_DB,
+  mongooseConnection: DB,
   collectionName: 'sessions'
 });
+
+if (true) { //turn off for production!!
+  DB.on('connected', () => {
+    console.log('Connected to Database');
+  })
+  DB.on('disconnect', () => {
+    console.log('Disconnected from Database')
+  })
+}
+
+DB.on('error', (err) => {
+  console.error('Error connecting to Database', err);
+})
+
+
+/*######
+SESSIONS
+########*/
 
 app.use(session({ //from ChatGPT
   secret: process.env.SESSION,
@@ -45,12 +75,15 @@ app.use(session({ //from ChatGPT
   store: store
 }));
 
+app.use(passport.initialize());
+app.use(passport.session())
+
 // Set up body-parser middleware from ChatGPT
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 // Session middleware function for all routes
-let Sessions = sessionDB.model('sessions', session_schema);
+let Sessions = DB.model('sessions', session_schema);
 
 let session_middleware = async (req, res, next) => {
   let sessionDB_result, errorLimit = 3;
@@ -104,7 +137,8 @@ let session_middleware = async (req, res, next) => {
 app.use(session_middleware);
 
 
-apiRoute(app);
+apiRoute(app, DB);
+//auth(app);
 
 //placeholder error middleware
 app.use((err, req, res, next) => {
