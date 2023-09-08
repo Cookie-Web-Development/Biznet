@@ -1,7 +1,8 @@
 'use strict';
 
-import mongoose from 'mongoose';
 import langData from '../../src/server/lang/lang.json' assert { type: "json" };
+import bcrypt from 'bcrypt';
+import passport from 'passport';
 import { products_schema } from './schema/products_schema.js';
 //import { product_variations_schema } from './schema/product_variations_schema.js';
 import { brands_schema } from './schema/brands_schema.js';
@@ -12,7 +13,6 @@ import { session_schema } from './schema/session_schema.js'
 import { users_schema } from './schema/users_schema.js';
 import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
-import bcrypt from 'bcrypt';
 
 //import crypto from 'crypto';
 //import {cookieParser} from 'cookie-parser';
@@ -24,7 +24,6 @@ import bcrypt from 'bcrypt';
 
 let apiRoute = function (app, db) {
     /*pre-hooks for schemas: used to assign customs_ids before saving*/
-
     //brand
     brands_schema.statics.createBrand = async function (data) {
         let last_entry = await this.findOne({}, { _id: 0, brand_id: 1 }, { sort: { brand_id: -1 } }) || { brand_id: 0 };
@@ -81,7 +80,7 @@ let apiRoute = function (app, db) {
 
 
     //format currency in USD with two decimal places
-    let formatOptions = { 
+    let formatOptions = {
         style: 'currency',
         currency: 'USD',
         minimumFractionDigits: 2,
@@ -97,11 +96,20 @@ let apiRoute = function (app, db) {
         })
     }
 
+    /*passport authenticate middleware*/
+    function check_auth(req, res, next) {
+        if (req.isAuthenticated()) {
+            return next();
+        }
+        //placeholder
+        res.redirect('/')
+    }
+
     app.route(['/', '/home']).get(async (req, res) => {
         //session lang is req.session.lang
         let lang = req.session.lang || "es";
-        let discount_list = await Products.aggregate(search_query({discount: "true"}));
-        let featured_list = await Products.aggregate(search_query({featured: "true"}, {sample: 8}))
+        let discount_list = await Products.aggregate(search_query({ discount: "true" }));
+        let featured_list = await Products.aggregate(search_query({ featured: "true" }, { sample: 8 }))
 
         priceFormatter(discount_list);
         priceFormatter(featured_list);
@@ -138,7 +146,7 @@ let apiRoute = function (app, db) {
         .post(async (req, res) => {
             let active_page = +req.body.active_page || 1;
             let items_per_page = +req.body.items_per_page || 12;
-            let results = await Products.aggregate(search_query(req.body, { skip: [ active_page, items_per_page]}));
+            let results = await Products.aggregate(search_query(req.body, { skip: [active_page, items_per_page] }));
 
             priceFormatter(results[0].results_arr);
             res.json({ api_results: results })
@@ -149,23 +157,23 @@ let apiRoute = function (app, db) {
             let lang = req.session.lang || 'es';
             try {
                 let product_id = req.params.id;
-                let result = await Products.aggregate(search_query({ id: product_id }));                
+                let result = await Products.aggregate(search_query({ id: product_id }));
                 let similar = {
-                    by_brand: await Products.aggregate(search_query({ more_brand: [product_id, result[0].brand_id]}, { sample: 8})),
-                    by_other: await Products.aggregate(search_query({ more_similar: [ product_id, result[0].brand_id, result[0].category_id, [...result[0].tag_id] ] }, { sample: 8 } ) )
+                    by_brand: await Products.aggregate(search_query({ more_brand: [product_id, result[0].brand_id] }, { sample: 8 })),
+                    by_other: await Products.aggregate(search_query({ more_similar: [product_id, result[0].brand_id, result[0].category_id, [...result[0].tag_id]] }, { sample: 8 }))
                 }
 
                 priceFormatter(result)
 
-                if(similar.by_brand.length >= 1) {
+                if (similar.by_brand.length >= 1) {
                     priceFormatter(similar.by_brand)
                 }
-                if(similar.by_other.length >= 1) {
+                if (similar.by_other.length >= 1) {
                     priceFormatter(similar.by_other)
                 }
 
-                if(similar.by_brand.length == 0 || similar.by_other.length == 0) {
-                    similar.more_products = await Products.aggregate(search_query({ more_product: product_id}, { sample: 10 }))
+                if (similar.by_brand.length == 0 || similar.by_other.length == 0) {
+                    similar.more_products = await Products.aggregate(search_query({ more_product: product_id }, { sample: 10 }))
                     priceFormatter(similar.more_products)
                 }
 
@@ -177,6 +185,22 @@ let apiRoute = function (app, db) {
             }
         })
 
+    app.route('/login')
+        .get((req, res) => {
+            let lang = req.session.lang || 'es';
+            let loginCheck = true;
+            res.render('login', { lang, langData, loginCheck })
+        })
+
+    app.route('/register')
+        .get((req, res) => {
+            let lang = req.session.lang || 'es';
+            let loginCheck = true;  
+            res.render('register', { lang, langData, loginCheck })
+        })
+
+    app.route('/profile')
+
     app.route('/lang_change').get((req, res) => {
         if (req.session.lang == 'en') {
             req.session.lang = 'es'
@@ -187,39 +211,39 @@ let apiRoute = function (app, db) {
         res.redirect(referer);
     });
 
-/*############
-DEV ROUTES
-#############*/
-/*
-    app.route('/test').get(async (req, res) => {
-        let lang = req.session.lang || 'es';
-        let tags = await Tags.aggregate(search_list.multi_lang(lang)),
-            categories = await Categories.aggregate(search_list.multi_lang(lang)),
-            brands = await Brands.aggregate(search_list.brand),
-            price_range = await Products.aggregate(search_list.price_range);
-        // price_range returns [{max, min}]
-
-        let search_fields = {
-            tags: [...tags],
-            categories: [...categories],
-            brands: [...brands],
-            price_range: price_range[0]
-        }
-        res.send(search_fields)
-    });
-
-    app.route('/test_db').get(async (req, res) => {
-        let db = await Products.aggregate([{ $match: {} }, {$project: {listing: 1}}, {$sort: { "listing.price": -1} }])
-        res.json(db)
-    });
-
-    app.route('/test_product').get(async (req, res) => {
-        //let products = await Products.aggregate([{ $match: {} }])
-        //res.json(products)
-        let count_test = await Products.aggregate(search_query({ category: 9}, { skip: [1, 3]}));
-        priceFormatter(count_test[0].results_arr)
-        res.json(count_test)
-    })*/
+    /*############
+    DEV ROUTES
+    #############*/
+    /*
+        app.route('/test').get(async (req, res) => {
+            let lang = req.session.lang || 'es';
+            let tags = await Tags.aggregate(search_list.multi_lang(lang)),
+                categories = await Categories.aggregate(search_list.multi_lang(lang)),
+                brands = await Brands.aggregate(search_list.brand),
+                price_range = await Products.aggregate(search_list.price_range);
+            // price_range returns [{max, min}]
+    
+            let search_fields = {
+                tags: [...tags],
+                categories: [...categories],
+                brands: [...brands],
+                price_range: price_range[0]
+            }
+            res.send(search_fields)
+        });
+    
+        app.route('/test_db').get(async (req, res) => {
+            let db = await Products.aggregate([{ $match: {} }, {$project: {listing: 1}}, {$sort: { "listing.price": -1} }])
+            res.json(db)
+        });
+    
+        app.route('/test_product').get(async (req, res) => {
+            //let products = await Products.aggregate([{ $match: {} }])
+            //res.json(products)
+            let count_test = await Products.aggregate(search_query({ category: 9}, { skip: [1, 3]}));
+            priceFormatter(count_test[0].results_arr)
+            res.json(count_test)
+        })*/
     app.route('/test_cookie').get(async (req, res) => {
         let dateNow = new Date().toUTCString();
         console.log(dateNow)

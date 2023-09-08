@@ -25,6 +25,7 @@ CSS rules that affects elements such as [header], [main], or [footer]; and modif
 */
 @import './layout/header.css';
 @import './layout/main.css';
+@import './layout/user-form.css'; /*account info: logins forms, register, profile, etc.*/
 
 /*
 PAGES:

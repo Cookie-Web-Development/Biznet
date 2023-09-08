@@ -1,0 +1,27 @@
+doctype html 
+html(lang=lang)
+    include partials/_head.pug
+    body
+        include partials/_header.pug
+        main 
+            h1(class='login_text' class='user_form_title')=langData.profile.sign_up[lang]
+            section#form_section
+                form(method='' action='' class='user_form' id='register_form')
+                    label(for="username")=langData.profile.new_username[lang]
+                    input(class='input_box' id='username' type='text' autocomplete="off")
+                    label(for='password' class='password_label')=langData.profile.password[lang] 
+                    div(class='input_div password')
+                        input(id='password' type='password' autocomplete="off")
+                        label(class='show_password' for='show_password_checkbox')
+                            input(type='checkbox' id='show_password_checkbox' checked=false autocomplete="off")
+                            i(id='show_password_off' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
+                            i(id='show_password_on' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
+                    label(for='password_confirm' class='password_confirm_label')=langData.profile.password_confirm[lang]
+                    input(class='input_box' id='password_confirm' type='password' autocomplete='off')
+                    button(class='button btn_modal disabled btn_form' type='submit')=langData.profile.confirm[lang] 
+                    div.form_divider
+            p(style='margin-bottom: 2rem;') 
+                span=langData.profile.redirect_login.text[lang]
+                a(class='text_link_inline' href='/login')=langData.profile.redirect_login.link[lang]
+        footer
+        script(src='/src/client/components/login_form.js' defer)

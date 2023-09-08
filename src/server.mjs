@@ -11,7 +11,7 @@ import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
 import apiRoute from './server/api.mjs';
-//import auth from './server/auth.js'
+import auth from './server/auth.js'
 import { session_schema } from './server/schema/session_schema.js'
 
 const app = express();
@@ -138,7 +138,7 @@ app.use(session_middleware);
 
 
 apiRoute(app, DB);
-//auth(app);
+auth(app, DB);
 
 //placeholder error middleware
 app.use((err, req, res, next) => {

@@ -2,6 +2,7 @@
     height: 3rem;
     min-width: 3rem;
     background-color: transparent;
+    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
     border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
     border-radius: 10px;
 }
@@ -25,7 +26,6 @@
 
 .button_pagination {
     border-radius: 5px;
-    font-size: var(--fs-body);
     height: var(--fs-max);
     width: var(--fs-max);
 }
@@ -40,24 +40,11 @@
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
 }
 
-.button_forgot_password {
-    background-color: transparent;
-    border: none;   
-    align-self: flex-start;
-}
 
-.button_forgot_password:hover {
+/*########
+TEXT LINKS
+##########*/
+/*these are here due to being clickable | interactive elements*/
+.text_link:hover {
     cursor: pointer;
 }
-
-/*
-
-.lang_selector {
-    width: auto;
-    height: auto;
-    align-self: flex-end;
-}
-
-.lang_selector > button {
-    padding: 1rem;
-}*/

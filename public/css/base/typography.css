@@ -10,6 +10,7 @@
 
 .navbar > li {
     color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
+    font-size: var(--fs-body);
 }
 
 .anchor_inline {
@@ -52,24 +53,22 @@ DISCLAIMER
     font-size: var(--fs-body);
 }
 
+/*#####
+BUTTONS
+#######*/
+.button {
+    font-size: var(--fs-body);
+}
+
+.btn_inline {
+    font-size: var(--fs-note)
+}
+
 /*##########
 INPUT BOXES
 ############*/
 .input_box {
     font-size: var(--fs-note)
-}
-
-
-/*###########
-Login Modal
-#############*/ 
-.login_text { /*Literally is the text that says LOGIN*/
-    font-size: var(--fs-max);
-}
-
-.button_forgot_password {
-    text-decoration: underline;
-    font-size: var(--fs-note);
 }
 
 /*#######################
@@ -116,7 +115,8 @@ Product Cards
     position: relative;
 }
 
-.price_discount > .price_before::before { /* discount red line. This is here cuz I treat this as "text-decoration" */
+.price_discount > .price_before::before { 
+    /* discount red line. This is here cuz I treat this as "text-decoration" */
     content: '';
     height: 0px;
     width: 90%;
@@ -192,7 +192,34 @@ Product Display
     font-size: var(--fs-body);
 }
 
+/*###########
+Login Modal
+#############*/ 
+.login_text { /*Literally is the text that says LOGIN*/
+    font-size: var(--fs-max);
+}
 
+.text_link {
+    text-decoration: underline;
+    font-size: var(--fs-note);
+}
+
+/*###################
+LOGIN & REGISTER PAGE
+#####################*/
+.user_form > label {
+    text-align: right;
+    font-size: var(--fs-body)
+}
+
+#form_section + p {
+    font-size: var(--fs-body);
+} 
+
+.text_link_inline {
+    text-decoration: underline;
+    font-size: var(--fs-body);
+}
 /*####
 MAIN
 ######*/
@@ -200,4 +227,6 @@ MAIN
 h2 {
     font-size: var(--fs-max);
 }
+
+
 

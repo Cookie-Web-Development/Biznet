@@ -5,34 +5,8 @@
             "es": "buscar"
         },
         "login": {
-            "login_upper": {
-                "en": "LOGIN",
-                "es": "ENTRAR"
-            },
-            "login_lower": {
-                "en": "Login",
-                "es": "Iniciar sesión"
-            },
-            "username": {
-                "en": "Username",
-                "es": "Nombre de usuario"
-            },
-            "password": {
-                "en": "Password",
-                "es": "Contraseña"
-            },
-            "password_forgot": {
-                "en": "Forgot password?",
-                "es": "¿Olvidó su contraseña?"
-            },
-            "sign_up": {
-                "en": "Create new account",
-                "es": "Crear una nueva cuenta"
-            },
-            "cancel": {
-                "en": "Cancel",
-                "es": "Cancelar"
-            }
+            "en": "LOGIN",
+            "es": "ENTRAR"
         },
         "navbar": {
             "home": {
@@ -50,6 +24,64 @@
             "return_search_results": {
                 "en": "Return to search results",
                 "es": "Volver a los resultados de busqueda"
+            }
+        }
+    },
+    "profile" : {
+        "login": {
+            "en": "Login",
+            "es": "Iniciar sesión"
+        },
+        "username": {
+            "en": "Username",
+            "es": "Nombre de usuario"
+        },
+        "new_username":{
+            "en": "New username",
+            "es": "Nuevo usuario"
+        },
+        "password": {
+            "en": "Password",
+            "es": "Contraseña"
+        },
+        "password_confirm": {
+            "en": "Confirm password",
+            "es": "Confirme la contraseña"
+        },
+        "password_forgot": {
+            "en": "Forgot password?",
+            "es": "¿Olvidó su contraseña?"
+        },
+        "sign_up": {
+            "en": "Create new account",
+            "es": "Crear una cuenta nueva"
+        },
+        "confirm": {
+            "en": "Confirm",
+            "es": "Confirmar"
+        },
+        "cancel": {
+            "en": "Cancel",
+            "es": "Cancelar"
+        },
+        "redirect_login": {
+            "text": {
+                "en": "Already have an account? ",
+                "es": "¿Ya tienes una cuenta? "
+            },
+            "link": {
+                "en": "Log in",
+                "es": "Inicia sesión"
+            }
+        },
+        "redirect_register": {
+            "text": {
+                "en": "Don't have an account? ",
+                "es": "¿No tienes una cuenta? "
+            },
+            "link": {
+                "en": "Sign up",
+                "es": "Regístrate"
             }
         }
     },

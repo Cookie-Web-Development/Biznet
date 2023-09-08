@@ -101,7 +101,6 @@ HEADER_BOT START
     border-top: 50px solid transparent;
     border-right: var(--rwd-navbar-decor) solid hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
     right: 0;
-    top: 0;
 }
 
 .breadcrumb_container {

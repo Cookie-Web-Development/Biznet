@@ -24,8 +24,9 @@ header.header
                 i(class="fa-solid fa-magnifying-glass")
         form(id='lang_selector', class='lang_selector', action='/lang_change', method='get')
             button(class='button all_caps')=lang
-        div.login
-            button.button.btn_main#login_modal_btn=langData.header.login.login_upper[lang]
+        if (!loginCheck)
+            div.login
+                button.button.btn_main#login_modal_btn=langData.header.login[lang]
     nav.header_bot
         ul.navbar
             li
@@ -33,22 +34,25 @@ header.header
             li 
                 a(href='/catalog')=langData.header.navbar.catalog[lang]
             li.disabled=langData.header.navbar.deals[lang]
-dialog(id='login_modal')
-    span.login_text=langData.header.login.login_lower[lang]
-    form(action="" id='login_form')
-        label(for="username")=langData.header   .login.username[lang]
-        input(class='input_box' id='username' type='text' autocomplete="off")
-        label(for='password')=langData.header.login.password[lang] 
-        div(class='input_div password')
-            input(id='password' type='password' autocomplete="off")
-            label(class='show_password' for='show_password_checkbox')
-                input(type='checkbox' id='show_password_checkbox' checked=false autocomplete="off")
-                i(id='show_password_off' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
-                i(id='show_password_on' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
-        button(class='button_forgot_password disabled')=langData.header.login.password_forgot[lang]
-        button(class='button btn_modal disabled' type='submit')=langData.header.login.login_lower[lang] 
-        button(class='button btn_modal disabled')=langData.header.login.sign_up[lang] 
-        button(class='button btn_modal login_modal_close', type='button')=langData.header.login.cancel[lang]
-    button(class='button_modal_close login_modal_close', type='button') 
-        i(class="fa-solid fa-circle-xmark fa-xl")
-script(src='/src/client/components/login_modal.js' defer)
+if (!loginCheck)
+    dialog(id='login_modal')
+        span.login_text=langData.profile.login[lang]
+        form(method="" action='' id='modal_form')
+            label(for="username")=langData.profile.username[lang]
+            input(class='input_box' id='username' type='text' autocomplete="off")
+            label(for='password')=langData.profile.password[lang] 
+            div(class='input_div password')
+                input(id='password' type='password' autocomplete="off")
+                label(class='show_password' for='show_password_checkbox')
+                    input(type='checkbox' id='show_password_checkbox' checked=false autocomplete="off")
+                    i(id='show_password_off' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
+                    i(id='show_password_on' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
+            a(class='text_link disabled' href='/')=langData.profile.password_forgot[lang]
+            button(class='button btn_modal disabled' type='submit')=langData.profile.login[lang] 
+            a(href='/register') 
+                button(class='button btn_modal' type='button')=langData.profile.sign_up[lang]
+            button(class='button btn_modal login_modal_close', type='button')=langData.profile.cancel[lang]
+        button(class='button_modal_close login_modal_close', type='button') 
+            i(class="fa-solid fa-circle-xmark fa-xl")
+    script(src='/src/client/components/login_modal.js' defer)
+    script(src='/src/client/components/login_form.js' defer)

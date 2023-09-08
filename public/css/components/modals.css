@@ -11,7 +11,6 @@
 }
 
 #login_modal {
-    height: 28rem;
     width: 38rem;
 }
 
@@ -19,6 +18,13 @@
 /*#########
 LOGIN MODAL
 ###########*/
+#modal_form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+}
+
 
 .button_modal_close {
     position: absolute;
@@ -35,27 +41,6 @@ LOGIN MODAL
     cursor: pointer;
     scale: 1.1
 }
-
-#login_form {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    padding-top: 0.5rem;
-}
-
-#show_password_checkbox {
-    display: none;
-}
-
-.show_password_icon {
-    display: none;
-    padding-right: 1rem;
-}
-
-.show_password_icon.active {
-    display: inline;
-}
-
 
 /*#############
 DISCLAIMER MODAL

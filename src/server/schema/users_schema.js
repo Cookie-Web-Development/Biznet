@@ -12,12 +12,8 @@ export let users_schema = mongoose.Schema({
         type: String,
         required: true
     },
-    profile_pic: {
-        type: String,
-        default: ''
-    },
-    user_control_id: {
-        type: String,
-        unique: true
+    user_config: {
+        lang: String,
+        theme: String
     }
 })
