@@ -170,5 +170,32 @@
             "en": "Other products that might interest you",
             "es": "Otros productos que te podrían interesar"
         }
-    }
+    },
+    "error": {
+        "required_field": {
+            "en": "This field is required.",
+            "es": "Este campo es obligatorio."
+        },
+        "javascript_disabled": {
+            "en": "This website uses JavaScript primarily to fetch data from database in order to display it on the browser. With JavaScript disabled, this website will not be able to work as intended.",
+            "es": "Este sitio web utiliza JavaScript principalmente para recibir datos desde una base de datos y mostrarlo en el navegador. Con JavaScript desabilitado, este sitio web no podrá funcionar de manera correcta."
+        },
+        "confirm_password": {
+            "en": "Password and Confirm Password mismatch. Make sure both Password and Confirm Password fields contain the same information.",
+            "es": "Los campos de Contraseña y Confirme la contraseña no son iguales. Asegurese de que ambos campos contengan la misma información."
+        },
+        "username_space": {
+            "en": "The username can not contain any spaces.",
+            "es": "El nombre de usuario no puede tener espacios."
+        },
+        "username_in_use": {
+            "en": "This username is already in use.",
+            "es": "Éste nombre de usuario ya está en uso."
+        },
+        "password_space": {
+            "en": "Password can't contain any spaces.",
+            "es": "La contraseña no puede contener espacios."
+        }
+    },
+    "notification": {}
 }

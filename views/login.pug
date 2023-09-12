@@ -5,13 +5,20 @@ html(lang=lang)
         include partials/_header.pug
         main 
             h1(class='login_text' class='user_form_title')=langData.profile.login[lang]
+            if messages.register 
+                each message in messages.register 
+                    p=message
             section#form_section
-                form(method='' action='' class='user_form' id='login_form')
-                    label(for="username")=langData.profile.username[lang]
-                    input(class='input_box' id='username' type='text' autocomplete="off")
+                form(method='get' action='/login_test' class='user_form' id='login_form')
+                    if messages.login_error
+                        div.login_notification
+                            each error in messages.login_error 
+                                p.notification_message=error                        
+                    label(for="username" class='username_label')=langData.profile.username[lang]
+                    input(class='input_box' id='username' class='username_input' type='text' name='username' autocomplete="off")
                     label(for='password' class='password_label')=langData.profile.password[lang] 
                     div(class='input_div password')
-                        input(id='password' type='password' autocomplete="off")
+                        input(id='password' name='password' type='password' autocomplete="off")
                         label(class='show_password' for='show_password_checkbox')
                             input(type='checkbox' id='show_password_checkbox' checked=false autocomplete="off")
                             i(id='show_password_off' class="fa-solid fa-eye-slash fa-lg show_password_icon active")

@@ -216,6 +216,15 @@ LOGIN & REGISTER PAGE
     font-size: var(--fs-body);
 } 
 
+.notification_container > .error_notification {
+    font-size: var(--fs-note);
+    color: red;
+}
+
+.error_notification::before {
+    content: '*';
+}
+
 .text_link_inline {
     text-decoration: underline;
     font-size: var(--fs-body);

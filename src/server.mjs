@@ -5,6 +5,7 @@ import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
 import passport from 'passport';
+import flash from 'express-flash';
 import http from 'http';
 import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
@@ -21,6 +22,7 @@ dotenv.config({ path: './.env' });
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(cookieParser());
+app.use(flash());
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/src', express.static(process.cwd() + '/src'));
 

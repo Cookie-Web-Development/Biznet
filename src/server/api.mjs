@@ -3,6 +3,7 @@
 import langData from '../../src/server/lang/lang.json' assert { type: "json" };
 import bcrypt from 'bcrypt';
 import passport from 'passport';
+import flash from 'express-flash';
 import { products_schema } from './schema/products_schema.js';
 //import { product_variations_schema } from './schema/product_variations_schema.js';
 import { brands_schema } from './schema/brands_schema.js';
@@ -97,6 +98,7 @@ let apiRoute = function (app, db) {
     }
 
     /*passport authenticate middleware*/
+    /*    
     function check_auth(req, res, next) {
         if (req.isAuthenticated()) {
             return next();
@@ -104,8 +106,24 @@ let apiRoute = function (app, db) {
         //placeholder
         res.redirect('/')
     }
+    */
+    function check_auth (redirecRoute, restictionCheck) {
+        let redirect = redirecRoute || '/', check = restictionCheck || false;
+        if (check) {
+            return function (req, res, next) {
+                if (req.isAuthenticated()) { return next() }
+                res.redirect(redirect)
+            }
+        }
 
-    app.route(['/', '/home']).get(async (req, res) => {
+        return function (req, res, next) {
+            if (req.isAuthenticated()) { return res.redirect(redirect) }
+            next();
+        }
+    }
+
+    app.route(['/', '/home'])
+        .get(async (req, res) => {
         //session lang is req.session.lang
         let lang = req.session.lang || "es";
         let discount_list = await Products.aggregate(search_query({ discount: "true" }));
@@ -117,7 +135,7 @@ let apiRoute = function (app, db) {
         console.log('SessionID from API', req.sessionID)
 
         res.render('home', { discount_list, featured_list, lang, langData })
-    });
+        });
 
     app.route('/catalog')
         .get(async (req, res) => {
@@ -186,22 +204,82 @@ let apiRoute = function (app, db) {
         })
 
     app.route('/login')
-        .get((req, res) => {
+        .get(check_auth('/profile', false), (req, res) => {
             let lang = req.session.lang || 'es';
             let loginCheck = true;
             res.render('login', { lang, langData, loginCheck })
         })
-
+        
     app.route('/register')
         .get((req, res) => {
             let lang = req.session.lang || 'es';
             let loginCheck = true;  
             res.render('register', { lang, langData, loginCheck })
         })
+        .post(async (req, res) => {
+            //test if username is valid
+            /*let input_username = req.body.username.trim()
+            if (/\s/.test(input_username)) { //no spaces in username
+                req.flash('error', 'username_space')
+                req.flash('error_username', `${input_username}`)
+                return res.redirect('/register')
+            }
+
+            //check password vs confirm password
+            if(req.body.password !== req.body.confirm_password) {
+                req.flash('error', 'confirm_password')
+                return res.redirect('/register')
+            }
+
+            /*
+            //check if username already exist
+            let checkDB = await Users.findOne({ username: input_username.toLowerCase() })
+            if(checkDB) {
+                req.flash('error', 'username_in_use')
+                req.flash('error_username', `${input_username}`)
+                res.redirect('/register')
+            }
+            */
+
+            //test password
+            /*let input_password = req.body.password.trim();
+            if(/\s/.test(input_password)) {
+                req.flash('error', 'password_space')
+                return res.redirect('/register')
+            }
+
+            let hash = await bcrypt.hash(input_password, 12)
+            console.log(hash)
+            /*
+            let user_save = await Users.insertOne({
+                username: input_username.toLowerCase(),
+                profile_username: input_username,
+                password: hash
+            })
+
+            console.log(user_save)*/
+            //req.flash('register', 'Registrado mah boi')
+            //res.redirect('/login')
+            //console.log(req.body.get('username'))
+            res.json({aloha: "hola"})
+        })
+        
+    app.route('/register_test')
+        .get((req, res) => {
+            let request = req;
+            res.json(request)
+        })
+
 
     app.route('/profile')
+        .get((req, res) => {
+            let lang = req.session.lang || 'es';
+            let loginCheck = true;
+            res.render('profile', { lang, langData, loginCheck})
+        })
 
-    app.route('/lang_change').get((req, res) => {
+    app.route('/lang_change')
+        .get((req, res) => {
         if (req.session.lang == 'en') {
             req.session.lang = 'es'
         } else {
@@ -209,7 +287,7 @@ let apiRoute = function (app, db) {
         }
         let referer = req.headers.referer || '/';
         res.redirect(referer);
-    });
+        });
 
     /*############
     DEV ROUTES

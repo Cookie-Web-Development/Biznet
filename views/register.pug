@@ -5,23 +5,36 @@ html(lang=lang)
         include partials/_header.pug
         main 
             h1(class='login_text' class='user_form_title')=langData.profile.sign_up[lang]
+            if messages.error
+                each error in messages.error
+                    if messages.error_username 
+                        p=`${langData.error.username_prefix[lang]} ${messages.error_username} ${langData.error[error][lang]}`
+                    else
+                        p=langData.error[error][lang]
             section#form_section
-                form(method='' action='' class='user_form' id='register_form')
-                    label(for="username")=langData.profile.new_username[lang]
-                    input(class='input_box' id='username' type='text' autocomplete="off")
+                form(class='user_form' id='register_form' data-registration-form)
+                    label(for="username" class='username_label')=langData.profile.new_username[lang]
+                    input(class='input_box' id='username' class='username_input' type='text' name='username')
+                    div(id='username_notification' class='notification_container' data-registration-notification='username')
                     label(for='password' class='password_label')=langData.profile.password[lang] 
                     div(class='input_div password')
-                        input(id='password' type='password' autocomplete="off")
+                        input(id='password' type='password' name='password')
                         label(class='show_password' for='show_password_checkbox')
-                            input(type='checkbox' id='show_password_checkbox' checked=false autocomplete="off")
+                            input(type='checkbox' id='show_password_checkbox' checked=false)
                             i(id='show_password_off' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
                             i(id='show_password_on' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
+                    div(id='password_notification' class='notification_container' data-registration-notification='password')
                     label(for='password_confirm' class='password_confirm_label')=langData.profile.password_confirm[lang]
-                    input(class='input_box' id='password_confirm' type='password' autocomplete='off')
-                    button(class='button btn_modal disabled btn_form' type='submit')=langData.profile.confirm[lang] 
+                    input(class='input_box' name='confirm_password' id='password_confirm' type='password' autocomplete='off')
+                    div(id='password_confirm_notification' class='notification_container' data-registration-notification='confirm_password')
+                    button(class='button btn_modal btn_form' type='button' data-registration-submit)=langData.profile.confirm[lang] 
                     div.form_divider
-            p(style='margin-bottom: 2rem;') 
+            p(style='margin-bottom: 2rem;')
                 span=langData.profile.redirect_login.text[lang]
                 a(class='text_link_inline' href='/login')=langData.profile.redirect_login.link[lang]
         footer
+        script.
+            let lang = !{JSON.stringify(lang)};
+            let langData = !{JSON.stringify(langData)};
+        script(type='module', src='/src/client/components/registration_form.js' defer)
         script(src='/src/client/components/login_form.js' defer)

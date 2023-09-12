@@ -46,6 +46,10 @@ CSS rules that affect theme changes such as [dark-theme]
     cursor: not-allowed;
 }
 
+.disabled:active {
+    pointer-events: none;
+}
+
 footer {
     display: none;
 }

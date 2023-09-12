@@ -8,6 +8,7 @@ export let users_schema = mongoose.Schema({
         required: true,
         unique: true
     },
+    profile_name: String,
     password: {
         type: String,
         required: true
