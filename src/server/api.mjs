@@ -212,64 +212,41 @@ let apiRoute = function (app, db) {
         
     app.route('/register')
         .get((req, res) => {
+            const flash_messages = req.flash('flash')[0] || []
+            console.log(flash_messages)
             let lang = req.session.lang || 'es';
             let loginCheck = true;  
-            res.render('register', { lang, langData, loginCheck })
+            res.render('register', { lang, langData, loginCheck, notification: flash_messages })
         })
         .post(async (req, res) => {
-            //test if username is valid
-            /*let input_username = req.body.username.trim()
-            if (/\s/.test(input_username)) { //no spaces in username
-                req.flash('error', 'username_space')
-                req.flash('error_username', `${input_username}`)
-                return res.redirect('/register')
-            }
+            let user_credentials = req.body
+            user_credentials.username = user_credentials.username.trim();
 
-            //check password vs confirm password
-            if(req.body.password !== req.body.confirm_password) {
-                req.flash('error', 'confirm_password')
-                return res.redirect('/register')
-            }
-
-            /*
             //check if username already exist
-            let checkDB = await Users.findOne({ username: input_username.toLowerCase() })
+            let checkDB = await Users.findOne({ username: user_credentials.username.toLowerCase() })
             if(checkDB) {
-                req.flash('error', 'username_in_use')
-                req.flash('error_username', `${input_username}`)
+                req.flash('flash', {username: {error: 'username_in_use', input: user_credentials.username}})
                 res.redirect('/register')
-            }
-            */
-
-            //test password
-            /*let input_password = req.body.password.trim();
-            if(/\s/.test(input_password)) {
-                req.flash('error', 'password_space')
-                return res.redirect('/register')
+                return;
             }
 
-            let hash = await bcrypt.hash(input_password, 12)
+            let hash = await bcrypt.hash(user_credentials.password, 12)
             console.log(hash)
-            /*
-            let user_save = await Users.insertOne({
-                username: input_username.toLowerCase(),
-                profile_username: input_username,
+            
+            let user_save = new Users({
+                username: user_credentials.username.toLowerCase(),
+                profile_username: user_credentials.username,
                 password: hash
             })
+            try {
+                await user_save.save()
+                console.log(`User created with _id: ${user_save._id}`)
+                res.redirect('/login')
+            } catch(err) {
+                console.error("Registring error: ", err)
+            }
 
-            console.log(user_save)*/
-            //req.flash('register', 'Registrado mah boi')
-            //res.redirect('/login')
-            //console.log(req.body.get('username'))
-            res.json({aloha: "hola"})
         })
-        
-    app.route('/register_test')
-        .get((req, res) => {
-            let request = req;
-            res.json(request)
-        })
-
 
     app.route('/profile')
         .get((req, res) => {

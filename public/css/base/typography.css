@@ -216,7 +216,8 @@ LOGIN & REGISTER PAGE
     font-size: var(--fs-body);
 } 
 
-.notification_container > .error_notification {
+.error_notification,
+.error_notification > * {
     font-size: var(--fs-note);
     color: red;
 }
