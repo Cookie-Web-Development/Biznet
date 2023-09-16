@@ -7,11 +7,6 @@ export let session_schema = mongoose.Schema({
         type: String,
         required: true
     },
-    user_id: {
-        type: String,
-        default: ''
-    },
     expires: Date,
     session: String,
-    last_acess: String
 })

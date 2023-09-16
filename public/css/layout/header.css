@@ -18,11 +18,43 @@
     justify-content: space-evenly;
     padding: 1rem;
     width: var(--rwd-full-width);
+    gap: 1rem;
+    flex-wrap: wrap;
 }
 
-.searchbar, .login, .lang_selector {
+.searchbar,
+.login,
+.lang_selector,
+.user_profile {
     align-self: flex-end;
 }
+
+.user_profile {
+    width: 14rem;
+    height: 4rem;
+    border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    border-radius: 10px;
+    /*DEV*/
+}
+
+.user_profile_greeting {
+    padding: 0.5rem 0.5rem 0.1rem 0.5rem;
+    border-radius: 10px 10px 0 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+}
+
+.user_profile_links {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    justify-content: flex-end;
+    margin: .5rem;
+}
+
 
 /*########
 LOGO START
@@ -55,13 +87,13 @@ SEARCHBAR START
     grid-template-columns: 1fr 2rem;
 }
 
-.searchbar > * {
+.searchbar>* {
     height: 2rem;
     border: none;
     background-color: transparent;
 }
 
-.searchbar > button {
+.searchbar>button {
     cursor: pointer;
 }
 
@@ -77,7 +109,7 @@ HEADER_BOT START
 }
 
 .navbar {
-    width: var(--rwd-full-width); 
+    width: var(--rwd-full-width);
     justify-content: space-around;
     padding: 1rem 1.5rem;
     background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
@@ -123,7 +155,7 @@ HEADER_BOT START
     padding-right: 0.5rem;
 }
 
-.return_search_result > li:before {
+.return_search_result>li:before {
     content: '<-';
     padding-right: 0.5rem;
 }
@@ -133,18 +165,22 @@ RESPONSIVE WEB DESIGN
 #####################*/
 
 @media (max-width: 780px) {
-    .searchbar > *, .lang_selector > *, .login > * {
+
+    .searchbar>*,
+    .lang_selector>*,
+    .login>* {
         height: 2.5rem;
     }
 
-    .lang_selector > *, .login > * {
+    .lang_selector>*,
+    .login>* {
         width: 4rem;
     }
 
     .header_top {
         flex-wrap: wrap;
     }
-    
+
     .logo_container {
         display: flex;
         flex-direction: row;
@@ -156,7 +192,7 @@ RESPONSIVE WEB DESIGN
     .lang_selector {
         order: 2;
     }
-    
+
     .searchbar {
         margin-top: 1rem;
         width: 50%;
@@ -164,9 +200,12 @@ RESPONSIVE WEB DESIGN
         order: 3;
     }
 
-    .login {
+    .login,
+    .user_profile {
         order: 4;
     }
+
+
 
     .header_bot {
         margin-top: 0;
@@ -184,25 +223,27 @@ RESPONSIVE WEB DESIGN
         width: 10vw;
     }
 
-    .searchbar > input {
+    .searchbar>input {
         display: none;
     }
 
-    .searchbar:hover, .searchbar:focus-within {
+    .searchbar:hover,
+    .searchbar:focus-within {
         width: auto;
     }
 
-    .searchbar:hover > input, .searchbar > input:focus {
+    .searchbar:hover>input,
+    .searchbar>input:focus {
         display: block;
         width: 50px;
     }
 
-    .searchbar > button {
+    .searchbar>button {
         pointer-events: none;
         padding-left: 9px;
     }
 
-    .searchbar:focus-within > button {
+    .searchbar:focus-within>button {
         pointer-events: all;
     }
 }

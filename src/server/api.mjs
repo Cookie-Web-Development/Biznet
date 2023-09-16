@@ -97,17 +97,9 @@ let apiRoute = function (app, db) {
         })
     }
 
-    /*passport authenticate middleware*/
-    /*    
-    function check_auth(req, res, next) {
-        if (req.isAuthenticated()) {
-            return next();
-        }
-        //placeholder
-        res.redirect('/')
-    }
-    */
-    function check_auth (redirecRoute, restictionCheck) {
+    function check_auth(redirecRoute, restictionCheck) {
+        //if restrictionCheck is true, means ONLY logged in users can enter.
+        //restrictionCheck false is used to allow only GUEST
         let redirect = redirecRoute || '/', check = restictionCheck || false;
         if (check) {
             return function (req, res, next) {
@@ -122,23 +114,33 @@ let apiRoute = function (app, db) {
         }
     }
 
+    //Global objects for all routes middleware
+    function globalObjectInit(req, res, next) {
+        //lang
+        let lang = req.session.lang || 'es';
+        //userCheck
+        next();
+    }
+
     app.route(['/', '/home'])
         .get(async (req, res) => {
-        //session lang is req.session.lang
-        let lang = req.session.lang || "es";
-        let discount_list = await Products.aggregate(search_query({ discount: "true" }));
-        let featured_list = await Products.aggregate(search_query({ featured: "true" }, { sample: 8 }))
+            //user object
+            let user = req.user || null;
+            //session lang is req.session.lang
+            let lang = req.session.lang || "es";
+            let discount_list = await Products.aggregate(search_query({ discount: "true" }));
+            let featured_list = await Products.aggregate(search_query({ featured: "true" }, { sample: 8 }))
 
-        priceFormatter(discount_list);
-        priceFormatter(featured_list);
+            priceFormatter(discount_list);
+            priceFormatter(featured_list);
 
-        console.log('SessionID from API', req.sessionID)
-
-        res.render('home', { discount_list, featured_list, lang, langData })
+            res.render('home', { discount_list, featured_list, lang, langData, user })
         });
 
     app.route('/catalog')
         .get(async (req, res) => {
+            //user object
+            let user = req.user || null;
             //if there is a URL param for quiick search, include iit in the reender section...
             let quick_query = undefined;
             if (req.query) {
@@ -158,7 +160,7 @@ let apiRoute = function (app, db) {
                 brands: [...brands],
                 price_range: price_range[0]
             }
-            res.render('catalog', { search_fields, lang, langData, quick_query });
+            res.render('catalog', { search_fields, lang, langData, quick_query, user });
             //res.json(search_fields)
         })
         .post(async (req, res) => {
@@ -172,6 +174,8 @@ let apiRoute = function (app, db) {
 
     app.route('/product/:id')
         .get(async (req, res) => {
+            //user object
+            let user = req.user || null;
             let lang = req.session.lang || 'es';
             try {
                 let product_id = req.params.id;
@@ -195,7 +199,7 @@ let apiRoute = function (app, db) {
                     priceFormatter(similar.more_products)
                 }
 
-                res.render('product', { api_results: result[0], similar, lang, langData })
+                res.render('product', { api_results: result[0], similar, lang, langData, user })
 
             } catch (err) {
                 console.log(err)
@@ -203,19 +207,39 @@ let apiRoute = function (app, db) {
             }
         })
 
+
     app.route('/login')
         .get(check_auth('/profile', false), (req, res) => {
+            let login_notification = req.flash('error') || []
             let lang = req.session.lang || 'es';
             let loginCheck = true;
-            res.render('login', { lang, langData, loginCheck })
+            res.render('login', { lang, langData, loginCheck, error_login: login_notification })
         })
-        
-    app.route('/register')
+        .post((req, res, next) => {
+            if (!req.body.username || !req.body.password) {
+                req.flash('error', 'invalid_login')
+                return res.redirect('/login')
+            } else { next() }
+        },
+            passport.authenticate('local', {
+                successRedirect: '/profile',
+                failureRedirect: '/login',
+                failureFlash: true
+            }))
+
+    app.route('/logout')
         .get((req, res) => {
+            req.logout((err) => {
+                if (err) { return next(err) }
+                res.redirect('/login')
+            })
+        })
+
+    app.route('/register')
+        .get(check_auth('/profile', false), (req, res) => {
             const flash_messages = req.flash('flash')[0] || []
-            console.log(flash_messages)
             let lang = req.session.lang || 'es';
-            let loginCheck = true;  
+            let loginCheck = true;
             res.render('register', { lang, langData, loginCheck, notification: flash_messages })
         })
         .post(async (req, res) => {
@@ -223,47 +247,60 @@ let apiRoute = function (app, db) {
             user_credentials.username = user_credentials.username.trim();
 
             //check if username already exist
-            let checkDB = await Users.findOne({ username: user_credentials.username.toLowerCase() })
-            if(checkDB) {
-                req.flash('flash', {username: {error: 'username_in_use', input: user_credentials.username}})
+            let checkDB = await Users.findOne({ username: user_credentials.username.toLowerCase() }, { username: 1 })
+            if (checkDB) {
+                req.flash('flash', { username: { error: 'username_in_use', input: user_credentials.username } })
                 res.redirect('/register')
                 return;
             }
 
             let hash = await bcrypt.hash(user_credentials.password, 12)
-            console.log(hash)
-            
+
+            //user credentials creation
             let user_save = new Users({
                 username: user_credentials.username.toLowerCase(),
-                profile_username: user_credentials.username,
-                password: hash
+                profile_name: user_credentials.username,
+                password: hash,
+                user_preferences: {
+                    lang: req.session.lang || 'es'
+                }
             })
             try {
                 await user_save.save()
-                console.log(`User created with _id: ${user_save._id}`)
                 res.redirect('/login')
-            } catch(err) {
-                console.error("Registring error: ", err)
+            } catch (err) {
+                console.error(err);
+                req.flash('flash', { username: { error: 'unexpected_error' } });
+                res.redirect('/register');
             }
-
         })
 
     app.route('/profile')
-        .get((req, res) => {
+        .get(check_auth('/login', true), async (req, res) => {
+            //user object
+            let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
+
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', { message: 'unexpected_error' })
+                return res.redirect('/login')
+            }
+
+            //set user_prefered.lang to session.lang
+            req.session.lang = user.user_preferences.lang
             let lang = req.session.lang || 'es';
             let loginCheck = true;
-            res.render('profile', { lang, langData, loginCheck})
+            res.render('profile', { lang, langData, loginCheck, user })
         })
 
     app.route('/lang_change')
         .get((req, res) => {
-        if (req.session.lang == 'en') {
-            req.session.lang = 'es'
-        } else {
-            req.session.lang = 'en'
-        }
-        let referer = req.headers.referer || '/';
-        res.redirect(referer);
+            if (req.session.lang == 'en') {
+                req.session.lang = 'es'
+            } else {
+                req.session.lang = 'en'
+            }
+            let referer = req.headers.referer || '/';
+            res.redirect(referer);
         });
 
     /*############

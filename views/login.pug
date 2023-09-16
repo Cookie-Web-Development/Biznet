@@ -5,15 +5,12 @@ html(lang=lang)
         include partials/_header.pug
         main 
             h1(class='login_text' class='user_form_title')=langData.profile.login[lang]
-            if messages.register 
-                each message in messages.register 
-                    p=message
             section#form_section
-                form(method='get' action='/login_test' class='user_form' id='login_form')
-                    if messages.login_error
+                form(method='post' action='/login' class='user_form' id='login_form')
+                    if error_login
                         div.login_notification
-                            each error in messages.login_error 
-                                p.notification_message=error                        
+                            each error in error_login
+                                p.error_notification=langData.error[error][lang]  
                     label(for="username" class='username_label')=langData.profile.username[lang]
                     input(class='input_box' id='username' class='username_input' type='text' name='username' autocomplete="off")
                     label(for='password' class='password_label')=langData.profile.password[lang] 
@@ -24,7 +21,7 @@ html(lang=lang)
                             i(id='show_password_off' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
                             i(id='show_password_on' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
                     a(class='text_link text_link_form disabled' href='/')=langData.profile.password_forgot[lang]
-                    button(class='button btn_modal disabled btn_form' type='submit')=langData.profile.login[lang] 
+                    button(class='button btn_modal btn_form' type='submit')=langData.profile.login[lang] 
                     div.form_divider
             p(style='margin-bottom: 2rem;') 
                 span=langData.profile.redirect_register.text[lang]

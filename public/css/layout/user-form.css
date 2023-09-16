@@ -77,8 +77,6 @@
 
 .login_notification {
     grid-area: login-noti;
-    /*DEVMOD*/
-    text-align: center;
 }
 
 .username_label {
@@ -159,7 +157,7 @@
 
     #login_form.user_form > :nth-child(2),
     #login_form.user_form > :nth-child(5),
-    #register_form.user_form > :nth-child(even) {
+    #register_form.user_form > :nth-child(3n) {
         margin-bottom: 1.5rem;
     }
 
@@ -167,12 +165,18 @@
         text-align: unset;
     }
 
-    #password_confirm, 
+    .login_notification,
+    .username_label,
+    .username_input,
+    #username_notification,
     .password_label, 
     .input_div, 
+    #password_notification,
+    .password_confirm_label,
+    #password_confirm, 
+    #password_confirm_notification,
     .text_link_form, 
-    .btn_form, 
-    .password_confirm_label {
+    .btn_form {
         grid-area: unset;
     }
 }

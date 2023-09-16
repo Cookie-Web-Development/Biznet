@@ -1,0 +1,71 @@
+.profile_title {
+    text-transform: uppercase;
+    padding: 2rem;
+}
+
+.profile_section {
+    width: 75vw;
+    height: 50vh;
+    display: grid;
+    grid-template-columns: 20rem 25px 2fr;
+    margin: auto;
+    grid-template-areas: "nav divider main";
+    border-radius: 10px;
+}
+
+.profile_nav {
+    grid-area: nav;
+    border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    border-radius: 10px;
+    /*DEV*/
+}
+
+.profile_menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile_menu > h2 {
+    padding: 0.5rem;
+    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+}
+
+.profile_menu:first-of-type > h2 {
+    border-radius: 8px 8px 0 0 ;
+}
+
+.profile_menu > ul {
+    padding: 1rem 0;
+    line-height: 2rem;
+}
+
+.profile_menu > ul > li {
+    cursor: pointer;
+    padding-left: 3rem;
+    user-select: none;
+}
+
+.profile_menu > ul > li a{
+    display: block;
+    width: 100%;
+}
+
+.profile_menu > ul > li:hover {
+    background-color: hsla(var(--color-lightblue-h), var(--color-lightblue-s), var(--color-lightblue-l), var(--color-opacity-light));
+}
+
+.profile_container {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+}
+
+.profile_container > .profile_picture {
+    width: 150px;
+    margin: 1rem;
+    border: 1px solid black;
+    border-radius: 50%;
+} 

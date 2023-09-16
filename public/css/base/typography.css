@@ -204,9 +204,30 @@ Login Modal
     font-size: var(--fs-note);
 }
 
-/*###################
-LOGIN & REGISTER PAGE
-#####################*/
+/*#######################
+LOGIN, REGISTER & PROFILE
+#########################*/
+.user_profile_greeting {
+    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+}
+
+.profile_menu > h2 {
+    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    font-size: var(--fs-subtitle);
+}
+
+.profile_menu > ul {
+    font-size: var(--fs-body);
+}
+
+.profile_container > .profile_username {
+    font-size: var(--fs-title)
+}
+
+.profile_container > .profile_user_settings {
+    font-size: var(--fs-body);
+}
+
 .user_form > label {
     text-align: right;
     font-size: var(--fs-body)
@@ -215,6 +236,10 @@ LOGIN & REGISTER PAGE
 #form_section + p {
     font-size: var(--fs-body);
 } 
+
+.login_notification {
+    text-align: right;
+}
 
 .error_notification,
 .error_notification > * {

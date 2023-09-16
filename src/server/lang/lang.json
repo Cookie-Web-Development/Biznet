@@ -28,9 +28,19 @@
         }
     },
     "profile" : {
+        "en": "Profile",
+        "es": "Perfil",
+        "title": {
+            "en": "User Profile",
+            "es": "Perfil de Usuario"
+        },
         "login": {
             "en": "Login",
             "es": "Iniciar sesión"
+        },
+        "logout": {
+            "en": "Logout",
+            "es": "Cerrar sesión"
         },
         "username": {
             "en": "Username",
@@ -83,6 +93,30 @@
                 "en": "Sign up",
                 "es": "Regístrate"
             }
+        },
+        "greeting": {
+            "en": "Hello! ",
+            "es": "¡Hola! "
+        },
+        "edit": {
+            "en": "Edit Profile",
+            "es": "Editar Perfil"
+        },
+        "profile_prefix": {
+            "en": "",
+            "es": "Perfil de "
+        },
+        "profile_suffix": {
+            "en": "'s profile",
+            "es": ""
+        },
+        "language_pref": {
+            "en": "Language preference ",
+            "es": "Preferencia de lenguaje "
+        },
+        "language_sel": {
+            "en": "English",
+            "es": "Español"
         }
     },
     "main": {
@@ -199,6 +233,14 @@
         "password_space": {
             "en": "Password can't contain any spaces.",
             "es": "La contraseña no puede contener espacios."
+        },
+        "invalid_login": {
+            "en": "Invalid username and/or password.",
+            "es": "Nombre de usuario y/o contraseña no válido."
+        },
+        "unexpected_error": {
+            "en": "Something went wrong. Please try again later.",
+            "es": "Algo salió mal. Porfavor intentelo nuevamente más tarde."
         }
     },
     "notification": {}

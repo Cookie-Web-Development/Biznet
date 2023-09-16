@@ -17,8 +17,6 @@ html(lang=lang)
                     input(class='input_box' id='username' class='username_input' type='text' name='username')
                     div(id='username_notification' class='notification_container' data-registration-notification='username')
                         if notification.username
-                            console.log("aloha from alona")
-                            console.log(notification.username)
                             p.error_notification
                                 if(notification.username.input)
                                     span=langData.error.username_prefix[lang]
