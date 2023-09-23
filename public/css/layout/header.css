@@ -172,11 +172,6 @@ RESPONSIVE WEB DESIGN
         height: 2.5rem;
     }
 
-    .lang_selector>*,
-    .login>* {
-        width: 4rem;
-    }
-
     .header_top {
         flex-wrap: wrap;
     }
@@ -204,8 +199,6 @@ RESPONSIVE WEB DESIGN
     .user_profile {
         order: 4;
     }
-
-
 
     .header_bot {
         margin-top: 0;

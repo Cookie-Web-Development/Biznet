@@ -2,6 +2,7 @@
 
 import langData from '../../src/server/lang/lang.json' assert { type: "json" };
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 import passport from 'passport';
 import flash from 'express-flash';
 import { products_schema } from './schema/products_schema.js';
@@ -15,16 +16,16 @@ import { users_schema } from './schema/users_schema.js';
 import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
 
-//import crypto from 'crypto';
 //import {cookieParser} from 'cookie-parser';
 
 //const key = crypto.randomBytes(32).toString('hex');
-//console.log(key);
-//import product_variation from '../../../devTool/product_object';
 /*DEV MODE END*/
 
 let apiRoute = function (app, db) {
-    /*pre-hooks for schemas: used to assign customs_ids before saving*/
+    /*#######
+    PRE-HOOKS 
+    #########
+    for schemas: used to assign customs_ids before saving*/
     //brand
     brands_schema.statics.createBrand = async function (data) {
         let last_entry = await this.findOne({}, { _id: 0, brand_id: 1 }, { sort: { brand_id: -1 } }) || { brand_id: 0 };
@@ -53,7 +54,6 @@ let apiRoute = function (app, db) {
         }
         return this.create(data)
     }
-
     //tags
     tags_schema.statics.createTag = async function (data) {
         let last_entry = await this.findOne({}, { _id: 0, tag_id: 1 }, { sort: { tag_id: -1 } }) || { tag_id: 0 };
@@ -69,7 +69,9 @@ let apiRoute = function (app, db) {
         return this.create(data)
     }
 
-    /*Models*/
+    /*####
+    MODELS
+    ######*/
     let Products = db.model('products', products_schema),
         //Product_Variations = productsDB.model('variations', product_variations_schema),
         Brands = db.model('brands', brands_schema),
@@ -97,10 +99,14 @@ let apiRoute = function (app, db) {
         })
     }
 
+    /*###############
+    ROUTES MIDDLEWARE
+    #################*/
     function check_auth(redirecRoute, restictionCheck) {
         //if restrictionCheck is true, means ONLY logged in users can enter.
         //restrictionCheck false is used to allow only GUEST
         let redirect = redirecRoute || '/', check = restictionCheck || false;
+
         if (check) {
             return function (req, res, next) {
                 if (req.isAuthenticated()) { return next() }
@@ -114,13 +120,21 @@ let apiRoute = function (app, db) {
         }
     }
 
-    //Global objects for all routes middleware
-    function globalObjectInit(req, res, next) {
-        //lang
-        let lang = req.session.lang || 'es';
-        //userCheck
-        next();
+    function check_token(req, res, next) {
+        let form_token = req.body._csrf || undefined;
+        let token = req.session._csrf || undefined;
+
+        if (!form_token || !token || form_token !== token) {
+            console.log(new Date(), 'Invalid Token')
+            let referer = req.headers.referer || '/';
+            res.redirect(referer);
+        } else { next() }
+
     }
+
+    /*####
+    ROUTES
+    ######*/
 
     app.route(['/', '/home'])
         .get(async (req, res) => {
@@ -211,18 +225,19 @@ let apiRoute = function (app, db) {
     app.route('/login')
         .get(check_auth('/profile', false), (req, res) => {
             let login_notification = req.flash('error') || []
+
             let lang = req.session.lang || 'es';
             let loginCheck = true;
             res.render('login', { lang, langData, loginCheck, error_login: login_notification })
         })
-        .post((req, res, next) => {
+        .post((req, res, next) => { //voids empty fields
             if (!req.body.username || !req.body.password) {
                 req.flash('error', 'invalid_login')
                 return res.redirect('/login')
             } else { next() }
         },
             passport.authenticate('local', {
-                successRedirect: '/profile',
+                successRedirect: '/pref',
                 failureRedirect: '/login',
                 failureFlash: true
             }))
@@ -275,23 +290,6 @@ let apiRoute = function (app, db) {
             }
         })
 
-    app.route('/profile')
-        .get(check_auth('/login', true), async (req, res) => {
-            //user object
-            let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
-
-            if (!user) { //fallback incase user is not found for some reason
-                req.flash('error', { message: 'unexpected_error' })
-                return res.redirect('/login')
-            }
-
-            //set user_prefered.lang to session.lang
-            req.session.lang = user.user_preferences.lang
-            let lang = req.session.lang || 'es';
-            let loginCheck = true;
-            res.render('profile', { lang, langData, loginCheck, user })
-        })
-
     app.route('/lang_change')
         .get((req, res) => {
             if (req.session.lang == 'en') {
@@ -303,49 +301,138 @@ let apiRoute = function (app, db) {
             res.redirect(referer);
         });
 
-    /*############
-    DEV ROUTES
-    #############*/
-    /*
-        app.route('/test').get(async (req, res) => {
-            let lang = req.session.lang || 'es';
-            let tags = await Tags.aggregate(search_list.multi_lang(lang)),
-                categories = await Categories.aggregate(search_list.multi_lang(lang)),
-                brands = await Brands.aggregate(search_list.brand),
-                price_range = await Products.aggregate(search_list.price_range);
-            // price_range returns [{max, min}]
-    
-            let search_fields = {
-                tags: [...tags],
-                categories: [...categories],
-                brands: [...brands],
-                price_range: price_range[0]
+    app.route('/pref')
+        .get(check_auth('/login', true), async (req, res) => {
+            //user object
+            let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
             }
-            res.send(search_fields)
-        });
-    
-        app.route('/test_db').get(async (req, res) => {
-            let db = await Products.aggregate([{ $match: {} }, {$project: {listing: 1}}, {$sort: { "listing.price": -1} }])
-            res.json(db)
-        });
-    
-        app.route('/test_product').get(async (req, res) => {
-            //let products = await Products.aggregate([{ $match: {} }])
-            //res.json(products)
-            let count_test = await Products.aggregate(search_query({ category: 9}, { skip: [1, 3]}));
-            priceFormatter(count_test[0].results_arr)
-            res.json(count_test)
-        })*/
-    app.route('/test_cookie').get(async (req, res) => {
-        let dateNow = new Date().toUTCString();
-        console.log(dateNow)
-        let cookie = await req.cookies
-        let regex = /:(\w+)\./
-        //let session_id_cookie = cookie["connect.sid"].match(regex)[1]
-        //let session_db_search = await Sessions.findOneAndUpdate({_id: session_id_cookie}, { testerino: ""})
-        res.json(cookie)
-    })
+            if (user.user_preferences.lang) {
+                req.session.lang = user.user_preferences.lang;
+            }
+            /*if(user.user_preferences.theme) {
+                req.session.theme = user.user_preferences.theme;
+            }*/
+            return res.redirect('/profile_overview')
+        })
 
+    app.route('/profile_overview') //missing check role
+        .get(check_auth('/login', true), async (req, res) => {
+
+            //user object
+            let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
+            }
+
+            let lang = req.session.lang || 'es';
+            let loginCheck = true;
+            res.render(`profile_overview`, { lang, langData, loginCheck, user })
+        })
+
+    app.route('/password')
+        .get(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
+            let csrf_token = crypto.randomBytes(16).toString('hex');
+            let csrf = csrf_token;
+
+            //user object
+            let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
+            }
+
+            let lang = req.session.lang || 'es';
+            let loginCheck = true;
+
+            res.render(`data_management/password`, { lang, langData, loginCheck, user, csrf })
+        })
+
+
+    app.route('/:main') //universal route
+        .get(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
+            let main_dir = req.params.main;
+            let csrf_token = crypto.randomBytes(16).toString('hex');
+            let csrf = csrf_token;
+            req.session._csrf = csrf_token;
+
+            //flash message
+            let flash_message = {};
+            flash_message.notification = req.flash('notification') || undefined;
+            flash_message.error = req.flash('error') || undefined;
+
+            //user object
+            let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
+            }
+
+            let lang = req.session.lang || 'es';
+            let loginCheck = true;
+            res.render(`data_management/${main_dir}`, { lang, langData, loginCheck, user, csrf, flash_message })
+        })
+        .post(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
+            let main_dir = req.params.main;
+            let db_selector, user_update = req.body;
+
+            if (user_update.validate._csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail')
+                console.log('invalid token')
+                res.json({ url: `/${main_dir}` })
+                return;
+            }
+
+            switch (main_dir) {
+                case 'profile':
+                    db_selector = Users;
+                    user_update.target._id = req.session.passport.user;
+                    req.session.lang = user_update.update['user_preferences.lang']
+                    break;
+                case 'products':
+                    db_selector = Products
+                    break;
+                case 'brands':
+                    db_selector = Brands
+                    break;
+                case 'tags':
+                    db_selector = Tags
+                    break;
+                case 'categories':
+                    db_selector = Categories
+                    break;
+                // case '':
+                //     db_selector = 
+                //     break;
+                // case '':
+                //     db_selector = 
+                //     break;
+                default:
+                    try { throw new Error('internal error') } catch (err) { next(err) }
+                    return;
+            }
+
+
+            await db_selector.findOneAndUpdate(
+                user_update.target,
+                user_update.update,
+            )
+
+            req.flash('notification', 'save_success')
+            res.json({ url: `/${main_dir}` })
+        })
+
+    //non-existant routes handler
+    app.route('/*').get((req, res) => { res.redirect('/') })
+
+    app.use((err, req, res, next) => {
+        console.log('Routing API error:')
+        console.error(err)
+        res.redirect('/')
+    })
 };
 
 export default apiRoute;

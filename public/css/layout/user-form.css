@@ -26,10 +26,10 @@
 #login_form.user_form {
     grid-template-rows: min-content 1fr 1fr 1fr 1fr;
     grid-template-areas: 
-        "login-noti login-noti login-noti"
-        "user-label divider user-input"
-        "password-label divider password-input"
-        ". divider forgot-password"
+        "login_noti login_noti login_noti"
+        "user_label divider user_input"
+        "password_label divider password_input"
+        ". divider forgot_password"
         ". divider button";
 
 }
@@ -37,13 +37,57 @@
 #register_form.user_form {
     grid-template-rows: 1fr min-content 1fr min-content 1fr min-content 1fr;
     grid-template-areas: 
-        "user-label divider user-input"
-        ". divider user-noti"
-        "password-label divider password-input"
-        ". divider password-noti"
-        "password-confirm-label divider password-confirm-input"
-        ". divider confirm-password-noti"
+        "user_label divider user_input"
+        ". divider user_noti"
+        "password_label divider password_input"
+        ". divider password_noti"
+        "password_confirm_label divider password_confirm_input"
+        ". divider confirm_password_noti"
         ". divider button";
+}
+
+#universal_form.user_form {
+    width: 100%;
+    margin: 0;
+}
+
+[data-universal-form='profile'].user_form {
+    grid-template-rows: repeat(5, 1fr);
+    grid-template-areas: 
+        "username_label divider username_text"
+        "profile_name_label divider profile_name_input"
+        "change_password_label divider change_password_btn"
+        "pref_lang_label divider pref_lang_select"
+        ". divider button";
+    gap: 1rem;
+}
+
+[data-universal-form='change_password'].user_form {
+    grid-template-rows: repeat(4, 1fr);
+    grid-template-areas:
+        "password_label divider password_input"
+        "password_new_label divider password_new_input"
+        "password_new_confirm_label divider password_new_confirm_input"
+        ". divider button"
+}
+
+.universal_notification {
+    width: 100%;
+}
+
+.universal_notification > p {
+    padding: 0.5rem;
+    border-radius: 20px;
+}
+
+.universal_notification > p.green {
+    border: 2px solid hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
+    background-color: hsla(var(--color-green-h), var(--color-green-s), var(--color-greylight-l), var(--color-opacity-medium));
+}
+
+.universal_notification > p.red {
+    border: 2px solid hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
+    background-color: hsla(var(--color-red-h), var(--color-red-s), var(--color-greylight-l), var(--color-opacity-medium));
 }
 
 .form_divider {
@@ -61,7 +105,8 @@
 }
 
 
-#show_password_checkbox {
+#show_password_checkbox,
+.show_password_checkbox {
     display: none;
 }
 
@@ -76,36 +121,52 @@
 }
 
 .login_notification {
-    grid-area: login-noti;
+    grid-area: login_noti;
 }
 
 .username_label {
-    grid-area: user-label;
+    grid-area: user_label;
 }
 
 .username_input {
-    grid-area: user-input;
+    grid-area: user_input;
 }
 
 #username_notification {
-    grid-area: user-noti;
+    grid-area: user_noti;
 }
 
 .password_label {
-    grid-area: password-label;
+    grid-area: password_label;
 }
 
-.input_div {
-    grid-area: password-input;
+.password_new_label {
+    grid-area: password_new_label;
+}
+
+.password_new_confirm_label {
+    grid-area: password_new_confirm_label;
+}
+
+.input_div.password {
+    grid-area: password_input;
+}
+
+.input_div.password_new {
+    grid-area: password_new_input;
+}
+
+.input_div.password_new_confirm {
+    grid-area: password_new_confirm_input;
 }
 
 #password_notification {
-    grid-area: password-noti;
+    grid-area: password_noti;
 }
 
 .text_link_form {
     align-self: flex-start;
-    grid-area: forgot-password;
+    grid-area: forgot_password;
 }   
 
 .btn_form {
@@ -113,15 +174,15 @@
 }
 
 .password_confirm_label {
-    grid-area: password-confirm-label;
+    grid-area: password_confirm_label;
 }
 
 #password_confirm {
-    grid-area: password-confirm-input;
+    grid-area: password_confirm_input;
 }
 
 #password_confirm_notification {
-    grid-area: confirm-password-noti;
+    grid-area: confirm_password_noti;
 }
 
 @media (max-width: 980px) {
@@ -142,10 +203,15 @@
     }
 
     #login_form.user_form,
-    #register_form.user_form {
-        margin-left: 35px;
+    #register_form.user_form,
+    #universal_form.user_form {
         grid-template-columns: 1fr;
         grid-template-areas: unset;
+    }
+
+    #login_form.user_form,
+    #register_form.user_form {
+        margin-left: 35px;
     }
 
     #login_form.user_form {
@@ -153,6 +219,18 @@
     }
     #register_form.user_form {
         grid-template-rows: repeat(10, min-content);
+    }
+
+    #universal_form.user_form {
+        gap: unset;
+    }
+
+    [data-universal-form='profile'].user_form {
+        grid-template-rows: repeat(8, 1fr) 1.5fr;
+    }
+
+    [data-universal-form='change_password'].user_form {
+        grid-template-rows: repeat(6, 1fr) 3fr;
     }
 
     #login_form.user_form > :nth-child(2),
@@ -165,7 +243,7 @@
         text-align: unset;
     }
 
-    .login_notification,
+    /* .login_notification,
     .username_label,
     .username_input,
     #username_notification,
@@ -177,6 +255,10 @@
     #password_confirm_notification,
     .text_link_form, 
     .btn_form {
+        grid-area: unset;
+    } */
+
+    .user_form > *, .user_form > .input_div {
         grid-area: unset;
     }
 }

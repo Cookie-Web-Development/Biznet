@@ -6,28 +6,8 @@ html(lang=lang)
         main 
             h1.profile_title=langData.profile.title[lang]
             section.profile_section 
-                nav.profile_nav
-                    section.profile_menu
-                        h2 Menu
-                        ul
-                            li=langData.profile[lang]
-                            li=langData.profile.edit[lang]
-                            li
-                                a(href='/logout' style='width: 100%;')=langData.profile.logout[lang]
-                    if (user.account_settings.role == 'admin')
-                        section.profile_menu 
-                            h2 Company Menu
-                            ul
-                                li Catalog
-                                li Products
-                                li Category
-                                li Brands
-                                li Tags
-                    if (user.account_settings.role == 'super_admin')
-                        section.profile_menu
-                            h2 Webmaster
-                            ul
-                                li Accounts
+                - let profile_active = 'profile'
+                include data_management/include/user-nav.pug
                 div.profile_container
                     img(class='profile_picture' src=`/public/img/profile-images/${user.profile_pic}`)
                     if lang=='en'

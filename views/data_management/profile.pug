@@ -1,0 +1,38 @@
+doctype html
+html(lang=lang)
+    include ../partials/_head.pug
+    body
+        include ../partials/_header.pug
+        main 
+            h1.profile_title=langData.profile.edit[lang]
+            section.profile_section 
+                - let profile_active = 'edit'
+                include include/user-nav.pug
+                div.profile_container
+                    img(class='profile_picture' src=`/public/img/profile-images/${user.profile_pic}`)
+                    div(class='universal_notification' data-universal-notification)
+                        if flash_message.notification.length > 0 
+                            each noti in flash_message.notification 
+                                p(class='green')=langData.notification[noti][lang]
+                        if flash_message.error.length > 0
+                            each noti in flash_message.error 
+                                p(class='red')=langData.error[noti][lang]
+                    form(action='/profile' method='post' id='universal_form' class='user_form' data-universal-form='profile')
+                        label=`${langData.profile.username[lang]}: `
+                        input(class='input_box' value=`${user.username}` readonly title=`${langData.profile.username_edit[lang]}`)
+                        label(for='profile_name')=`${langData.profile.profile_name_change[lang]}: ` 
+                        input(id='profile_name' class='input_box' name='profile_name' data-default-value=`${user.profile_name}` autocomplete=false title=`${langData.profile.profile_name_change[lang]}` value=`${user.profile_name}`)
+                        label=`${langData.profile.password_change[lang]}: ` 
+                        a(class='button inline-flex-center' href='/password' type='button' title=`${langData.profile.password_change[lang]}`)=langData.profile.password_change[lang]
+                        label(for='prefered_lang')=`${langData.profile.language_pref[lang]}: `
+                        select(id='prefered_lang' class='input_box' name='prefered_language' data-default-value=`${user.user_preferences.lang}` data-form-select='prefered_language' autocomplete=false title=`${langData.profile.language_pref_change[lang]}`)
+                            option(value='es')=langData.profile.language_sel.es
+                            option(value='en')=langData.profile.language_sel.en
+                        input(type='hidden' name='token' value=`${csrf}`)
+                        button(class='button btn_form' type='submit' title=`${langData.profile.save_changes[lang]}`)=langData.profile.save_changes[lang]
+                        div.form_divider                           
+        footer
+        script.
+            let lang = !{JSON.stringify(lang)};
+            let langData = !{JSON.stringify(langData)};
+        script(type='module' src='/src/client/components/universal_form.js' defer)

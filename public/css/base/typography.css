@@ -211,6 +211,11 @@ LOGIN, REGISTER & PROFILE
     color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
 }
 
+.profile_title {
+    text-transform: uppercase;
+    text-align: center;
+}
+
 .profile_menu > h2 {
     color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
     font-size: var(--fs-subtitle);
@@ -218,6 +223,11 @@ LOGIN, REGISTER & PROFILE
 
 .profile_menu > ul {
     font-size: var(--fs-body);
+}
+
+.profile_container {
+    text-align: center;
+    font-size: var(--fs-body)
 }
 
 .profile_container > .profile_username {
@@ -244,10 +254,17 @@ LOGIN, REGISTER & PROFILE
 .error_notification,
 .error_notification > * {
     font-size: var(--fs-note);
-    color: red;
+    color: hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
 }
 
-.error_notification::before {
+.success_notification,
+.success_notification > * {
+    font-size: var(--fs-note);
+    color: hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
+}
+
+.error_notification::before,
+.success_notification::before {
     content: '*';
 }
 

@@ -46,6 +46,10 @@
             "en": "Username",
             "es": "Nombre de usuario"
         },
+        "username_edit": {
+            "en": "Username can not be changed",
+            "es": "No se puede cambiar el nombre de usuario"
+        },
         "new_username":{
             "en": "New username",
             "es": "Nuevo usuario"
@@ -61,6 +65,22 @@
         "password_forgot": {
             "en": "Forgot password?",
             "es": "¿Olvidó su contraseña?"
+        },
+        "password_change": {
+            "en": "Change Password",
+            "es": "Cambiar contraseña"
+        },
+        "password_current": {
+            "en": "Current Password",
+            "es": "Contraseña actual"
+        },
+        "password_new": {
+            "en": "New Password",
+            "es": "Nueva contraseña"
+        },
+        "password_new_confirm": {
+            "en": "Confirm New Password",
+            "es": "Confirme nueva contraseña"
         },
         "sign_up": {
             "en": "Create new account",
@@ -110,13 +130,29 @@
             "en": "'s profile",
             "es": ""
         },
+        "profile_name": {
+            "en": "Profile Name",
+            "es": "Nombre de perfil"
+        },
+        "profile_name_change": {
+            "en": "Change profile name",
+            "es": "Cambiar nombre de perfil"
+        },
         "language_pref": {
             "en": "Language preference ",
             "es": "Preferencia de lenguaje "
         },
+        "language_pref_change": {
+            "en": "Change language preference",
+            "es": "Cambiar lenguaje de preferencia"
+        },
         "language_sel": {
             "en": "English",
             "es": "Español"
+        },
+        "save_changes": {
+            "en": "Save Changes",
+            "es": "Guardar cambios"
         }
     },
     "main": {
@@ -241,7 +277,20 @@
         "unexpected_error": {
             "en": "Something went wrong. Please try again later.",
             "es": "Algo salió mal. Porfavor intentelo nuevamente más tarde."
+        },
+        "save_fail": {
+            "en": "Changes could not be saved.",
+            "es": "Los cambios no pudieron ser guardados."
+        },
+        "no_change": {
+            "en": "No changes were made.",
+            "es": "No se ha realizado ningún cambio."
         }
     },
-    "notification": {}
+    "notification": {
+        "save_success": {
+            "en": "Changes has been saved successfully.",
+            "es": "Los cambios han sido guardados satisfactoriamente."
+        }
+    }
 }

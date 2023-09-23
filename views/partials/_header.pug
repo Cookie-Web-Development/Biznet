@@ -34,7 +34,7 @@ header.header
                     | #{user.profile_name}
                 ul.user_profile_links
                     li
-                        a(class='anchor_inline' href='/profile')=langData.profile[lang]
+                        a(class='anchor_inline' href='/profile_overview')=langData.profile[lang]
                     li
                         a(class='anchor_inline' href='/logout')=langData.profile.logout[lang]
     nav.header_bot
@@ -52,11 +52,11 @@ if (!loginCheck && !user)
             input(class='input_box' id='username' name='username' type='text' autocomplete="off")
             label(for='password')=langData.profile.password[lang] 
             div(class='input_div password')
-                input(id='password' name='password' type='password' autocomplete="off")
-                label(class='show_password' for='show_password_checkbox')
-                    input(type='checkbox' id='show_password_checkbox' checked=false autocomplete="off")
-                    i(id='show_password_off' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
-                    i(id='show_password_on' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
+                input(id='password' name='password' type='password' autocomplete="off" data-password-input='password')
+                label(class='show_password' for='show_password')
+                    input(type='checkbox' class='show_password_checkbox' id='show_password' data-password-show='password' checked=false autocomplete="off")
+                    i(data-password-icon-on='password' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
+                    i(data-password-icon-off='password' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
             a(class='text_link disabled' href='/')=langData.profile.password_forgot[lang]
             button(class='button btn_modal' type='submit')=langData.profile.login[lang] 
             a(href='/register') 
@@ -65,4 +65,4 @@ if (!loginCheck && !user)
         button(class='button_modal_close login_modal_close', type='button') 
             i(class="fa-solid fa-circle-xmark fa-xl")
     script(src='/src/client/components/login_modal.js' defer)
-    script(src='/src/client/components/login_form.js' defer)
+    script(src='/src/client/components/password_icon.js' defer)

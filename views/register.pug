@@ -24,14 +24,20 @@ html(lang=lang)
                                 span=langData.error[notification.username.error][lang]
                     label(for='password' class='password_label')=langData.profile.password[lang] 
                     div(class='input_div password')
-                        input(id='password' type='password' name='password')
-                        label(class='show_password' for='show_password_checkbox')
-                            input(type='checkbox' id='show_password_checkbox' checked=false)
-                            i(id='show_password_off' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
-                            i(id='show_password_on' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
+                        input(id='password' name='password' type='password' autocomplete="off" data-password-input='password')
+                        label(class='show_password' for='show_password')
+                            input(type='checkbox' class='show_password_checkbox' id='show_password' data-password-show='password' checked=false autocomplete="off")
+                            i(data-password-icon-on='password' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
+                            i(data-password-icon-off='password' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
                     div(id='password_notification' class='notification_container' data-registration-notification='password')
                     label(for='password_confirm' class='password_confirm_label')=langData.profile.password_confirm[lang]
-                    input(class='input_box' name='confirm_password' id='password_confirm' type='password' autocomplete='off')
+                    div(class='input_div password' id='password_confirm')
+                        input(id='confirm_password' name='confirm_password' type='password' autocomplete="off" data-password-input='confirm_password')
+                        label(class='show_password' for='show_confirm_password')
+                            input(type='checkbox' class='show_password_checkbox' id='show_confirm_password' data-password-show='confirm_password' checked=false autocomplete="off")
+                            i(data-password-icon-on='confirm_password' class="fa-solid fa-eye-slash fa-lg show_password_icon active")
+                            i(data-password-icon-off='confirm_password' class="fa-sharp fa-solid fa-eye fa-lg show_password_icon")
+                    //- input(class='input_box' name='confirm_password' id='password_confirm' type='password' autocomplete='off')
                     div(id='password_confirm_notification' class='notification_container' data-registration-notification='confirm_password' style='margin-bottom: 1rem;')
                     button(class='button btn_modal btn_form' type='submit' data-registration-submit)=langData.profile.confirm[lang] 
                     div.form_divider
@@ -43,4 +49,4 @@ html(lang=lang)
             let lang = !{JSON.stringify(lang)};
             let langData = !{JSON.stringify(langData)};
         script(type='module', src='/src/client/components/registration_form.js' defer)
-        script(src='/src/client/components/login_form.js' defer)
+        script(src='/src/client/components/password_icon.js' defer)

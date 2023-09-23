@@ -26,7 +26,6 @@ app.use(flash());
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/src', express.static(process.cwd() + '/src'));
 
-
 /*###########
 DB connection
 #############*/
@@ -69,8 +68,8 @@ app.use(session({ //from ChatGPT
   resave: false,
   saveUninitialized: false,
   cookie: {
-    sameSite: 'lax', //Set none for Production. lax for dev
-    httpOnly: false, //Prevent client-side scripting
+    sameSite: 'lax',
+    httpOnly: true, //Prevent client-side scripting
     secure: false, //Sends cookies only HTTPS. true for Production. false for dev
     maxAge: 300000 //5min FOR DEV ONLY!
   },
