@@ -21,7 +21,7 @@ function formCheck() {
     let username_input = formData.get('username');
     let username_notification = [];
 
-    if (!username_input) { username_notification.push('required_field') }
+    if (!username_input || username_input.trim() === '') { username_notification.push('required_field') }
     if (/\s/.test(username_input.trim())) { username_notification.push('username_space') }
 
     if (username_notification.length > 0) {
@@ -33,7 +33,7 @@ function formCheck() {
     let password_input = formData.get('password');
     let password_notification = [];
 
-    if (!password_input) { password_notification.push('required_field') }
+    if (!password_input || password_input.trim() === '') { password_notification.push('required_field') }
     if (/\s/.test(password_input)) { password_notification.push('password_space') }
 
 
@@ -46,7 +46,7 @@ function formCheck() {
     let confirm_password_input = formData.get('confirm_password');
     let password_confirm_notification = [];
 
-    if (!confirm_password_input) { password_confirm_notification.push('required_field') }
+    if (!confirm_password_input || confirm_password_input.trim() === '') { password_confirm_notification.push('required_field') }
     if (password_input !== confirm_password_input) { password_confirm_notification.push('confirm_password') }
 
     if (password_confirm_notification.length > 0) {

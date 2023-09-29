@@ -335,8 +335,10 @@ let apiRoute = function (app, db) {
 
     app.route('/password')
         .get(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
+            let flash_message = req.flash() || {};
             let csrf_token = crypto.randomBytes(16).toString('hex');
             let csrf = csrf_token;
+            req.session._csrf = csrf_token;
 
             //user object
             let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
@@ -348,7 +350,45 @@ let apiRoute = function (app, db) {
             let lang = req.session.lang || 'es';
             let loginCheck = true;
 
-            res.render(`data_management/password`, { lang, langData, loginCheck, user, csrf })
+            res.render(`data_management/password`, { lang, langData, loginCheck, user, csrf, flash_message })
+        })
+        .post(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
+            let user_update = req.body;
+            
+            //validate
+            if (user_update.validate._csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail')
+                console.log('invalid token')
+                res.json({ url: `/password` })
+                return;
+            }
+
+            //user object
+            let user = await Users.findOne({ _id: req.user._id }) || null;
+
+            //validate current password
+            if(!bcrypt.compareSync(user_update.validate.password, user.password)) {
+                req.flash('error', 'wrong_password');
+                res.json({ url: '/password' });
+                return;
+            }
+
+            //check if updating same password
+            if(bcrypt.compareSync(user_update.update.password, user.password)) {
+                req.flash('error', 'no_change');
+                res.json({ url: '/password' });
+                return;
+            }
+
+            let update_password =  await bcrypt.hash(req.body.update.password, 12);
+            
+            await Users.findOneAndUpdate(
+                { _id: req.user._id },
+                { password: update_password }
+            )
+
+            req.flash('notification', 'save_success')
+            res.json({ url: '/password'})
         })
 
 

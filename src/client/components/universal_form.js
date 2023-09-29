@@ -90,6 +90,7 @@ function formCheck() {
 }
 
 function display_notification(notification_object) {
+    unique_trigger = false;
     for (let type in notification_object) {
         let noti_text = new HTML_ELEM('p')
         noti_text.addText(langData[type][notification_object[type]][lang]);

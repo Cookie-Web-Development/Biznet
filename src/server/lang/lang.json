@@ -274,6 +274,10 @@
             "en": "Invalid username and/or password.",
             "es": "Nombre de usuario y/o contraseña no válido."
         },
+        "wrong_password": {
+            "en": "Current Password is incorrect.",
+            "es": "Su contraseña actual es incorrecto."
+        },
         "unexpected_error": {
             "en": "Something went wrong. Please try again later.",
             "es": "Algo salió mal. Porfavor intentelo nuevamente más tarde."

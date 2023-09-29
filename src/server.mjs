@@ -1,6 +1,8 @@
 'use strict';
 
 import express from 'express';
+import favicon from 'serve-favicon';
+import path from 'path';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
@@ -15,6 +17,16 @@ import apiRoute from './server/api.mjs';
 import auth from './server/auth.js'
 import { session_schema } from './server/schema/session_schema.js'
 
+/*Directory Traversal Prevent*/
+// function _DTP (req, res, next) {
+//   const requested_path =  req.path;
+//   const norm_path = path.normalize(requested_path)
+
+//   if(!norm_path.startsWith('public'))
+// }
+
+
+
 const app = express();
 const server = http.createServer(app);
 dotenv.config({ path: './.env' });
@@ -23,6 +35,7 @@ app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(cookieParser());
 app.use(flash());
+app.use(favicon('./public/img/logo/icon.ico'))
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/src', express.static(process.cwd() + '/src'));
 

@@ -255,6 +255,7 @@ LOGIN, REGISTER & PROFILE
 .error_notification > * {
     font-size: var(--fs-note);
     color: hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
+    text-align: left;
 }
 
 .success_notification,
