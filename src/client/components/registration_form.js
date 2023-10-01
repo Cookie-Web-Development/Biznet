@@ -1,9 +1,85 @@
 'use strict';
 
 import { HTML_ELEM } from '../modules/moduleHTMLElemMaker.js';
+import { INPUT_CHECK } from '../modules/moduleInputCheck.js';
+
+/*Input requirements function*/
+let username_input = document.querySelector('input[name="username"]');
+let password_input = document.querySelector('input[name="password"]');
+let class_green = ['green', 'fa-circle-check'],
+    class_red = ['red', 'fa-circle-xmark'];
+
+username_input.addEventListener('input', () => {
+    let input = new INPUT_CHECK(username_input.value);
+    let targets = Array.from(document.querySelectorAll('[data-username-requirement]'));
+
+    targets.forEach(elem => {
+        elem.classList.remove('red', 'green')
+        elem.querySelector('i').classList.remove('fa-circle-check', 'fa-circle-xmark');
+
+        if(!input.checkEmpty()) {
+            switch (elem.dataset.usernameRequirement) {
+                case 'length':
+                    if (input.checkLength(4)) {
+                        checklist_update(elem, class_green);
+                    } else { checklist_update(elem, class_red) }
+                    break;
+                case 'spaces':
+                    if (!input.checkSpace()) {
+                        checklist_update(elem, class_green);
+                    } else { checklist_update(elem, class_red) };
+                    break;
+                case 'special':
+                    if(!input.checkSpecial()) {
+                        checklist_update(elem, class_green);
+                    } else { checklist_update(elem, class_red )}
+                    break;
+            }
+        }
+    })
+})
+
+password_input.addEventListener('input', () => {
+    let input = new INPUT_CHECK(password_input.value);
+    let targets = Array.from(document.querySelectorAll('[data-password-requirement]'));
+
+    targets.forEach(elem => {
+        elem.classList.remove('red', 'green')
+        elem.querySelector('i').classList.remove('fa-circle-check', 'fa-circle-xmark');
+
+        if (!input.checkEmpty()) {
+            switch (elem.dataset.passwordRequirement) {
+                case 'length':
+                    if (input.checkLength(6)) {
+                        checklist_update(elem, class_green);
+                    } else { checklist_update(elem, class_red) }
+                    break;
+                case 'spaces':
+                    if (!input.checkSpace()) {
+                        checklist_update(elem, class_green);
+                    }else { checklist_update(elem, class_red) };
+                    break;
+                case 'letter':
+                    if(input.checkLetter()) {
+                        checklist_update(elem, class_green);
+                    } else { checklist_update(elem, class_red) }
+                    break;
+                case 'number':
+                    if(input.checkNum()) {
+                        checklist_update(elem, class_green);
+                    } else { checklist_update(elem, class_red )}
+                    break;
+            }
+        }
+    })
+})
+
+function checklist_update(elem, [color_class, i_class]) {
+    elem.classList.add(color_class);
+    elem.querySelector('i').classList.add(i_class)
+}
 
 /*Registration notification messages*/
-let signUp_submit = document.querySelector('[data-registration-submit]');
 let signUp_form = document.querySelector('[data-registration-form]');
 let notification_container = document.querySelectorAll('[data-registration-notification]')
 
@@ -19,10 +95,13 @@ function formCheck() {
 
     //check username
     let username_input = formData.get('username');
+    let username_value = new INPUT_CHECK(username_input);
     let username_notification = [];
 
-    if (!username_input || username_input.trim() === '') { username_notification.push('required_field') }
-    if (/\s/.test(username_input.trim())) { username_notification.push('username_space') }
+    if (username_value.checkEmpty()) { username_notification.push('required_field') }
+    if (!username_value.checkLength(4)) { username_notification.push('username_length') }
+    if (username_value.checkSpace()) { username_notification.push('username_space') }
+    if (username_value.checkSpecial()) { username_notification.push('username_special') }
 
     if (username_notification.length > 0) {
         notifications = notifications || {};
@@ -31,10 +110,14 @@ function formCheck() {
 
     //check password
     let password_input = formData.get('password');
+    let password_value = new INPUT_CHECK(password_input);
     let password_notification = [];
 
-    if (!password_input || password_input.trim() === '') { password_notification.push('required_field') }
-    if (/\s/.test(password_input)) { password_notification.push('password_space') }
+    if (password_value.checkEmpty()) { password_notification.push('required_field') };
+    if (!password_value.checkLength(6)) { password_notification.push( 'password_length') };
+    if (!password_value.checkLetter()) { password_notification.push('password_letter') };
+    if (!password_value.checkNum()) { password_notification.push('password_number') };
+    if (password_value.checkSpace()) { password_notification.push('password_space') };
 
 
     if (password_notification.length > 0) {
@@ -55,10 +138,10 @@ function formCheck() {
     }
 
     if (notifications) {
+        console.log(notifications.username)
         displayNotification(notifications);
         return;
     }
-
     signUp_form.submit();
 }
 
@@ -73,13 +156,15 @@ function displayNotification(obj) {
             child.forEach(elem => elem.remove());
         }
     })
-
     for (let section in obj) {
         let target = document.querySelector(`[data-registration-notification=${section}]`)
-        let noti_html = new HTML_ELEM('p');
-        noti_html.addText(langData.error[obj[section]][lang])
-        noti_html.addClass('error_notification');
 
-        target.appendChild(noti_html.getElement())
+        obj[section].forEach(notification => {
+            let noti_html = new HTML_ELEM('p');
+            noti_html.addText(langData.error[notification][lang])
+            noti_html.addClass('error_notification');
+
+            target.appendChild(noti_html.getElement())
+        })
     }
 }

@@ -11,6 +11,7 @@ import { users_schema } from './schema/users_schema.js';
 let auth = (app, db) => {
     let userDB = db.model('users', users_schema);
     passport.use(new LocalStrat((username, password, done) => {
+        //PENDING: FAILED ATTEMP ACCOUNT LOCKOUT
         userDB.findOne({username: username.trim().toLowerCase()})
             .then(user => {
                 if (!user) {

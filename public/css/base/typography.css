@@ -247,8 +247,8 @@ LOGIN, REGISTER & PROFILE
     font-size: var(--fs-body);
 } 
 
-.login_notification {
-    text-align: right;
+.login_notification > * {
+    text-align: right !important;
 }
 
 .error_notification,

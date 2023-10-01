@@ -1,7 +1,6 @@
 .user_form_title {
-    margin: 2rem 0;
+    margin: 2rem auto 1rem;
     align-self: flex-start;
-    padding-left: clamp(70px, 10vw, 200px);
 }
 
 #form_section {
@@ -25,7 +24,7 @@
 
 #login_form.user_form {
     grid-template-rows: min-content 1fr 1fr 1fr 1fr;
-    grid-template-areas: 
+    grid-template-areas:
         "login_noti login_noti login_noti"
         "user_label divider user_input"
         "password_label divider password_input"
@@ -35,15 +34,19 @@
 }
 
 #register_form.user_form {
+    margin: auto;
+    width: 90vw;
+    max-width: 1080px;
+    grid-template-columns: 200px max-content 1fr max-content;
     grid-template-rows: 1fr min-content 1fr min-content 1fr min-content 1fr;
-    grid-template-areas: 
-        "user_label divider user_input"
-        ". divider user_noti"
-        "password_label divider password_input"
-        ". divider password_noti"
-        "password_confirm_label divider password_confirm_input"
-        ". divider confirm_password_noti"
-        ". divider button";
+    grid-template-areas:
+        "user_label divider user_input username_checklist"
+        ". divider user_noti username_checklist"
+        "password_label divider password_input username_checklist"
+        ". divider password_noti password_checklist"
+        "password_confirm_label divider password_confirm_input password_checklist"
+        ". divider confirm_password_noti password_checklist"
+        ". divider button password_checklist";
 }
 
 #universal_form.user_form {
@@ -53,7 +56,7 @@
 
 [data-universal-form='profile'].user_form {
     grid-template-rows: repeat(5, 1fr);
-    grid-template-areas: 
+    grid-template-areas:
         "username_label divider username_text"
         "profile_name_label divider profile_name_input"
         "change_password_label divider change_password_btn"
@@ -78,23 +81,54 @@
     padding-bottom: 0.5rem;
 }
 
-.universal_notification {
+.universal_notification{
     width: 100%;
 }
 
-.universal_notification > p {
+.universal_alert {
+    max-width: 920px;
+    margin: 0 1rem 0.5rem 1rem;
+}
+
+.universal_notification>p, .universal_alert>p {
     padding: 0.5rem;
     border-radius: 20px;
 }
 
-.universal_notification > p.green {
+.universal_notification>p.green {
     border: 2px solid hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
     background-color: hsla(var(--color-green-h), var(--color-green-s), var(--color-greylight-l), var(--color-opacity-medium));
 }
 
-.universal_notification > p.red {
+.universal_notification>p.red {
     border: 2px solid hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
     background-color: hsla(var(--color-red-h), var(--color-red-s), var(--color-greylight-l), var(--color-opacity-medium));
+}
+
+.universal_alert>p.orange {
+    border: 2px solid hsl(var(--color-orange-h), var(--color-orange-s), var(--color-orange-l));
+    background-color: hsla(var(--color-orange-h), var(--color-orange-s), var(--color-greylight-l), var(--color-opacity-medium));
+}
+
+.input_checklist {
+    border: 1px solid hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    border-radius: 15px;
+    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    align-self: flex-start;
+    padding: 0.5rem;
+}
+
+.checklist_requirement.red, .checklist_requirement.red > * {
+    color: hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
+}
+
+.checklist_requirement.green, .checklist_requirement.green > * {
+    color: hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
+}
+
+.checklist_requirement:before {
+    content: "- ";
+    padding-left: 1rem;
 }
 
 .form_divider {
@@ -103,14 +137,12 @@
     width: 3px;
     background-color: transparent;
     border-right: 2px transparent solid;
-    border-image: linear-gradient(to bottom, 
-    hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l)), 
-    hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l)), 
-    hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l))
-    ) 1;
+    border-image: linear-gradient(to bottom,
+            hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l)),
+            hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l)),
+            hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l))) 1;
     grid-area: divider;
 }
-
 
 #show_password_checkbox,
 .show_password_checkbox {
@@ -159,6 +191,14 @@
     grid-area: password_input;
 }
 
+[data-input-checklist='username'] {
+    grid-area: username_checklist;
+}
+
+[data-input-checklist='password'] {
+    grid-area: password_checklist;
+}
+
 [data-form-notification='password_current'] {
     grid-area: password_notification;
 }
@@ -186,7 +226,7 @@
 .text_link_form {
     align-self: flex-start;
     grid-area: forgot_password;
-}   
+}
 
 .btn_form {
     grid-area: button;
@@ -211,6 +251,23 @@
     }
 }
 
+@media (max-width: 880px) {
+    #register_form.user_form {
+        grid-template-columns: 200px max-content 1fr;
+        grid-template-rows: 1fr min-content max-content 1fr min-content max-content 1fr min-content 1fr;
+        grid-template-areas:
+            "user_label divider user_input"
+            ". divider user_noti"
+            ". divider username_checklist"
+            "password_label divider password_input"
+            ". divider password_noti"
+            ". divider password_checklist"
+            "password_confirm_label divider password_confirm_input"
+            ". divider confirm_password_noti"
+            ". divider button";
+    }
+}
+
 @media (max-width: 520px) {
     .form_divider {
         display: none;
@@ -218,7 +275,6 @@
 
     .user_form_title {
         padding-left: 35px;
-        margin-bottom: 1rem;
     }
 
     #login_form.user_form,
@@ -228,14 +284,14 @@
         grid-template-areas: unset;
     }
 
-    #login_form.user_form,
-    #register_form.user_form {
+    #login_form.user_form {
         margin-left: 35px;
     }
 
     #login_form.user_form {
         grid-template-rows: repeat(7, min-content);
     }
+
     #register_form.user_form {
         grid-template-rows: repeat(10, min-content);
     }
@@ -252,32 +308,21 @@
         grid-template-rows: repeat(9, 1fr) 3fr;
     }
 
-    #login_form.user_form > :nth-child(2),
-    #login_form.user_form > :nth-child(5),
-    #register_form.user_form > :nth-child(3n) {
+    #login_form.user_form> :nth-child(2),
+    #login_form.user_form> :nth-child(5),
+    #register_form.user_form> :nth-child(4n) {
         margin-bottom: 1.5rem;
     }
 
-    .user_form > label {
+    .input_checklist {
+        margin-top: 0.5rem;
+    }
+
+    .user_form>label {
         text-align: unset;
     }
 
-    /* .login_notification,
-    .username_label,
-    .username_input,
-    #username_notification,
-    .password_label, 
-    .input_div, 
-    #password_notification,
-    .password_confirm_label,
-    #password_confirm, 
-    #password_confirm_notification,
-    .text_link_form, 
-    .btn_form {
-        grid-area: unset;
-    } */
-
-    .user_form > *, .user_form > .input_div {
-        grid-area: unset;
+    .user_form>* {
+        grid-area: unset !important;
     }
 }

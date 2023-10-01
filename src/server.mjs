@@ -3,6 +3,7 @@
 import express from 'express';
 import favicon from 'serve-favicon';
 import path from 'path';
+import helmet from 'helmet';
 import session from 'express-session';
 import MongoStore from 'connect-mongo';
 import mongoose from 'mongoose';
@@ -35,7 +36,7 @@ app.set('view engine', 'pug');
 app.set('views', './views');
 app.use(cookieParser());
 app.use(flash());
-app.use(favicon('./public/img/logo/icon.ico'))
+app.use(favicon('./public/img/logo/icon.ico'));
 app.use('/public', express.static(process.cwd() + '/public'));
 app.use('/src', express.static(process.cwd() + '/src'));
 
@@ -58,19 +59,34 @@ const store = MongoStore.create({
   collectionName: 'sessions'
 });
 
-if (true) { //turn off for production!!
-  DB.on('connected', () => {
-    console.log('Connected to Database');
-  })
-  DB.on('disconnect', () => {
-    console.log('Disconnected from Database')
-  })
-}
 
 DB.on('error', (err) => {
   console.error('Error connecting to Database', err);
 })
 
+//DEV ENVIORMENT; DELETE FOR PRODUCTION
+if ( process.env.DEV_ENV ) {
+
+  DB.on('connected', () => {
+    console.log('Connected to Database');
+  });
+
+  DB.on('disconnect', () => {
+    console.log('Disconnected from Database')
+  });
+
+  app.use(helmet({
+    hsts: false,
+    referrerPolicy: { policy: 'same-origin' },
+    hidePoweredBy: false,
+    contentSecurityPolicy: false
+  }));
+
+} else {
+  app.use(helmet({
+    referrerPolicy: { policy: 'same-origin' }
+  }))
+}
 
 /*######
 SESSIONS

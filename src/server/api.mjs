@@ -16,6 +16,9 @@ import { users_schema } from './schema/users_schema.js';
 import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
 
+//client js imports
+import { INPUT_CHECK } from '../client/modules/moduleInputCheck.js';
+
 //import {cookieParser} from 'cookie-parser';
 
 //const key = crypto.randomBytes(32).toString('hex');
@@ -252,14 +255,55 @@ let apiRoute = function (app, db) {
 
     app.route('/register')
         .get(check_auth('/profile', false), (req, res) => {
-            const flash_messages = req.flash('flash')[0] || []
+            const flash_messages = req.flash('flash')[0] || [];
+            let csrf_token = crypto.randomBytes(16).toString('hex');
+            let csrf = csrf_token;
+            req.session._csrf = csrf_token;
             let lang = req.session.lang || 'es';
             let loginCheck = true;
-            res.render('register', { lang, langData, loginCheck, notification: flash_messages })
+            res.render('register', { lang, langData, loginCheck, csrf,notification: flash_messages })
         })
         .post(async (req, res) => {
-            let user_credentials = req.body
-            user_credentials.username = user_credentials.username.trim();
+            let user_credentials = req.body;
+
+            //check data integrity
+            try {
+                for (let key in user_credentials) {
+                    let value = new INPUT_CHECK(user_credentials[key])
+                    switch (key) {
+                        case 'token': 
+                            if(value.checkEmpty() || user_credentials[key] !== req.session._csrf) {throw new Error('invalid token')}
+                            break;
+                        case 'username':
+                            if(
+                                value.checkEmpty() || 
+                                value.checkSpace() || 
+                                !value.checkLength(4) ||
+                                value.checkSpecial()
+                            ) {throw new Error('invalid username')}
+                            break;
+                        case 'password':
+                            if(
+                                value.checkEmpty() || 
+                                value.checkSpace() || 
+                                !value.checkLength(6) ||
+                                !value.checkLetter() ||
+                                !value.checkNum()||
+                                value.checkSpecial()
+                            ) {throw new Error('invalid password')}
+                            break;
+                        case 'confirm_password':
+                            break;
+                        default: 
+                            throw new Error('unexpected values')
+                    }}
+            } catch (err) {
+                console.log(err)
+                console.log('register data integrity failed')
+                req.flash('flash', { username: { error: 'unexpected_error' } });
+                return res.redirect('/register');
+            }
+            
 
             //check if username already exist
             let checkDB = await Users.findOne({ username: user_credentials.username.toLowerCase() }, { username: 1 })
@@ -282,11 +326,11 @@ let apiRoute = function (app, db) {
             })
             try {
                 await user_save.save()
-                res.redirect('/login')
+                return res.redirect('/login')
             } catch (err) {
                 console.error(err);
                 req.flash('flash', { username: { error: 'unexpected_error' } });
-                res.redirect('/register');
+                return res.redirect('/register');
             }
         })
 
@@ -298,7 +342,7 @@ let apiRoute = function (app, db) {
                 req.session.lang = 'en'
             }
             let referer = req.headers.referer || '/';
-            res.redirect(referer);
+            return res.redirect(referer);
         });
 
     app.route('/pref')
@@ -330,7 +374,7 @@ let apiRoute = function (app, db) {
 
             let lang = req.session.lang || 'es';
             let loginCheck = true;
-            res.render(`profile_overview`, { lang, langData, loginCheck, user })
+            return res.render(`profile_overview`, { lang, langData, loginCheck, user })
         })
 
     app.route('/password')
@@ -350,7 +394,7 @@ let apiRoute = function (app, db) {
             let lang = req.session.lang || 'es';
             let loginCheck = true;
 
-            res.render(`data_management/password`, { lang, langData, loginCheck, user, csrf, flash_message })
+            return res.render(`data_management/password`, { lang, langData, loginCheck, user, csrf, flash_message })
         })
         .post(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
             let user_update = req.body;
@@ -388,7 +432,7 @@ let apiRoute = function (app, db) {
             )
 
             req.flash('notification', 'save_success')
-            res.json({ url: '/password'})
+            return res.json({ url: '/password'})
         })
 
 
@@ -413,7 +457,7 @@ let apiRoute = function (app, db) {
 
             let lang = req.session.lang || 'es';
             let loginCheck = true;
-            res.render(`data_management/${main_dir}`, { lang, langData, loginCheck, user, csrf, flash_message })
+            return res.render(`data_management/${main_dir}`, { lang, langData, loginCheck, user, csrf, flash_message })
         })
         .post(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
             let main_dir = req.params.main;
@@ -462,16 +506,19 @@ let apiRoute = function (app, db) {
             )
 
             req.flash('notification', 'save_success')
-            res.json({ url: `/${main_dir}` })
+            return res.json({ url: `/${main_dir}` })
         })
 
     //non-existant routes handler
-    app.route('/*').get((req, res) => { res.redirect('/') })
+    app.route('/*').get((req, res) => { 
+        console.log('Non-existance route')
+        return res.redirect('/') 
+    })
 
     app.use((err, req, res, next) => {
         console.log('Routing API error:')
         console.error(err)
-        res.redirect('/')
+        return res.redirect('/')
     })
 };
 

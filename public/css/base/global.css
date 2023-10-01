@@ -37,6 +37,10 @@
     --color-green-h: 131;
     --color-green-s: 100%;
     --color-green-l: 32%;
+    /*## orange (alerts) ##*/
+    --color-orange-h: 38;
+    --color-orange-s: 80%;
+    --color-orange-l: 50%;
     /*## bg-white ##*/
     --color-bg-h: 360;
     --color-bg-s: 100%;

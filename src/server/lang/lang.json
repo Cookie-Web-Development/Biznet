@@ -82,6 +82,53 @@
             "en": "Confirm New Password",
             "es": "Confirme nueva contraseña"
         },
+        "username_requirement_title": {
+            "en": "Username requirements:",
+            "es": "Requerimientos para el nombre de usuario:"
+        },
+        "username_requirement": [
+            {
+                "key": "length",
+                "en": "Four(4) or more characters.",
+                "es": "Cuatro(4) o más caracteres."
+            },
+            {
+                "key": "spaces",
+                "en": "No blank spaces.",
+                "es": "Sin espacios en blanco."
+            },
+            {
+                "key": "special",
+                "en": "No special characters. Exceptions: - _ . ",
+                "es": "Ningún caracter especial. Excepción: - _ . "
+            }
+        ],
+        "password_requirement_title": {
+            "en": "Password requirements:",
+            "es": "Requerimientos para la contraseña:"
+        },
+        "password_requirement": [
+            {
+                "key": "length",
+                "en": "Six(6) or more characters.",
+                "es": "Seis(6) o más caracteres."
+            },
+            {
+                "key": "letter",
+                "en": "At least one(1) letter.",
+                "es": "Al menos una(1) letra."
+            },
+            {
+                "key": "number",
+                "en": "At least one(1) number.",
+                "es": "Al menos un(1) número."
+            },
+            {
+                "key": "spaces",
+                "en": "No blank spaces.",
+                "es": "Sin espacios en blanco."
+            }
+        ],
         "sign_up": {
             "en": "Create new account",
             "es": "Crear una cuenta nueva"
@@ -266,9 +313,29 @@
             "en": " is already in use.",
             "es": " ya está en uso."
         },
+        "username_special": {
+            "en": "Username can not contain special characters. The exeptions are hyphen (-), Underline (_), and period (.).",
+            "es": "El nombre de usuario no puede contener caracteres especiales. Las excepciones son el guión (-), el guión bajo (_) y el punto (.)."
+        },
+        "username_length": {
+            "en": "Username must be four (4) or more characters long.",
+            "es": "El nombre de usuario debe tener cuatro (4) caracteres o más."
+        },
         "password_space": {
             "en": "Password can't contain any spaces.",
             "es": "La contraseña no puede contener espacios."
+        },
+        "password_letter": {
+            "en": "Password must contain at least one (1) letter.",
+            "es": "La contraseña debe de contener al menos una (1) letra."
+        },
+        "password_number": {
+            "en": "Password must contain at least one (1) number.",
+            "es": "La contraseña debe de contener al menos un (1) número."
+        },
+        "password_length": {
+            "en": "Password must contain at least six (6) or more characters.",
+            "es": "La contraseña debe de contener al menos seis (6) caracteres o más."
         },
         "invalid_login": {
             "en": "Invalid username and/or password.",
@@ -295,6 +362,18 @@
         "save_success": {
             "en": "Changes has been saved successfully.",
             "es": "Los cambios han sido guardados satisfactoriamente."
+        },
+        "account_disclaimer_prefix": {
+            "en": "Notice: While we take great care to secure and encrypt users' information, please ",
+            "es": "Nota: Aún cuando nos esforzamos por mantener la información de los usuarios encriptados y de manera segura, por favor "
+        },
+        "account_disclaimer": {
+            "en": "AVOID USING ",
+            "es": "EVITE UTILIZAR "
+        },
+        "account_disclaimer_suffix": {
+            "en": "credentials that you are already using on other websites or platforms.",
+            "es": "información que usted esté utilizando actualmente en otras plataformas o sitios web."
         }
     }
 }
