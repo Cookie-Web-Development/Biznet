@@ -29,7 +29,7 @@ _dotenv["default"].config({
 });
 
 /*Directory Traversal Prevent*/
-if (!process.env.DEV_ENV) {
+if (true) {
   app.use(function (req, res, next) {
     // Get the requested URL path
     var urlPath = req.url;
