@@ -2,8 +2,8 @@
   "name": "biznet",
   "version": "1.0.0",
   "description": "Prototype web for proof of concept",
-  "main": "server.js",
-  "type": "commonjs",
+  "main": "server.mjs",
+  "type": "module",
   "scripts": {
     "start": "nodemon src/server.mjs",
     "test": "mocha --ui tdd --exit tests/",
@@ -36,7 +36,6 @@
     "@babel/plugin-syntax-import-attributes": "^7.22.5",
     "@babel/plugin-transform-arrow-functions": "^7.22.5",
     "@babel/preset-env": "^7.22.9",
-    "babel-loader": "^9.1.3",
     "glob": "^10.3.10",
     "nodemon": "^2.0.21",
     "webpack": "^5.88.2",

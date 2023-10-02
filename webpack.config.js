@@ -7,11 +7,7 @@ module.exports = {
     entry: {     // Use glob to match all JavaScript files in src/client and subdirectories
         ...glob.sync('./dist/client/**/*.js').reduce((entries, file) => {
           const entryName = path.relative(path.join(__dirname, 'dist/client'), file);
-          console.log('HAKUNA entryName')
-          console.log(entryName);
           entries[entryName] = file;
-          console.log('MATATA entries')
-          console.log(entries)
           return entries;
         }, {}),},
     output: {

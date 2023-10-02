@@ -19,19 +19,27 @@ import apiRoute from './server/api.mjs';
 import auth from './server/auth.js'
 import { session_schema } from './server/schema/session_schema.js'
 
-/*Directory Traversal Prevent*/
-// function _DTP (req, res, next) {
-//   const requested_path =  req.path;
-//   const norm_path = path.normalize(requested_path)
-
-//   if(!norm_path.startsWith('public'))
-// }
-
-
 
 const app = express();
 const server = http.createServer(app);
 dotenv.config({ path: './.env' });
+
+/*Directory Traversal Prevent*/
+app.use((req, res, next) => {
+  // Get the requested URL path
+  const urlPath = req.url;
+  // Normalize the URL path to remove any potential directory traversal
+  const normalizedPath = path.normalize(urlPath);
+
+  // Check if the normalized path contains '..' or starts with '/server/'
+  if (normalizedPath.includes('..') || normalizedPath.startsWith('\\src\\server') || normalizedPath.startsWith('\\dist\\server')) {
+    // If it contains '..', it's a directory traversal attempt
+    res.status(403).send('Access to this path is forbidden.');
+  } else {
+    // If not, continue with the request
+    next();
+  }
+});
 
 app.set('view engine', 'pug');
 app.set('views', './views');

@@ -1,5 +1,6 @@
 'use strict';
 
+import langData from '../../server/lang/lang.json'assert { type: "json" };
 import { HTML_ELEM } from '../modules/moduleHTMLElemMaker.js';
 import { INPUT_CHECK } from '../modules/moduleInputCheck.js';
 
