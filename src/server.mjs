@@ -25,21 +25,27 @@ const server = http.createServer(app);
 dotenv.config({ path: './.env' });
 
 /*Directory Traversal Prevent*/
-app.use((req, res, next) => {
-  // Get the requested URL path
-  const urlPath = req.url;
-  // Normalize the URL path to remove any potential directory traversal
-  const normalizedPath = path.normalize(urlPath);
+if (!process.env.DEV_ENV) {
+  app.use((req, res, next) => {
+    // Get the requested URL path
+    const urlPath = req.url;
+    // Normalize the URL path to remove any potential directory traversal
+    const normalizedPath = path.normalize(urlPath);
 
-  // Check if the normalized path contains '..' or starts with '/server/'
-  if (normalizedPath.includes('..') || normalizedPath.startsWith('\\src\\server') || normalizedPath.startsWith('\\dist\\server')) {
-    // If it contains '..', it's a directory traversal attempt
-    res.status(403).send('Access to this path is forbidden.');
-  } else {
-    // If not, continue with the request
-    next();
-  }
-});
+    // Check if the normalized path contains '..' or starts with '/server/'
+    if (
+      normalizedPath.includes('..') ||
+      normalizedPath.startsWith('\\src\\server') ||
+      normalizedPath.startsWith('\\dist\\server')
+    ) {
+      // If it contains '..', it's a directory traversal attempt
+      res.status(403).send('Access to this path is forbidden.');
+    } else {
+      // If not, continue with the request
+      next();
+    }
+  })
+};
 
 app.set('view engine', 'pug');
 app.set('views', './views');
@@ -74,7 +80,7 @@ DB.on('error', (err) => {
 })
 
 //DEV ENVIORMENT; DELETE FOR PRODUCTION
-if ( process.env.DEV_ENV ) {
+if (process.env.DEV_ENV) {
 
   DB.on('connected', () => {
     console.log('Connected to Database');
@@ -93,7 +99,13 @@ if ( process.env.DEV_ENV ) {
 
 } else {
   app.use(helmet({
-    referrerPolicy: { policy: 'same-origin' }
+    referrerPolicy: { policy: 'same-origin' },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"]
+      }
+    }
   }))
 }
 
@@ -128,16 +140,16 @@ let session_middleware = async (req, res, next) => {
   let sessionDB_result, errorLimit = 3;
 
   async function queryDB(id) {
-    return await Sessions.findOne( { _id: id } );
+    return await Sessions.findOne({ _id: id });
   }
 
   async function regenerate_id() {
     return new Promise((resolve, reject) => {
       req.session.regenerate((err) => {
-        if (err) {throw new Error('wtf')}
-        else { 
+        if (err) { throw new Error('wtf') }
+        else {
           console.log('Error log: session_middleware errorLimit', errorLimit)
-          resolve() 
+          resolve()
         }
       })
     })
@@ -147,28 +159,28 @@ let session_middleware = async (req, res, next) => {
     return new Promise(async (resolve, reject) => {
       sessionDB_result = await queryDB(req.sessionID);
 
-      if(sessionDB_result && !req.cookies['connect.sid']) { reject() }
-      
-      if(!sessionDB_result) { req.session.save() }
+      if (sessionDB_result && !req.cookies['connect.sid']) { reject() }
+
+      if (!sessionDB_result) { req.session.save() }
       resolve();
 
     })
-    .then(() => {
-      req.session.last_access = new Date();
-      next();
-    })
-    .catch(async () => {
-      errorLimit--
-      if(errorLimit <= 0) { throw new Error('Unable to generate SessionID') };
-      await regenerate_id();
-      return sessionID_check();
-    })
+      .then(() => {
+        req.session.last_access = new Date();
+        next();
+      })
+      .catch(async () => {
+        errorLimit--
+        if (errorLimit <= 0) { throw new Error('Unable to generate SessionID') };
+        await regenerate_id();
+        return sessionID_check();
+      })
   }
 
   try {
     await sessionID_check()
-  } 
-  catch(err) {
+  }
+  catch (err) {
     next(err);
   }
 }

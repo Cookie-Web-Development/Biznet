@@ -19,10 +19,6 @@ import search_query from './pipeline/search_query.js';
 //client js imports
 import { INPUT_CHECK } from '../client/modules/moduleInputCheck.js';
 
-//import {cookieParser} from 'cookie-parser';
-
-//const key = crypto.randomBytes(32).toString('hex');
-/*DEV MODE END*/
 
 let apiRoute = function (app, db) {
     /*#######
@@ -288,8 +284,7 @@ let apiRoute = function (app, db) {
                                 value.checkSpace() || 
                                 !value.checkLength(6) ||
                                 !value.checkLetter() ||
-                                !value.checkNum()||
-                                value.checkSpecial()
+                                !value.checkNum()
                             ) {throw new Error('invalid password')}
                             break;
                         case 'confirm_password':
@@ -398,11 +393,26 @@ let apiRoute = function (app, db) {
         })
         .post(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
             let user_update = req.body;
-            
-            //validate
+
+            //validate csrf
             if (user_update.validate._csrf !== req.session._csrf) {
                 req.flash('error', 'save_fail')
                 console.log('invalid token')
+                res.json({ url: `/password` })
+                return;
+            }
+
+            //validate new password standard
+            let new_password = new INPUT_CHECK(user_update.update.password);
+            if(
+                new_password.checkEmpty() || 
+                new_password.checkSpace() || 
+                !new_password.checkLength(6) ||
+                !new_password.checkLetter() ||
+                !new_password.checkNum()
+            ) {
+                req.flash('error', 'save_fail')
+                console.log('new password not valid')
                 res.json({ url: `/password` })
                 return;
             }

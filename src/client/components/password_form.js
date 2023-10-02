@@ -2,7 +2,7 @@
 
 import langData from '../../server/lang/lang.json'assert { type: "json" };
 import { HTML_ELEM } from '../modules/moduleHTMLElemMaker.js';
-
+import { INPUT_CHECK } from '../modules/moduleInputCheck.js';
 
 /*##########
 FORM Handler
@@ -33,31 +33,41 @@ function formCheck(data) {
     let form_data = new FormData(data);
     let notifications;
 
-    form_data.forEach((value, key) => {
-        if (!value || value.trim() === '') {
-            notifications = notifications || {};
-            notifications[key] = notifications[key] || [];
-            notifications[key].push('required_field');
-        }
-    })
+    //current password
+    let password_current = form_data.get('password_current');
+    let pwCurrent_value = new INPUT_CHECK(password_current);
+    let password_current_noti = [];
 
-    // let password_current = form_data.get('password_current');
+    if (pwCurrent_value.checkEmpty()) { password_current_noti.push( 'required_field' )};
+
+    if (password_current_noti.length > 0) {
+        notifications = notifications || {};
+        notifications.password_current = password_current_noti;
+    };
+
+    //password new
     let password_new = form_data.get('password_new');
     let password_new_confirm = form_data.get('password_new_confirm');
+    let pwNew_value = new INPUT_CHECK(password_new);
+    let password_new_noti = [], password_new_confirm_noti = [];
 
-    console.log('password_new_confirm', form_data.get('password_new_confirm'))
+    if (pwNew_value.checkEmpty()) { password_new_noti.push( 'required_field' )};
+    if (!pwNew_value.checkLength(6)) { password_new_noti.push( 'password_length' )};
+    if (!pwNew_value.checkLetter()) { password_new_noti.push( 'password_letter' )};
+    if (!pwNew_value.checkNum()) { password_new_noti.push( 'password_number' )};
+    if (pwNew_value.checkSpace()) { password_new_noti.push( 'password_space' )};
 
-    if (/\s/.test(password_new)) {
+    if (password_new_noti.length > 0 ) {
         notifications = notifications || {};
-        notifications.password_new = notifications.password_new || [];
-        notifications.password_new.push('password_space')
-    }
+        notifications.password_new = password_new_noti;
+    };
 
-    if (password_new !== password_new_confirm) {
+    if (password_new !== password_new_confirm) { password_new_confirm_noti.push('confirm_password') };
+
+    if (password_new_confirm_noti.length > 0) {
         notifications = notifications || {};
-        notifications.password_new_confirm = notifications.password_new_confirm || [];
-        notifications.password_new_confirm.push('confirm_password')
-    }
+        notifications.password_new_confirm = password_new_confirm_noti;
+    };
 
     if (notifications) {
         display_notification(notifications)
@@ -82,6 +92,7 @@ function formCheck(data) {
                     throw new Error('Submit Error')
             }
         })
+
         //send To API
         let endpoint = form.getAttribute('action')
         console.log('submit_data')

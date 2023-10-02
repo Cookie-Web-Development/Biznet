@@ -11,24 +11,10 @@ module.exports = {
           return entries;
         }, {}),},
     output: {
-        filename: '[name]', // Output file name
-        path: path.resolve(__dirname, 'dist/client'), // Output directory
+        filename: '[name]',
+        path: path.resolve(__dirname, 'dist/client'),
     },
-    // module: {
-    //     rules: [
-    //         {
-    //             test: /\.js$/, // Match JavaScript files
-    //             exclude: /node_modules/,
-    //             use: {
-    //                 loader: 'babel-loader', // Use Babel for transpilation
-    //                 options: {
-    //                     presets: ['@babel/preset-env'], // Use the @babel/preset-env preset
-    //                 },
-    //             },
-    //         },
-    //     ],
-    // },
     resolve: {
-        preferRelative: true, // Add this line to enable preferRelative
+        preferRelative: true,
       },
 };
