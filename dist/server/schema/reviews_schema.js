@@ -4,16 +4,15 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.reviews_schema = void 0;
-require("core-js/modules/es.number.constructor.js");
 var _mongoose = _interopRequireDefault(require("mongoose"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var reviews_schema = _mongoose.default.Schema({
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+var reviews_schema = _mongoose["default"].Schema({
   user_id: {
-    type: _mongoose.default.Schema.Types.ObjectId,
+    type: _mongoose["default"].Schema.Types.ObjectId,
     required: true
   },
   product_id: {
-    type: _mongoose.default.Schema.Types.ObjectId,
+    type: _mongoose["default"].Schema.Types.ObjectId,
     required: true,
     ref: "products"
   },
@@ -25,7 +24,7 @@ var reviews_schema = _mongoose.default.Schema({
   },
   review_text: {
     type: String,
-    default: ''
+    "default": ''
   }
 });
 exports.reviews_schema = reviews_schema;

@@ -4,10 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.products_schema = exports.listing_schema = void 0;
-require("core-js/modules/es.number.constructor.js");
 var _mongoose = _interopRequireDefault(require("mongoose"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var listing_schema = _mongoose.default.Schema({
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+var listing_schema = _mongoose["default"].Schema({
   variation_options: {
     en: Object,
     es: Object
@@ -18,15 +17,15 @@ var listing_schema = _mongoose.default.Schema({
   },
   discount: {
     type: Boolean,
-    default: false
+    "default": false
   },
   discount_percent: {
     type: Number,
-    default: 0
+    "default": 0
   },
   featured: {
     type: Boolean,
-    default: false
+    "default": false
   },
   images: [String],
   sku: {
@@ -35,7 +34,7 @@ var listing_schema = _mongoose.default.Schema({
   }
 });
 exports.listing_schema = listing_schema;
-var products_schema = _mongoose.default.Schema({
+var products_schema = _mongoose["default"].Schema({
   name: {
     es: {
       type: String,
@@ -49,11 +48,11 @@ var products_schema = _mongoose.default.Schema({
   description: {
     en: {
       type: String,
-      default: ''
+      "default": ''
     },
     es: {
       type: String,
-      default: ''
+      "default": ''
     }
   },
   category_id: {

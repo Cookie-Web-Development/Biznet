@@ -4,10 +4,9 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.tags_schema = void 0;
-require("core-js/modules/es.number.constructor.js");
 var _mongoose = _interopRequireDefault(require("mongoose"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-var tags_schema = _mongoose.default.Schema({
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+var tags_schema = _mongoose["default"].Schema({
   name: {
     es: {
       type: String,

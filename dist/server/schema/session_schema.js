@@ -1,19 +1,17 @@
-"use strict";
+'use strict';
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.brands_schema = void 0;
+exports.session_schema = void 0;
 var _mongoose = _interopRequireDefault(require("mongoose"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
-var brands_schema = _mongoose["default"].Schema({
-  name: {
+var session_schema = _mongoose["default"].Schema({
+  _id: {
     type: String,
-    "default": "Original"
+    required: true
   },
-  brand_id: {
-    type: Number,
-    unique: true
-  }
+  expires: Date,
+  session: String
 });
-exports.brands_schema = brands_schema;
+exports.session_schema = session_schema;

@@ -1,5 +1,6 @@
 'use strict';
 
+import 'core-js';
 import express from 'express';
 import favicon from 'serve-favicon';
 import path from 'path';

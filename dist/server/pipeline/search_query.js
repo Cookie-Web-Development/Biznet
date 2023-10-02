@@ -1,37 +1,15 @@
 "use strict";
 
-require("core-js/modules/es.symbol.to-primitive.js");
-require("core-js/modules/es.date.to-primitive.js");
-require("core-js/modules/es.symbol.js");
-require("core-js/modules/es.symbol.description.js");
-require("core-js/modules/es.object.to-string.js");
-require("core-js/modules/es.number.constructor.js");
-require("core-js/modules/es.object.keys.js");
-require("core-js/modules/es.array.filter.js");
-require("core-js/modules/es.object.get-own-property-descriptor.js");
-require("core-js/modules/web.dom-collections.for-each.js");
-require("core-js/modules/es.object.get-own-property-descriptors.js");
-require("core-js/modules/es.symbol.iterator.js");
-require("core-js/modules/es.array.iterator.js");
-require("core-js/modules/es.string.iterator.js");
-require("core-js/modules/web.dom-collections.iterator.js");
-require("core-js/modules/es.array.from.js");
-require("core-js/modules/es.array.slice.js");
-require("core-js/modules/es.regexp.to-string.js");
-require("core-js/modules/es.regexp.exec.js");
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = search_query;
-require("core-js/modules/es.function.name.js");
-require("core-js/modules/es.array.map.js");
-require("core-js/modules/es.object.entries.js");
+exports["default"] = search_query;
 var _mongoose = _interopRequireDefault(require("mongoose"));
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i.return && (_r = _i.return(), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -71,7 +49,7 @@ function search_query(query_input) {
   //id
 
   if (query_input.id) {
-    queryObj._id = new _mongoose.default.Types.ObjectId(query_input.id);
+    queryObj._id = new _mongoose["default"].Types.ObjectId(query_input.id);
   }
 
   //name
@@ -190,7 +168,7 @@ function search_query(query_input) {
   if (query_input.more_brand) {
     queryObj.$and = [{
       _id: {
-        $ne: new _mongoose.default.Types.ObjectId(query_input.more_brand[0])
+        $ne: new _mongoose["default"].Types.ObjectId(query_input.more_brand[0])
       }
     }, {
       brand_id: query_input.more_brand[1]
@@ -200,7 +178,7 @@ function search_query(query_input) {
   if (query_input.more_similar) {
     queryObj.$and = [{
       _id: {
-        $ne: new _mongoose.default.Types.ObjectId(query_input.more_similar[0])
+        $ne: new _mongoose["default"].Types.ObjectId(query_input.more_similar[0])
       }
     }, {
       brand_id: {
@@ -236,7 +214,7 @@ function search_query(query_input) {
         $map: {
           input: "$listing",
           as: "entry",
-          in: {
+          "in": {
             $mergeObjects: ["$$entry", {
               price_discounted: {
                 $round: [{
@@ -294,7 +272,7 @@ function search_query(query_input) {
         $map: {
           input: "$tag_collection",
           as: "tag",
-          in: {
+          "in": {
             name: "$$tag.name",
             tag_id: "$$tag.tag_id"
           }
