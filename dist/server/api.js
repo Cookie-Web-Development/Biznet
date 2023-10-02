@@ -36,10 +36,6 @@ function _regeneratorRuntime() { "use strict"; /*! regenerator-runtime -- Copyri
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; } //import { product_variations_schema } from './schema/product_variations_schema.js';
 //client js imports
-//import {cookieParser} from 'cookie-parser';
-
-//const key = crypto.randomBytes(32).toString('hex');
-/*DEV MODE END*/
 var apiRoute = function apiRoute(app, db) {
   /*#######
   PRE-HOOKS 
@@ -540,7 +536,7 @@ var apiRoute = function apiRoute(app, db) {
           case 14:
             return _context8.abrupt("break", 20);
           case 15:
-            if (!(value.checkEmpty() || value.checkSpace() || !value.checkLength(6) || !value.checkLetter() || !value.checkNum() || value.checkSpecial())) {
+            if (!(value.checkEmpty() || value.checkSpace() || !value.checkLength(6) || !value.checkLetter() || !value.checkNum())) {
               _context8.next = 17;
               break;
             }
@@ -790,11 +786,11 @@ var apiRoute = function apiRoute(app, db) {
     };
   }()).post(check_auth('/login', true) /*, check_role()*/, /*#__PURE__*/function () {
     var _ref12 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee12(req, res) {
-      var user_update, user, update_password;
+      var user_update, new_password, user, update_password;
       return _regeneratorRuntime().wrap(function _callee12$(_context12) {
         while (1) switch (_context12.prev = _context12.next) {
           case 0:
-            user_update = req.body; //validate
+            user_update = req.body; //validate csrf
             if (!(user_update.validate._csrf !== req.session._csrf)) {
               _context12.next = 6;
               break;
@@ -806,21 +802,34 @@ var apiRoute = function apiRoute(app, db) {
             });
             return _context12.abrupt("return");
           case 6:
-            _context12.next = 8;
+            //validate new password standard
+            new_password = new _moduleInputCheck.INPUT_CHECK(user_update.update.password);
+            if (!(new_password.checkEmpty() || new_password.checkSpace() || !new_password.checkLength(6) || !new_password.checkLetter() || !new_password.checkNum())) {
+              _context12.next = 12;
+              break;
+            }
+            req.flash('error', 'save_fail');
+            console.log('new password not valid');
+            res.json({
+              url: "/password"
+            });
+            return _context12.abrupt("return");
+          case 12:
+            _context12.next = 14;
             return Users.findOne({
               _id: req.user._id
             });
-          case 8:
+          case 14:
             _context12.t0 = _context12.sent;
             if (_context12.t0) {
-              _context12.next = 11;
+              _context12.next = 17;
               break;
             }
             _context12.t0 = null;
-          case 11:
+          case 17:
             user = _context12.t0;
             if (_bcrypt["default"].compareSync(user_update.validate.password, user.password)) {
-              _context12.next = 16;
+              _context12.next = 22;
               break;
             }
             req.flash('error', 'wrong_password');
@@ -828,9 +837,9 @@ var apiRoute = function apiRoute(app, db) {
               url: '/password'
             });
             return _context12.abrupt("return");
-          case 16:
+          case 22:
             if (!_bcrypt["default"].compareSync(user_update.update.password, user.password)) {
-              _context12.next = 20;
+              _context12.next = 26;
               break;
             }
             req.flash('error', 'no_change');
@@ -838,23 +847,23 @@ var apiRoute = function apiRoute(app, db) {
               url: '/password'
             });
             return _context12.abrupt("return");
-          case 20:
-            _context12.next = 22;
+          case 26:
+            _context12.next = 28;
             return _bcrypt["default"].hash(req.body.update.password, 12);
-          case 22:
+          case 28:
             update_password = _context12.sent;
-            _context12.next = 25;
+            _context12.next = 31;
             return Users.findOneAndUpdate({
               _id: req.user._id
             }, {
               password: update_password
             });
-          case 25:
+          case 31:
             req.flash('notification', 'save_success');
             return _context12.abrupt("return", res.json({
               url: '/password'
             }));
-          case 27:
+          case 33:
           case "end":
             return _context12.stop();
         }
