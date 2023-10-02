@@ -29,23 +29,22 @@ _dotenv["default"].config({
 });
 
 /*Directory Traversal Prevent*/
-if (true) {
-  app.use(function (req, res, next) {
-    // Get the requested URL path
-    var urlPath = req.url;
-    // Normalize the URL path to remove any potential directory traversal
-    var normalizedPath = _path["default"].normalize(urlPath);
+app.use(function (req, res, next) {
+  // Get the requested URL path
+  var urlPath = req.url;
+  // Normalize the URL path to remove any potential directory traversal
+  var normalizedPath = _path["default"].normalize(urlPath);
+  console.log(normalizedPath)
+  // Check if the normalized path contains '..' or starts with '/server/'
+  if (normalizedPath.includes('..') || normalizedPath.startsWith('\\src\\server') || normalizedPath.startsWith('\\dist\\server') || normalizedPath.startsWith('/src/server') || normalizedPath.startsWith('/dist/server')) {
+    // If it contains '..', it's a directory traversal attempt
+    res.status(403).send('Access to this path is forbidden.');
+  } else {
+    // If not, continue with the request
+    next();
+  }
+});
 
-    // Check if the normalized path contains '..' or starts with '/server/'
-    if (normalizedPath.includes('..') || normalizedPath.startsWith('\\src\\server') || normalizedPath.startsWith('\\dist\\server')) {
-      // If it contains '..', it's a directory traversal attempt
-      res.status(403).send('Access to this path is forbidden.');
-    } else {
-      // If not, continue with the request
-      next();
-    }
-  });
-}
 ;
 app.set('view engine', 'pug');
 app.set('views', './views');
