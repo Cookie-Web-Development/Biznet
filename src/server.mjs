@@ -79,35 +79,36 @@ DB.on('error', (err) => {
   console.error('Error connecting to Database', err);
 })
 
-//DEV ENVIORMENT; DELETE FOR PRODUCTION
-if (process.env.DEV_ENV) {
+/*############
+DEV ENVIORMENT
+##############*/
+// DB.on('connected', () => {
+//   console.log('Connected to Database');
+// });
 
-  DB.on('connected', () => {
-    console.log('Connected to Database');
-  });
+// DB.on('disconnect', () => {
+//   console.log('Disconnected from Database')
+// });
 
-  DB.on('disconnect', () => {
-    console.log('Disconnected from Database')
-  });
+// app.use(helmet({
+//   hsts: false,
+//   referrerPolicy: { policy: 'same-origin' },
+//   hidePoweredBy: false,
+//   contentSecurityPolicy: false
+//   }));
 
-  app.use(helmet({
-    hsts: false,
-    referrerPolicy: { policy: 'same-origin' },
-    hidePoweredBy: false,
-    contentSecurityPolicy: false
-  }));
-
-} else {
-  app.use(helmet({
-    referrerPolicy: { policy: 'same-origin' },
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"]
-      }
+/*########
+PRODUCTION
+##########*/
+app.use(helmet({
+  referrerPolicy: { policy: 'same-origin' },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"]
     }
-  }))
-}
+  }
+}))
 
 /*######
 SESSIONS

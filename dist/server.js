@@ -71,35 +71,38 @@ DB.on('error', function (err) {
   console.error('Error connecting to Database', err);
 });
 
-//DEV ENVIORMENT; DELETE FOR PRODUCTION
-if (process.env.DEV_ENV) {
-  DB.on('connected', function () {
-    console.log('Connected to Database');
-  });
-  DB.on('disconnect', function () {
-    console.log('Disconnected from Database');
-  });
-  app.use((0, _helmet["default"])({
-    hsts: false,
-    referrerPolicy: {
-      policy: 'same-origin'
-    },
-    hidePoweredBy: false,
-    contentSecurityPolicy: false
-  }));
-} else {
-  app.use((0, _helmet["default"])({
-    referrerPolicy: {
-      policy: 'same-origin'
-    },
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"]
-      }
+/*############
+DEV ENVIORMENT
+##############*/
+// DB.on('connected', () => {
+//   console.log('Connected to Database');
+// });
+
+// DB.on('disconnect', () => {
+//   console.log('Disconnected from Database')
+// });
+
+// app.use(helmet({
+//   hsts: false,
+//   referrerPolicy: { policy: 'same-origin' },
+//   hidePoweredBy: false,
+//   contentSecurityPolicy: false
+//   }));
+
+/*########
+PRODUCTION
+##########*/
+app.use((0, _helmet["default"])({
+  referrerPolicy: {
+    policy: 'same-origin'
+  },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"]
     }
-  }));
-}
+  }
+}));
 
 /*######
 SESSIONS
