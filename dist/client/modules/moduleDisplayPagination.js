@@ -1,1 +1,78 @@
-(()=>{"use strict";var t={590:(t,e)=>{Object.defineProperty(e,"__esModule",{value:!0}),e.HTML_ELEM=function t(e){var n=document.createElement(e);this.addElement=function(e){var r=new t(e);return n.appendChild(r.getElement()),r},this.addClass=function(t){n.classList.add(t)},this.addAttribute=function(t){var e=arguments.length>1&&void 0!==arguments[1]?arguments[1]:void 0;e?n.setAttribute(t,e):n.setAttribute(t)},this.addText=function(t){n.textContent=t},this.getElement=function(){return n}}}},e={};!function n(r){var i=e[r];if(void 0!==i)return i.exports;var s=e[r]={exports:{}};return t[r](s,s.exports,n),s.exports}(590)})();
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.display_pagination = display_pagination;
+var _moduleHTMLElemMaker = require("./moduleHTMLElemMaker.js");
+function display_pagination(active_page, total_pages, pagination_container) {
+  var pagination_type = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : undefined;
+  //element remover
+  Array.from(pagination_container.children).forEach(function (child) {
+    return child.remove();
+  });
+  if (total_pages < 2 || !total_pages) {
+    return;
+  }
+  ;
+  var pagination_active_page = active_page || 1;
+  var pagination_arr = [];
+  if (pagination_active_page !== 1) {
+    pagination_arr.push('prev');
+  }
+  ;
+  pagination_arr.push(1);
+  for (var i = -3; i <= 3; i++) {
+    var result = pagination_active_page + i;
+    if (i === -3 && result > 2 || i === 3 && result < total_pages - 1) {
+      pagination_arr.push('...');
+    } else {
+      if (result >= 2 && result < total_pages) {
+        pagination_arr.push(result);
+      }
+    }
+  }
+  pagination_arr.push(total_pages);
+  if (pagination_active_page !== total_pages) {
+    pagination_arr.push('next');
+  }
+  if (pagination_arr.length <= 1) {
+    pagination_container.style.display = 'none';
+    return;
+  }
+  ;
+  pagination_arr.forEach(function (page) {
+    var create_elem;
+    switch (page) {
+      case pagination_active_page:
+        //Plans for this, later
+        create_elem = new _moduleHTMLElemMaker.HTML_ELEM('p');
+        create_elem.addAttribute('id', 'page_current');
+        create_elem.addText(page);
+        var mobile_pagination_span = create_elem.addElement('span');
+        mobile_pagination_span.addAttribute('data-pagination-responsive', 'mobile');
+        mobile_pagination_span.addText("/".concat(total_pages));
+        break;
+      case '...':
+        create_elem = new _moduleHTMLElemMaker.HTML_ELEM('p');
+        create_elem.addAttribute('data-pagination-responsive', 'desktop');
+        create_elem.addText(page);
+        break;
+      default:
+        create_elem = new _moduleHTMLElemMaker.HTML_ELEM('button');
+        create_elem.addClass('button');
+        create_elem.addClass('button_pagination');
+        create_elem.addAttribute('type', 'button');
+        create_elem.addAttribute('data-page-value', page);
+        if (page == "prev" || page == "next") {
+          var arrow = create_elem.addElement('i');
+          arrow.addClass('fa-solid');
+          page == 'prev' ? arrow.addClass('fa-chevron-left') : arrow.addClass('fa-chevron-right');
+        } else {
+          create_elem.addText(page);
+          create_elem.addAttribute('data-pagination-responsive', 'desktop');
+        }
+    }
+    pagination_container.appendChild(create_elem.getElement());
+  });
+}

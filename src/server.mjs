@@ -47,7 +47,8 @@ app.use((req, res, next) => {
 })
 
 app.set('view engine', 'pug');
-app.set('views', './views');
+//app.set('views', './views');
+app.set('views', './dist/views');
 app.use(cookieParser());
 app.use(flash());
 app.use(favicon('./public/img/logo/icon.ico'));
@@ -95,15 +96,15 @@ DB.on('disconnect', () => {
 // }));
 
 
-// app.use(helmet({
-//   referrerPolicy: { policy: 'same-origin' },
-//   contentSecurityPolicy: {
-//     directives: {
-//       defaultSrc: ["'self'"],
-//       scriptSrc: ["'self'", "'unsafe-inline'"]
-//     }
-//   }
-// }))
+app.use(helmet({
+  referrerPolicy: { policy: 'same-origin' },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"]
+    }
+  }
+}))
 
 
 /*######
@@ -117,7 +118,7 @@ app.use(session({ //from ChatGPT
   cookie: {
     sameSite: 'lax',
     httpOnly: true, //Prevent client-side scripting
-    secure: true, //Sends cookies only HTTPS. true for Production. false for dev
+    secure: false, //Sends cookies only HTTPS. true for Production. false for dev
     maxAge: 300000 //5min FOR DEV ONLY!
   },
   store: store

@@ -1,0 +1,31 @@
+nav.profile_nav
+    section.profile_menu
+        h2 Menu
+        ul
+            li(data-profile-active='profile')
+                a(href='/profile_overview')=langData.profile[lang]
+            li(data-profile-active='edit')
+                a(href='/profile')=langData.profile.edit[lang]
+            li
+                a(href='/logout' style='width: 100%;')=langData.profile.logout[lang]
+    if (user.account_settings.role == 'admin')
+    //-if (true)
+        section.profile_menu 
+            h2 Company Menu
+            ul
+                li Products
+                li Category
+                li Brands
+                li Tags
+                li Users
+    if (user.account_settings.role == 'super_admin')
+    //-if (true)
+        section.profile_menu
+            h2 Webmaster
+            ul
+                li Admin
+                li Sessions
+script.
+    let active_li = !{JSON.stringify(profile_active)}
+    let active_menu = document.querySelector(`[data-profile-active='${active_li}']`)
+    active_menu.classList.add('active')

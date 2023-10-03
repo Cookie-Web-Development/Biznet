@@ -1,0 +1,71 @@
+doctype html
+html(lang=lang)
+    include partials/_head.pug
+        script(defer src="../client%5Cpages%5Ccatalog_api.js")
+        script(defer src="../client%5Cmodules%5CmoduleInputCheck.js")
+        script(defer src="../client%5Cmodules%5CmoduleHTMLElemMaker.js")
+        script(defer src="../client%5Cmodules%5CmoduleDisplayResults.js")
+        script(defer src="../client%5Cmodules%5CmoduleDisplayPagination.js")
+        script(defer src="../client%5Ccomponents%5Cuniversal_form.js")
+        script(defer src="../client%5Ccomponents%5Csearch_fields.js")
+        script(defer src="../client%5Ccomponents%5Cregistration_form.js")
+        script(defer src="../client%5Ccomponents%5Cproduct_image.js")
+        script(defer src="../client%5Ccomponents%5Cpassword_icon.js")
+        script(defer src="../client%5Ccomponents%5Cpassword_form.js")
+        script(defer src="../client%5Ccomponents%5Clogin_modal.js")
+        script(defer src="../client%5Ccomponents%5Cdrag_display.js")
+        script(defer src="../client%5Ccomponents%5Cdisclaimer.js")
+        script(defer src="../client%5Ccomponents%5Ccarousel.js")
+    body
+        include partials/_header.pug
+        main 
+            section.product_display
+                if ( !api_results )
+                    p Nothig here bro
+                else
+                    if ( api_results.listing[0].images.length > 1)
+                        div.thumbnail_display
+                            each image in api_results.listing[0].images                                    
+                                img(class='thumbnail_image', data-thumbnail=image, src='/public/img/products-images/' + image)
+                    div.image_display
+                        img(data-thumbnail-target, src='/public/img/products-images/' + api_results.listing[0].images[0])
+                    div.text_display
+                        p.text_container_header #{ api_results.category_name[lang] } / #{ api_results.brand_name }
+                        h3=api_results.name[lang]
+                        //Pending add average rating
+                        div.product_display_price_tag
+                            p.price_sell=api_results.listing[0].format_price_discounted 
+                            if(api_results.listing[0].discount_percent > 0)
+                                p.price_discount 
+                                    span.price_before #{api_results.listing[0].format_price}
+                                    span.discount_percent #{Math.round(api_results.listing[0].discount_percent * 100)}%
+                        p.product_display_description=api_results.description[lang]
+                        //Pending add product variations
+                        ul.product_card_tags 
+                            each tag in api_results.tag_array
+                                li=tag.name[lang]
+            - let api_obj_argument;
+            if(similar.by_brand.length > 0)
+                - api_obj_argument = {header_section: 'similar_brand', api_response: similar.by_brand}
+                include include/drag_display.pug
+            if(similar.by_other.length > 0)
+                - api_obj_argument = {header_section: 'similar_other', api_response: similar.by_other}
+                include include/drag_display.pug
+            if(similar.by_brand.length == 0 || similar.by_other.length == 0)
+                - api_obj_argument = {header_section: 'more_products', api_response: similar.more_products}
+                include include/drag_display.pug
+            section.product_reviews
+                //each review in api_results
+                //// ul
+                ////// li
+                ////////container for review description
+            dialog#image_display_modal
+                img#modal_image
+        footer
+        - let disclaimer_lang = lang
+        include include/disclaimer.pug
+
+        script(src='/src/client/components/product_image.js' defer)
+        script(src='/src/client/components/drag_display.js' defer)
+
+           

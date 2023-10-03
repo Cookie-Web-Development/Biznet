@@ -1,0 +1,38 @@
+doctype html
+html(lang=lang)
+    include partials/_head.pug
+        script(defer src="../client%5Cpages%5Ccatalog_api.js")
+        script(defer src="../client%5Cmodules%5CmoduleInputCheck.js")
+        script(defer src="../client%5Cmodules%5CmoduleHTMLElemMaker.js")
+        script(defer src="../client%5Cmodules%5CmoduleDisplayResults.js")
+        script(defer src="../client%5Cmodules%5CmoduleDisplayPagination.js")
+        script(defer src="../client%5Ccomponents%5Cuniversal_form.js")
+        script(defer src="../client%5Ccomponents%5Csearch_fields.js")
+        script(defer src="../client%5Ccomponents%5Cregistration_form.js")
+        script(defer src="../client%5Ccomponents%5Cproduct_image.js")
+        script(defer src="../client%5Ccomponents%5Cpassword_icon.js")
+        script(defer src="../client%5Ccomponents%5Cpassword_form.js")
+        script(defer src="../client%5Ccomponents%5Clogin_modal.js")
+        script(defer src="../client%5Ccomponents%5Cdrag_display.js")
+        script(defer src="../client%5Ccomponents%5Cdisclaimer.js")
+        script(defer src="../client%5Ccomponents%5Ccarousel.js")
+    body
+        include partials/_header.pug
+        main 
+            h2=langData.header.navbar.catalog[lang] 
+            section#product_search_section
+                include include/search_fields.pug
+                div.product_display_container
+                    div(id='product_result')
+                    div(id='pagination', data-pagination-type='normal')
+        footer 
+        - let disclaimer_lang = lang
+        include include/disclaimer.pug
+
+        script.
+            let lang = !{JSON.stringify(lang)};
+            let search_fields = !{JSON.stringify(search_fields)};
+            let quick_query = !{JSON.stringify(quick_query)};
+            let search_query;
+        script(type='module', src='/src/client/pages/catalog_api.js' defer)
+        script(src='/src/client/components/search_fields.js' defer)

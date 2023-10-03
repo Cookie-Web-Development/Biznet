@@ -36,8 +36,13 @@
     "@babel/plugin-syntax-import-attributes": "^7.22.5",
     "@babel/plugin-transform-arrow-functions": "^7.22.5",
     "@babel/preset-env": "^7.22.9",
+    "css-loader": "^6.8.1",
     "glob": "^10.3.10",
+    "html-webpack-plugin": "^5.5.3",
+    "html-webpack-pug-plugin": "^4.0.0",
     "nodemon": "^2.0.21",
+    "pug-plugin": "^4.9.9",
+    "style-loader": "^3.3.3",
     "webpack": "^5.88.2",
     "webpack-cli": "^5.1.4"
   }

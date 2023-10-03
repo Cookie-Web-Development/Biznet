@@ -1,0 +1,43 @@
+doctype html
+html(lang=lang)
+    include partials/_head.pug
+        script(defer src="../client%5Cpages%5Ccatalog_api.js")
+        script(defer src="../client%5Cmodules%5CmoduleInputCheck.js")
+        script(defer src="../client%5Cmodules%5CmoduleHTMLElemMaker.js")
+        script(defer src="../client%5Cmodules%5CmoduleDisplayResults.js")
+        script(defer src="../client%5Cmodules%5CmoduleDisplayPagination.js")
+        script(defer src="../client%5Ccomponents%5Cuniversal_form.js")
+        script(defer src="../client%5Ccomponents%5Csearch_fields.js")
+        script(defer src="../client%5Ccomponents%5Cregistration_form.js")
+        script(defer src="../client%5Ccomponents%5Cproduct_image.js")
+        script(defer src="../client%5Ccomponents%5Cpassword_icon.js")
+        script(defer src="../client%5Ccomponents%5Cpassword_form.js")
+        script(defer src="../client%5Ccomponents%5Clogin_modal.js")
+        script(defer src="../client%5Ccomponents%5Cdrag_display.js")
+        script(defer src="../client%5Ccomponents%5Cdisclaimer.js")
+        script(defer src="../client%5Ccomponents%5Ccarousel.js")
+    body
+        include partials/_header.pug
+        main 
+            h1.profile_title=langData.profile.title[lang]
+            section.profile_section 
+                - let profile_active = 'profile'
+                include data_management/include/user-nav.pug
+                div.profile_container
+                    img(class='profile_picture' src=`/public/img/profile-images/${user.profile_pic}`)
+                    if lang=='en'
+                        h2.profile_username 
+                            | #{user.profile_name}
+                            | #{langData.profile.profile_suffix[lang]}
+                    if lang=='es'
+                        h2.profile_username
+                            | #{langData.profile.profile_prefix[lang]}
+                            | #{user.profile_name}
+                    //-if lang='more_lang'
+                        h2.profile_username 
+                        | prefix
+                        | #{user.profile_name}
+                        | sufix
+                    p.profile_user_settings=`${langData.profile.username[lang]}: ${user.username}`
+                    p.profile_user_settings=`${langData.profile.language_pref[lang]}: ${langData.profile.language_sel[user.user_preferences.lang]}`
+        footer

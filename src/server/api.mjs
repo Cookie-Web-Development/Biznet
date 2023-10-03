@@ -15,9 +15,7 @@ import { session_schema } from './schema/session_schema.js'
 import { users_schema } from './schema/users_schema.js';
 import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
-
-//client js imports
-import { INPUT_CHECK } from '../client/modules/moduleInputCheck.js';
+import { INPUT_CHECK } from './modules/moduleInputCheck.js';
 
 
 let apiRoute = function (app, db) {
