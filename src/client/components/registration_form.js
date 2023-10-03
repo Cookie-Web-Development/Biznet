@@ -1,6 +1,6 @@
 'use strict';
 
-import langData from '../../server/lang/lang.json'assert { type: "json" };
+import langData from '../../lang/lang.json'assert { type: "json" };
 import { HTML_ELEM } from '../modules/moduleHTMLElemMaker.js';
 import { INPUT_CHECK } from '../modules/moduleInputCheck.js';
 
@@ -139,7 +139,6 @@ function formCheck() {
     }
 
     if (notifications) {
-        console.log(notifications.username)
         displayNotification(notifications);
         return;
     }
