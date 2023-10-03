@@ -41,7 +41,7 @@ html(lang=lang)
                             for requirement in langData.profile.password_requirement 
                                 li(class='checklist_requirement' data-password-requirement=requirement.key)=requirement[lang]
                                     i(class='fa-solid')
-                    label(for='password_confirm' class='password_confirm_label')=langData.profile.password_confirm[lang]
+                    label(for='confirm_password' class='password_confirm_label')=langData.profile.password_confirm[lang]
                     div(class='input_div password' id='password_confirm')
                         input(id='confirm_password' name='confirm_password' type='password' autocomplete="off" data-password-input='confirm_password')
                         label(class='show_password' for='show_confirm_password')

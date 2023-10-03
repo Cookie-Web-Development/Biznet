@@ -25,19 +25,33 @@ const server = http.createServer(app);
 dotenv.config({ path: './.env' });
 
 /*Directory Traversal Prevent*/
+<<<<<<< HEAD
 app.use((req, res, next) => {
   // Get the requested URL path
   const urlPath = req.url;
   // Normalize the URL path to remove any potential directory traversal
   const normalizedPath = path.normalize(urlPath);
 
+=======
+
+app.use((req, res, next) => {
+  // Get the requested URL path
+  const urlPath = req.url;
+  // Normalize the URL path to remove any potential directory traversal
+  const normalizedPath = path.normalize(urlPath);
+
+>>>>>>> feature/login
   // Check if the normalized path contains '..' or starts with '/server/'
   if (
     normalizedPath.includes('..') ||
     normalizedPath.startsWith('\\src\\server') ||
+<<<<<<< HEAD
     normalizedPath.startsWith('\\dist\\server') ||
     normalizedPath.startsWith('/src/server') ||
     normalizedPath.startsWith('/dist/server')
+=======
+    normalizedPath.startsWith('\\dist\\server')
+>>>>>>> feature/login
   ) {
     // If it contains '..', it's a directory traversal attempt
     res.status(403).send('Access to this path is forbidden.');
@@ -46,6 +60,10 @@ app.use((req, res, next) => {
     next();
   }
 })
+<<<<<<< HEAD
+=======
+
+>>>>>>> feature/login
 
 app.set('view engine', 'pug');
 app.set('views', './views');
@@ -79,36 +97,33 @@ DB.on('error', (err) => {
   console.error('Error connecting to Database', err);
 })
 
-/*############
-DEV ENVIORMENT
-##############*/
-// DB.on('connected', () => {
-//   console.log('Connected to Database');
-// });
+//DEV ENVIORMENT; DELETE FOR PRODUCTION
+DB.on('connected', () => {
+  console.log('Connected to Database');
+});
 
-// DB.on('disconnect', () => {
-//   console.log('Disconnected from Database')
-// });
+DB.on('disconnect', () => {
+  console.log('Disconnected from Database')
+});
 
 // app.use(helmet({
 //   hsts: false,
 //   referrerPolicy: { policy: 'same-origin' },
 //   hidePoweredBy: false,
 //   contentSecurityPolicy: false
-//   }));
+// }));
 
-/*########
-PRODUCTION
-##########*/
-app.use(helmet({
-  referrerPolicy: { policy: 'same-origin' },
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"]
-    }
-  }
-}))
+
+// app.use(helmet({
+//   referrerPolicy: { policy: 'same-origin' },
+//   contentSecurityPolicy: {
+//     directives: {
+//       defaultSrc: ["'self'"],
+//       scriptSrc: ["'self'", "'unsafe-inline'"]
+//     }
+//   }
+// }))
+
 
 /*######
 SESSIONS

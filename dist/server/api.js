@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
-var _lang = _interopRequireDefault(require("../../src/server/lang/lang.json"));
+var _lang = _interopRequireDefault(require("../../src/lang/lang.json"));
 var _bcrypt = _interopRequireDefault(require("bcrypt"));
 var _crypto = _interopRequireDefault(require("crypto"));
 var _passport = _interopRequireDefault(require("passport"));

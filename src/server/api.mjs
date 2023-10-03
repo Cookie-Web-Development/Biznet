@@ -1,6 +1,6 @@
 'use strict';
 
-import langData from '../../src/server/lang/lang.json' assert { type: "json" };
+import langData from '../../src/lang/lang.json' assert { type: "json" };
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import passport from 'passport';
