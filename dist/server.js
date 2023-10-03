@@ -34,7 +34,7 @@ app.use(function (req, res, next) {
   var urlPath = req.url;
   // Normalize the URL path to remove any potential directory traversal
   var normalizedPath = _path["default"].normalize(urlPath);
-  console.log(normalizedPath)
+
   // Check if the normalized path contains '..' or starts with '/server/'
   if (normalizedPath.includes('..') || normalizedPath.startsWith('\\src\\server') || normalizedPath.startsWith('\\dist\\server') || normalizedPath.startsWith('/src/server') || normalizedPath.startsWith('/dist/server')) {
     // If it contains '..', it's a directory traversal attempt
@@ -44,8 +44,6 @@ app.use(function (req, res, next) {
     next();
   }
 });
-
-;
 app.set('view engine', 'pug');
 app.set('views', './views');
 app.use((0, _cookieParser["default"])());

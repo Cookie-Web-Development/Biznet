@@ -95,8 +95,6 @@ function formCheck(data) {
 
         //send To API
         let endpoint = form.getAttribute('action')
-        console.log('submit_data')
-        console.log(JSON.stringify(submit_data))
         fetch(endpoint, {
             method: 'POST',
             headers: {
@@ -105,7 +103,6 @@ function formCheck(data) {
             body: JSON.stringify(submit_data),
         })
             .then(response => {
-                console.log(response)
                 window.location.href = response.url
             })
             .catch(err => { })

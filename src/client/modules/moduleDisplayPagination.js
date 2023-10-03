@@ -18,7 +18,6 @@ export function display_pagination ( active_page, total_pages, pagination_contai
     };
 
     pagination_arr.push(1);
-    //console.log('active_page', active_page)
 
     for(let i = -3; i <= 3; i++ ) {
         let result = pagination_active_page + i;

@@ -139,7 +139,6 @@ function formCheck() {
     }
 
     if (notifications) {
-        console.log(notifications.username)
         displayNotification(notifications);
         return;
     }
