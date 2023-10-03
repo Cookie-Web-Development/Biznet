@@ -25,14 +25,6 @@ const server = http.createServer(app);
 dotenv.config({ path: './.env' });
 
 /*Directory Traversal Prevent*/
-<<<<<<< HEAD
-app.use((req, res, next) => {
-  // Get the requested URL path
-  const urlPath = req.url;
-  // Normalize the URL path to remove any potential directory traversal
-  const normalizedPath = path.normalize(urlPath);
-
-=======
 
 app.use((req, res, next) => {
   // Get the requested URL path
@@ -40,18 +32,11 @@ app.use((req, res, next) => {
   // Normalize the URL path to remove any potential directory traversal
   const normalizedPath = path.normalize(urlPath);
 
->>>>>>> feature/login
   // Check if the normalized path contains '..' or starts with '/server/'
   if (
     normalizedPath.includes('..') ||
     normalizedPath.startsWith('\\src\\server') ||
-<<<<<<< HEAD
-    normalizedPath.startsWith('\\dist\\server') ||
-    normalizedPath.startsWith('/src/server') ||
-    normalizedPath.startsWith('/dist/server')
-=======
     normalizedPath.startsWith('\\dist\\server')
->>>>>>> feature/login
   ) {
     // If it contains '..', it's a directory traversal attempt
     res.status(403).send('Access to this path is forbidden.');
@@ -60,10 +45,6 @@ app.use((req, res, next) => {
     next();
   }
 })
-<<<<<<< HEAD
-=======
-
->>>>>>> feature/login
 
 app.set('view engine', 'pug');
 app.set('views', './views');
