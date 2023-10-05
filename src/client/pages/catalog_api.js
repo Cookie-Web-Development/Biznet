@@ -47,6 +47,7 @@ for (let key in search_query) {
 };
 
 //### API ENDPOINT ##
+let lang = document.documentElement.getAttribute('lang');
 let search_form = document.getElementById('catalog_search_form');
 let input_fields = Array.from(search_form.querySelectorAll('input[name], select'));
 let product_results_container = document.getElementById('product_result');

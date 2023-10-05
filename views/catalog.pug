@@ -14,8 +14,7 @@ html(lang=lang)
         - let disclaimer_lang = lang
         include include/disclaimer.pug
 
-        script.
-            let lang = !{JSON.stringify(lang)};
+        script
             let search_fields = !{JSON.stringify(search_fields)};
             let quick_query = !{JSON.stringify(quick_query)};
             let search_query;

@@ -146,6 +146,7 @@ function formCheck() {
 }
 
 function displayNotification(obj) {
+    let lang = document.documentElement.getAttribute('lang')
     let containers = Array.from(notification_container)
 
     //notification reset

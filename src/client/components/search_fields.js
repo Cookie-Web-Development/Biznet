@@ -1,5 +1,5 @@
 //(from api) 
-// lang = !{JSON.stringify(lang)}
+let search_fields_lang = document.documentElement.getAttribute('lang');
 // search_fields = !{JSON.stringify(search_fields)}
 // quick_query = !{JSON.stringify(quick_query)}
 
@@ -117,10 +117,10 @@ tags_select_container.addEventListener('click', (e) => { //deleting tags
         unselectedTags = [...unselectedTags, ...tag_target];
 
         unselectedTags.sort((a, b) => {
-            if (a.name[lang] > b.name[lang]){
+            if (a.name[search_fields_lang] > b.name[search_fields_lang]){
                 return 1
             }
-            if (a.name[lang] < b.name[lang]) {
+            if (a.name[search_fields_lang] < b.name[search_fields_lang]) {
                 return -1
             }
 
@@ -148,7 +148,7 @@ function tagListCreator() {
         unselectedTags.forEach(tag_unselected => {
             let option = document.createElement('option');
             option.value = tag_unselected.tag_id;
-            option.text= tag_unselected.name[lang];
+            option.text= tag_unselected.name[search_fields_lang];
             option.dataset.tag = tag_unselected.tag_id;
             tags_dropdown.appendChild(option);
         });
@@ -167,7 +167,7 @@ function tagListCreator() {
             selection_checkbox.value = tag.tag_id;
             selection_checkbox.dataset.tag = tag.tag_id;
             selection_checkbox.name = 'selected_tags';
-            selection_text.textContent = tag.name[lang];
+            selection_text.textContent = tag.name[search_fields_lang];
 
             selection_label.appendChild(selection_checkbox);
             selection_label.appendChild(selection_text);
@@ -213,7 +213,7 @@ resetBtn.addEventListener('click', () => {
     });
 });
 
-//### SEARCH TOGGLE ###
+//### SEARCH EXPAND BTN FOR RESPONSIVE WEB DESIGN ###
 let search_fields_toggle_target = document.getElementById('catalog_search_form');
 let search_fields_toggle_btn = document.getElementById('search_fields_toggle');
 

@@ -56,7 +56,5 @@ html(lang=lang)
                 span=langData.profile.redirect_login.text[lang]
                 a(class='text_link_inline' href='/login')=langData.profile.redirect_login.link[lang]
         footer
-        script.
-            let lang = !{JSON.stringify(lang)};
         script(src='/src/client/components/password_icon.js' defer)
         script(type='module', src='/src/client/components/registration_form.js' defer)
