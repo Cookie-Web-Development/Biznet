@@ -15,7 +15,7 @@ import dotenv from 'dotenv';
 import bodyParser from 'body-parser';
 import cookieParser from 'cookie-parser';
 
-import apiRoute from './server/api.mjs';
+import apiRoute from './server/api.js';
 import auth from './server/auth.js'
 import { session_schema } from './server/schema/session_schema.js'
 
@@ -48,12 +48,12 @@ app.use((req, res, next) => {
 
 app.set('view engine', 'pug');
 //app.set('views', './views');
-app.set('views', './dist/views');
+app.set('views', './views');
 app.use(cookieParser());
 app.use(flash());
 app.use(favicon('./public/img/logo/icon.ico'));
 app.use('/public', express.static(process.cwd() + '/public'));
-app.use('/src', express.static(process.cwd() + '/src'));
+app.use('/src', express.static(process.cwd() + '/dist'));
 
 /*###########
 DB connection
@@ -98,15 +98,15 @@ DB.on('disconnect', () => {
 // }));
 
 //** PRODUCTION HELMET
-// app.use(helmet({
-//   referrerPolicy: { policy: 'same-origin' },
-//   contentSecurityPolicy: {
-//     directives: {
-//       defaultSrc: ["'self'"],
-//       scriptSrc: ["'self'", "'unsafe-inline'"]
-//     }
-//   }
-// }))
+app.use(helmet({
+  referrerPolicy: { policy: 'same-origin' },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"]
+    }
+  }
+}))
 
 
 /*######

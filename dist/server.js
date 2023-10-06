@@ -47,7 +47,7 @@ app.use(function (req, res, next) {
 });
 app.set('view engine', 'pug');
 //app.set('views', './views');
-app.set('views', './dist/views');
+app.set('views', './views');
 app.use((0, _cookieParser["default"])());
 app.use((0, _expressFlash["default"])());
 app.use((0, _serveFavicon["default"])('./public/img/logo/icon.ico'));
@@ -81,6 +81,7 @@ DB.on('disconnect', function () {
   console.log('Disconnected from Database');
 });
 
+//** DEV HELMET
 // app.use(helmet({
 //   hsts: false,
 //   referrerPolicy: { policy: 'same-origin' },
@@ -88,6 +89,7 @@ DB.on('disconnect', function () {
 //   contentSecurityPolicy: false
 // }));
 
+//** PRODUCTION HELMET
 app.use((0, _helmet["default"])({
   referrerPolicy: {
     policy: 'same-origin'
