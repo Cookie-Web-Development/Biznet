@@ -25,7 +25,9 @@ const server = http.createServer(app);
 dotenv.config({ path: './.env' });
 
 /*Directory Traversal Prevent*/
-
+let forbidden_url = [
+  '..', '\\src\\server'
+]
 app.use((req, res, next) => {
   // Get the requested URL path
   const urlPath = req.url;
@@ -36,19 +38,21 @@ app.use((req, res, next) => {
   if (
     normalizedPath.includes('..') ||
     normalizedPath.startsWith('\\src\\server') ||
-    normalizedPath.startsWith('\\dist\\server')
+    normalizedPath.startsWith('\\dist\\server') ||
+    normalizedPath.startsWith('/dist/server') ||
+    normalizedPath.startsWith('/src/server')
   ) {
     // If it contains '..', it's a directory traversal attempt
     res.status(403).send('Access to this path is forbidden.');
   } else {
     // If not, continue with the request
     next();
-  }
+  } 
 })
-
+ 
 app.set('view engine', 'pug');
 //app.set('views', './views');
-app.set('views', './dist/views');
+app.set('views', './views');
 app.use(cookieParser());
 app.use(flash());
 app.use(favicon('./public/img/logo/icon.ico'));

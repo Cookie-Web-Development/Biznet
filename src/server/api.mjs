@@ -117,17 +117,35 @@ let apiRoute = function (app, db) {
         }
     }
 
-    function check_token(req, res, next) {
-        let form_token = req.body._csrf || undefined;
-        let token = req.session._csrf || undefined;
-
-        if (!form_token || !token || form_token !== token) {
-            console.log(new Date(), 'Invalid Token')
-            let referer = req.headers.referer || '/';
-            res.redirect(referer);
-        } else { next() }
-
+    function check_role(minimum_role) {
+        //Role hierarchy webmaster > company > user
+        //user.account_settings.role        
+        let entry_level = minimum_role;
+        switch (entry_level) {
+            case 'webmaster':
+                return function (req, res, next) {
+                    if (req.user.account_settings.role !== 'webmaster') {
+                        return res.status(403).send('Access denied');
+                    }
+                    return next();
+                }
+            case 'company':
+                return function (req, res, next) {
+                    if (
+                        req.user.account_settings.role !== 'webmaster' &&
+                        req.user.account_settings.role !== 'company'
+                    ) {
+                        return res.status(403).send('Access denied');
+                    }
+                    return next();
+                }
+            default:
+                return function (req, res, next) {
+                    res.status(403).send('Access denied.')
+                }
+        }
     }
+
 
     /*####
     ROUTES
@@ -255,7 +273,7 @@ let apiRoute = function (app, db) {
             req.session._csrf = csrf_token;
             let lang = req.session.lang || 'es';
             let loginCheck = true;
-            res.render('register', { lang, langData, loginCheck, csrf,notification: flash_messages })
+            res.render('register', { lang, langData, loginCheck, csrf, notification: flash_messages })
         })
         .post(async (req, res) => {
             let user_credentials = req.body;
@@ -265,38 +283,39 @@ let apiRoute = function (app, db) {
                 for (let key in user_credentials) {
                     let value = new INPUT_CHECK(user_credentials[key])
                     switch (key) {
-                        case 'token': 
-                            if(value.checkEmpty() || user_credentials[key] !== req.session._csrf) {throw new Error('invalid token')}
+                        case 'token':
+                            if (value.checkEmpty() || user_credentials[key] !== req.session._csrf) { throw new Error('invalid token') }
                             break;
                         case 'username':
-                            if(
-                                value.checkEmpty() || 
-                                value.checkSpace() || 
+                            if (
+                                value.checkEmpty() ||
+                                value.checkSpace() ||
                                 !value.checkLength(4) ||
                                 value.checkSpecial()
-                            ) {throw new Error('invalid username')}
+                            ) { throw new Error('invalid username') }
                             break;
                         case 'password':
-                            if(
-                                value.checkEmpty() || 
-                                value.checkSpace() || 
+                            if (
+                                value.checkEmpty() ||
+                                value.checkSpace() ||
                                 !value.checkLength(6) ||
                                 !value.checkLetter() ||
                                 !value.checkNum()
-                            ) {throw new Error('invalid password')}
+                            ) { throw new Error('invalid password') }
                             break;
                         case 'confirm_password':
                             break;
-                        default: 
+                        default:
                             throw new Error('unexpected values')
-                    }}
+                    }
+                }
             } catch (err) {
                 console.log(err)
                 console.log('register data integrity failed')
                 req.flash('flash', { username: { error: 'unexpected_error' } });
                 return res.redirect('/register');
             }
-            
+
 
             //check if username already exist
             let checkDB = await Users.findOne({ username: user_credentials.username.toLowerCase() }, { username: 1 })
@@ -357,7 +376,6 @@ let apiRoute = function (app, db) {
 
     app.route('/profile_overview') //missing check role
         .get(check_auth('/login', true), async (req, res) => {
-
             //user object
             let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
             if (!user) { //fallback incase user is not found for some reason
@@ -402,9 +420,9 @@ let apiRoute = function (app, db) {
 
             //validate new password standard
             let new_password = new INPUT_CHECK(user_update.update.password);
-            if(
-                new_password.checkEmpty() || 
-                new_password.checkSpace() || 
+            if (
+                new_password.checkEmpty() ||
+                new_password.checkSpace() ||
                 !new_password.checkLength(6) ||
                 !new_password.checkLetter() ||
                 !new_password.checkNum()
@@ -419,33 +437,43 @@ let apiRoute = function (app, db) {
             let user = await Users.findOne({ _id: req.user._id }) || null;
 
             //validate current password
-            if(!bcrypt.compareSync(user_update.validate.password, user.password)) {
+            if (!bcrypt.compareSync(user_update.validate.password, user.password)) {
                 req.flash('error', 'wrong_password');
                 res.json({ url: '/password' });
                 return;
             }
 
             //check if updating same password
-            if(bcrypt.compareSync(user_update.update.password, user.password)) {
+            if (bcrypt.compareSync(user_update.update.password, user.password)) {
                 req.flash('error', 'no_change');
                 res.json({ url: '/password' });
                 return;
             }
 
-            let update_password =  await bcrypt.hash(req.body.update.password, 12);
-            
+            let update_password = await bcrypt.hash(req.body.update.password, 12);
+
             await Users.findOneAndUpdate(
                 { _id: req.user._id },
                 { password: update_password }
             )
 
             req.flash('notification', 'save_success')
-            return res.json({ url: '/password'})
+            return res.json({ url: '/password' })
         })
 
 
+    app.route('/company_test') //check_role test routes
+        .get(check_auth('/login', true), check_role('company'), (req, res) => {
+            res.send('company');
+        })
+
+    app.route('/webmaster_test') //check_role test routes
+        .get(check_auth('/login', true), check_role('webmaster'), (req, res) => {
+            res.send('webmaster')
+        })
+
     app.route('/:main') //universal route
-        .get(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
+        .get(check_auth('/login', true)/*, check_role()*/, async (req, res, next) => {
             let main_dir = req.params.main;
             let csrf_token = crypto.randomBytes(16).toString('hex');
             let csrf = csrf_token;
@@ -465,7 +493,12 @@ let apiRoute = function (app, db) {
 
             let lang = req.session.lang || 'es';
             let loginCheck = true;
-            return res.render(`data_management/${main_dir}`, { lang, langData, loginCheck, user, csrf, flash_message })
+            try {
+                return res.render(`data_management/${main_dir}`, { lang, langData, loginCheck, user, csrf, flash_message })
+            } catch (err) {
+                err.status = 404;
+                next(err);
+            }
         })
         .post(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
             let main_dir = req.params.main;
@@ -518,15 +551,22 @@ let apiRoute = function (app, db) {
         })
 
     //non-existant routes handler
-    app.route('/*').get((req, res) => { 
+    app.route('/*').get((req, res) => {
         console.log('Non-existance route')
-        return res.redirect('/') 
+        return res.redirect('/')
+    })
+
+    app.use((req, res, next) => {
+        const err = new Error('Not Found');
+        err.status = 404;
+        next(err)
     })
 
     app.use((err, req, res, next) => {
         console.log('Routing API error:')
         console.error(err)
-        return res.redirect('/')
+        res.status(err.status || 500)
+        return res.json({error: err.status})
     })
 };
 
