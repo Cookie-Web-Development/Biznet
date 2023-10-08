@@ -117,35 +117,38 @@ let apiRoute = function (app, db) {
         }
     }
 
-    function check_role(minimum_role) {
+    function check_role(req, res, next) {
         //Role hierarchy webmaster > company > user
-        //user.account_settings.role        
-        let entry_level = minimum_role;
-        switch (entry_level) {
-            case 'webmaster':
-                return function (req, res, next) {
-                    if (req.user.account_settings.role !== 'webmaster') {
-                        return res.status(403).send('Access denied');
-                    }
-                    return next();
+        //user.account_settings.role
+        let route_regex = /^\/[^\/]+/        
+        let path = req.originalUrl;
+        let route = path.match(route_regex)[0];
+        let user_role = req.user.account_settings.role || undefined;
+        switch (path) {
+            //webmaster
+            case "/webmaster_test":
+            // case "":
+            // case "":
+            // case "":
+            // case "":
+            // case "":
+                if (user_role !== 'webmaster') {
+                    return res.status(401).send('Forbidden')
                 }
-            case 'company':
-                return function (req, res, next) {
-                    if (
-                        req.user.account_settings.role !== 'webmaster' &&
-                        req.user.account_settings.role !== 'company'
-                    ) {
-                        return res.status(403).send('Access denied');
-                    }
-                    return next();
+                return next()
+            //company
+            case "/company_test":
+            // case "":
+            // case "":
+                if (user_role !== 'webmaster' && user_role !== 'company') {
+                    return res.status(401).send('Forbidden')
                 }
+                return next();
             default:
-                return function (req, res, next) {
-                    res.status(403).send('Access denied.')
-                }
+                //notification
+                return res.redirect('/')
         }
     }
-
 
     /*####
     ROUTES
@@ -463,12 +466,12 @@ let apiRoute = function (app, db) {
 
 
     app.route('/company_test') //check_role test routes
-        .get(check_auth('/login', true), check_role('company'), (req, res) => {
+        .get(check_auth('/login', true), check_role, (req, res) => {
             res.send('company');
         })
 
     app.route('/webmaster_test') //check_role test routes
-        .get(check_auth('/login', true), check_role('webmaster'), (req, res) => {
+        .get(check_auth('/login', true), check_role, (req, res) => {
             res.send('webmaster')
         })
 
@@ -566,7 +569,7 @@ let apiRoute = function (app, db) {
         console.log('Routing API error:')
         console.error(err)
         res.status(err.status || 500)
-        return res.json({error: err.status})
+        return res.json({ error: err.status })
     })
 };
 
