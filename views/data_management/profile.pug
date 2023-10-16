@@ -7,8 +7,7 @@ html(lang=lang)
         main 
             h1.profile_title=langData.profile.edit[lang]
             section.profile_section 
-                - let profile_active = 'edit'
-                include include/user-nav.pug
+                include include/_user_nav.pug
                 div.profile_container
                     img(class='profile_picture' src=`/public/img/profile-images/${user.profile_pic}`)
                     div(class='universal_notification' data-universal-notification)
@@ -33,6 +32,4 @@ html(lang=lang)
                         button(class='button btn_form' type='submit' title=`${langData.profile.save_changes[lang]}`)=langData.profile.save_changes[lang]
                         div.form_divider                           
         footer
-        script.
-            let lang = !{JSON.stringify(lang)};
         script(type='module' src='/src/client/components/universal_form.js' defer)

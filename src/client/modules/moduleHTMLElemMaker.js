@@ -18,7 +18,7 @@ export function HTML_ELEM(html_tag) {
       if (attribute_value) {
         element.setAttribute(attribute_name, attribute_value);
       } else {
-        element.setAttribute(attribute_name);
+        element.setAttribute(attribute_name, "");
       }
     };
   
@@ -26,6 +26,10 @@ export function HTML_ELEM(html_tag) {
       element.textContent = text_value;
     };
   
+    this.addStyle = function (style, value) {
+      element.style[style] = value
+    }
+
     this.getElement = function () {
       return element;
     };

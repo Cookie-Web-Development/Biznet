@@ -81,7 +81,7 @@
     padding-bottom: 0.5rem;
 }
 
-.universal_notification{
+.universal_notification {
     width: 100%;
 }
 
@@ -90,24 +90,28 @@
     margin: 0 1rem 0.5rem 1rem;
 }
 
-.universal_notification>p, .universal_alert>p {
+.universal_notification>p,
+.universal_alert>p {
     padding: 0.5rem;
     border-radius: 20px;
+    backdrop-filter: blur(5px);
+    z-index: 10;
 }
 
 .universal_notification>p.green {
     border: 2px solid hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
-    background-color: hsla(var(--color-green-h), var(--color-green-s), var(--color-greylight-l), var(--color-opacity-medium));
+    background-color: hsla(var(--color-green-h), var(--color-green-s), var(--color-greylight-l), var(--color-opacity-high));
+
 }
 
 .universal_notification>p.red {
     border: 2px solid hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
-    background-color: hsla(var(--color-red-h), var(--color-red-s), var(--color-greylight-l), var(--color-opacity-medium));
+    background-color: hsla(var(--color-red-h), var(--color-red-s), var(--color-greylight-l), var(--color-opacity-high));
 }
 
 .universal_alert>p.orange {
     border: 2px solid hsl(var(--color-orange-h), var(--color-orange-s), var(--color-orange-l));
-    background-color: hsla(var(--color-orange-h), var(--color-orange-s), var(--color-greylight-l), var(--color-opacity-medium));
+    background-color: hsla(var(--color-orange-h), var(--color-orange-s), var(--color-greylight-l), var(--color-opacity-high));
 }
 
 .input_checklist {
@@ -118,11 +122,13 @@
     padding: 0.5rem;
 }
 
-.checklist_requirement.red, .checklist_requirement.red > * {
+.checklist_requirement.red,
+.checklist_requirement.red>* {
     color: hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
 }
 
-.checklist_requirement.green, .checklist_requirement.green > * {
+.checklist_requirement.green,
+.checklist_requirement.green>* {
     color: hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
 }
 

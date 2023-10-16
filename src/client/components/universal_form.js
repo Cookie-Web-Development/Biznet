@@ -88,6 +88,7 @@ function formCheck() {
 }
 
 function display_notification(notification_object) {
+    let lang = document.documentElement.lang;
     unique_trigger = false;
     for (let type in notification_object) {
         let noti_text = new HTML_ELEM('p')

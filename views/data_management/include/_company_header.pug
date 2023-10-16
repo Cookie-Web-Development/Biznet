@@ -1,0 +1,23 @@
+header.company_header
+    div.company_header_logo
+        svg(viewBox="0 0 444 121" fill="none" xmlns="http://www.w3.org/2000/svg" class='logo_svg')
+                g(class="logo_main")
+                    path(fill-rule="evenodd" clip-rule="evenodd" d="M46.5 44H79C89 45.8333 106.3 55.1 95.5 77.5C104.5 86.5 114.7 107.3 83.5 118.5H46.5V44ZM62.5 58.5V72.5H79C87 66.5 82.3333 60.6667 79 58.5H62.5ZM62.5 104.5V87.5H82.5C94.1 93.9 87.3333 101.5 82.5 104.5H62.5Z")
+                    path(fill-rule="evenodd" clip-rule="evenodd" d="M3.5 115.5H1V119.5H44.5V115.5H42.5V36L28.5 30.5V16.5L26.5 14.5V29.5L21 27V5.5L18 1.5V26L3.5 21V115.5ZM9.5 54V50.5H36.5V54H9.5ZM9.5 86.5V82.5H36.5V86.5H9.5Z")
+                    path(d="M122.5 44V118.5H139.5V44H122.5Z")
+                    path(d="M159 44V58.5H185.5L156 118.5H208.5V104.5H181.5V103.5L210.5 44.5L159 44Z")
+                    path(d="M280.5 86V44.5H297.5V118.5L280.5 105V86Z")
+                    path(d="M318.5 44.5V118.5H370.5V104.5H335.5V89.5H364.5V74.5H335.5V58.5H370.5V44.5H318.5Z")
+                    path(d="M383.5 44.5V58.5H405.5V118.5H420.5V58.5H443.5V44.5H383.5Z")
+                path(class="logo_sub" d="M227 119.5V45H230L297.5 101V119.5L244 77.5V119.5H227Z")
+                g(class="logo_white")
+                    path(d="M10 46.5V42H36.5V46.5H10Z")
+                    path(d="M10 62.5V58.5H36.5V62.5H10Z")
+                    path(d="M10 71.5V67H36.5V71.5H10Z")
+                    path(d="M10 80V75.5H36.5V80H10Z")
+                    path(d="M10 103.5V99H36.5V103.5H10Z")
+                    path(d="M10 111V107.5H36.5V111H10Z") 
+    div.company_header_greeting
+        p
+            | #{langData.profile.greeting[lang]}
+            | #{user.profile_name}

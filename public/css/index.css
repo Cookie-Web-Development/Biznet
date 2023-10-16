@@ -35,6 +35,7 @@ CSS rules that applies onto elements such as [body] and modifies the position or
 @import './pages/home.css';
 @import './pages/product.css';
 @import './pages/profile.css';
+@import './pages/company.css';
 
 /*
 THEME:

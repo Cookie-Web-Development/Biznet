@@ -16,6 +16,7 @@ import { users_schema } from './schema/users_schema.js';
 import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
 import { INPUT_CHECK } from './modules/moduleInputCheck.js';
+import company_query from './pipeline/company_query.js';
 
 
 let apiRoute = function (app, db) {
@@ -123,30 +124,30 @@ let apiRoute = function (app, db) {
         let route_regex = /^\/[^\/]+/        
         let path = req.originalUrl;
         let route = path.match(route_regex)[0];
+        console.log('route from check_role', route)
         let user_role = req.user.account_settings.role || undefined;
-        switch (path) {
+        switch (route) {
             //webmaster
             case "/webmaster_test":
-            // case "":
-            // case "":
-            // case "":
-            // case "":
-            // case "":
                 if (user_role !== 'webmaster') {
                     return res.status(401).send('Forbidden')
                 }
                 return next()
             //company
-            case "/company_test":
-            // case "":
-            // case "":
+            case "/product_edit":
+            case "/brand_edit":
+            case "/category_edit":
+            case "/tags_edit":
                 if (user_role !== 'webmaster' && user_role !== 'company') {
                     return res.status(401).send('Forbidden')
                 }
                 return next();
             default:
-                //notification
-                return res.redirect('/')
+                if(!user_role) {
+                    //notification
+                    return res.redirect('/')
+                }
+                return next();
         }
     }
 
@@ -464,19 +465,33 @@ let apiRoute = function (app, db) {
             return res.json({ url: '/password' })
         })
 
+    app.route('/brand_edit') //workbench
+        .get(async (req, res) => {
+            let lang = req.session.lang || 'es'
+            let csrf_token = crypto.randomBytes(16).toString('hex');
+            let csrf = csrf_token;
+            req.session._csrf = csrf_token;
+            
+            //param
+            let query = req.query || {}
+            //console.log(company_query(query)) //need to process strings and shit
+            // console.log(query)
+            let user = { profile_name: 'testerino', account_settings: { role: 'company'}}
 
-    app.route('/company_test') //check_role test routes
-        .get(check_auth('/login', true), check_role, (req, res) => {
-            res.send('company');
+            let flash_message = {
+                notification: [],
+                error: []
+            }
+
+            let brand_db = await Brands.aggregate(company_query(query))
+
+
+            res.render('data_management/brand_edit', { lang, csrf, langData, user, flash_message, db_result: brand_db })
         })
 
-    app.route('/webmaster_test') //check_role test routes
-        .get(check_auth('/login', true), check_role, (req, res) => {
-            res.send('webmaster')
-        })
 
     app.route('/:main') //universal route
-        .get(check_auth('/login', true)/*, check_role()*/, async (req, res, next) => {
+        .get(check_auth('/login', true), check_role, async (req, res, next) => {
             let main_dir = req.params.main;
             let csrf_token = crypto.randomBytes(16).toString('hex');
             let csrf = csrf_token;

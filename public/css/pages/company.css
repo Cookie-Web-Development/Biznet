@@ -1,0 +1,295 @@
+/*#######
+VARIABLES
+#########*/
+.company_body {
+    --height-company-header: 70px;
+    --height-table-searchbar: 50px;
+    --height-table-footer: 100px;
+}
+
+/*####
+HEADER
+######*/
+.company_header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: min-content;
+    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+}
+
+.company_header_logo {
+    width: 200px;
+    height: var(--height-company-header);
+    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.company_header_logo > svg {
+    max-width: 165px;
+}
+
+.company_header_greeting {
+    padding: 0.5rem;
+    margin: 0 1rem;
+    border-radius: 10px;
+    border: 1px solid hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+}
+
+.company_header_greeting > p {
+    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    height: 100%;
+}
+
+/*##########
+MAIN SECTION
+############*/
+.company_main {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 0;
+}
+
+/*### NAVIGATION*/
+.company_nav {
+    height: calc(100vh - 70px);
+    width: 200px;
+    display: flex;
+    flex-direction: column;
+    border-right: 2px transparent solid;
+    border-image: var(--rwd-search-form-border);
+}
+
+.company_nav_section {
+    padding-bottom: 1rem;
+}
+
+.company_nav_section > h2 {
+    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    color: white;
+    padding: 0.5rem 0 0.5rem 0.5rem; 
+}
+
+.company_nav_section > * > li.active {
+    background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
+}
+
+.company_nav_section > * > li a{
+    display: block;
+    width: 100%;
+    padding: 5px 0 5px 2rem;
+}
+
+.company_nav_section > * > li > a:hover {
+    background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
+}
+
+
+/*### WORKSPACE*/
+.company_workspace {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    /*DEV*/
+    height: max-content;
+}
+
+/*Notifications*/
+.company_notification_container {
+    width: 100%;
+    min-height: 1rem;
+    height: max-content;
+}
+
+.company_notification_container > p {
+    padding: 5px 0;
+    text-align: center;
+}
+
+.company_notification_container > p.green {
+    background-color: hsla(var(--color-green-h), var(--color-green-s), var(--color-greylight-l), var(--color-opacity-high));
+    border: 2px solid hsla(var(--color-green-h), var(--color-green-s), var(--color-green-l));
+}
+
+.company_notification_container > p.red {
+    background-color: hsla(var(--color-red-h), var(--color-red-s), var(--color-greylight-l), var(--color-opacity-high));
+    border: 2px solid hsla(var(--color-red-h), var(--color-red-s), var(--color-red-l));   
+}
+
+/*Table searchbar*/
+#table_search {
+    width: 100%;
+    height: var(--height-table-searchbar);
+    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#table_search > .input_div {
+    display: flex;
+    flex-direction: row;
+    width: 55%;
+}
+
+#table_search > .input_div > .table_search_select,
+#table_search > .input_div > .table_search_button {
+    background-color: transparent;
+    border: none;
+}
+
+#table_search > .input_div > .table_search_select {
+    border-right: solid hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l)) 1px;
+}
+
+#table_search > .input_div > .table_search_button {
+    padding: 0 1rem 0 0.5rem;
+}
+
+#table_search > .input_div > .table_search_button:hover {
+    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    cursor: pointer;
+}
+
+#table_search > .input_div > .table_search_button:hover > i {
+    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+}
+
+/*Table*/
+.table_container {
+    flex: 1;
+    max-height: calc(100vh - var(--height-company-header) - var(--height-table-searchbar) - var(--height-table-footer));
+    width: auto;
+    min-width: 50vw;
+    overflow: auto;
+    position: relative;
+    border: solid 1px black;
+}
+
+.company_db_table {
+    caption-side: top;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+.company_db_table > thead { 
+    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    position: sticky;
+    top: 0;
+}
+
+.company_db_table > thead > * > th {
+    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+}
+
+.company_db_table > * > tr {
+    height: var(--fs-max);
+    width: max-content;
+}
+
+.company_db_table > * > tr:nth-child(even) {
+    background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
+}
+
+[data-table-action-cell] > button:first-of-type {
+    margin-right: 5px;
+}
+
+.company_db_table > tbody > tr:hover,
+.company_db_table > tbody > tr.selected {
+    background-color: hsl(var(--color-lightblue-h), var(--color-lightblue-s), var(--color-greylight-l));
+}
+
+.company_db_table > tbody > tr:hover {
+    cursor: pointer;
+}
+
+/*Alingments*/
+th.row_left,
+td.row_left {
+    text-align: left;
+}
+
+th.row_center,
+td.row_center {
+    text-align: center;
+}
+
+th.row_right,
+td.row_right {
+    text-align: right;
+}
+
+
+/*Buttons*/
+.table_inline_btn {
+    padding: 0;
+    border: none;
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.table_inline_btn:hover {
+    cursor: pointer;
+}
+
+thead > tr > th > .table_inline_btn > i {
+    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+}
+
+thead > tr > th > .table_inline_btn:active {
+    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+}
+
+thead > tr > th > .table_inline_btn:active > i {
+    filter: invert();
+}
+
+tbody > tr > td > .table_inline_btn:hover > i {
+    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+}
+
+tbody > tr > td > .table_inline_btn:active > i {
+    color: unset;
+}
+
+/*######
+API_FORM
+########*/
+.api_modal_form {
+    width: 50vw;
+    max-width: 350px; 
+    display: flex;
+    flex-direction: column;
+    margin-top: 0.5rem;
+    gap: 5px;
+}
+
+.api_modal_form > * {
+    font-size: var(--fs-body);
+}
+
+.api_modal_form > input {
+    margin-bottom: 0.5rem;
+}
+
+.modal_btn_container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.modal_btn_container > button {
+    padding: 0 1rem;
+}

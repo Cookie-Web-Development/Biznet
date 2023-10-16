@@ -1,0 +1,74 @@
+doctype html
+html(lang=lang)
+    head
+        include ../partials/_head.pug
+    body.company_body 
+        include include/_company_header.pug
+        main.company_main
+            include include/_company_nav.pug
+            section.company_workspace
+                div.company_notification_container
+                    if flash_message.notification.length > 0
+                        each noti in flash_message.notification
+                            p(class='green')
+                                i(class='fa-solid fa-check')
+                                |  
+                                | #{noti}
+                    if flash_message.error.length > 0
+                        each err in flash_message.error 
+                            p(class='red')
+                                i(class='fa-solid fa-ban')
+                                |  
+                                | #{err}
+                div(id='table_search')
+                    div(class='input_div')
+                        select(class='table_search_select')
+                            option(value='name')=langData.main.search_filter.by_name[lang]
+                            option(value='brand_id')=langData.main.search_filter.by_id[lang]
+                        input(type='text' placeholder=`${langData.main.search_filter.search[lang]}` data-table-search)
+                        button(class='table_search_button' type='button')
+                            i(class="fa-solid fa-magnifying-glass")
+                h1 Brand edit
+                div(class='table_container')
+                    table(class='company_db_table') 
+                        colgroup
+                            col(style='width: 15%')
+                            col(style='width: 75%')
+                            col(style='width: 10')
+                        thead
+                            tr 
+                                th(scope='col' class='row-center')=langData.data_management.id[lang]
+                                th(scope='col' class='row-left')=langData.data_management.brand_name[lang] 
+                                th
+                                    button(class='table_inline_btn' type='button' title=`${langData.data_management.create[lang]}`)
+                                        i(class='fa-solid fa-square-plus fa-xl')
+                        tbody
+                            for entry in db_result
+                                tr(data-table-row=`${entry.brand_id}`)
+                                    td(class='row_center' data-row-key='brand_id' data-row-value=`${entry.brand_id}`)=entry.brand_id
+                                    td(class='row_center' data-row-key='brand_name' data-row-value=`${entry.name}`)=entry.name
+                                    td(class='row_center' data-table-action-cell=`${entry.brand_id}`)
+        footer 
+        dialog(class='api_modal' data-table-modal='edit')
+            h2=langData.data_management.edit[lang] 
+            form(action='brand_edit' method='post' class='api_modal_form' data-management-modal-form='brand' data-modal-action='edit' data-csrf=`${csrf}`)
+            div(class='modal_btn_container')
+                button(class='button' type='button' data-modal-api)=langData.data_management.save[lang] 
+                button(class='button' type='button' data-close-modal='edit')=langData.data_management.cancel[lang]
+        dialog(class='api_modal' data-table-modal='delete')
+            h2
+                i(class='fa-solid fa-triangle-exclamation')
+                | 
+                | #{langData.data_management.delete[lang]} 
+            p=langData.data_management.delete_confirm[lang]
+            form(action='brand_edit' method='post' class='api_modal_form' data-management-modal-form='brand' data-modal-action='delete' data-csrf=`${csrf}`)
+            div(class='modal_btn_container')
+                button(class='button' type='button')
+                    i(class='fa-solid fa-triangle-exclamation')
+                    | 
+                    | #{langData.data_management.delete[lang]}
+                    | 
+                    i(class='fa-solid fa-triangle-exclamation') 
+                button(class='button' type='button' data-close-modal='delete')=langData.data_management.cancel[lang] 
+        //- script(type='module' src='/src/client/components/universal_form.js' defer)
+        script(type='module' src='/src/client/components/data_table.js' defer)
