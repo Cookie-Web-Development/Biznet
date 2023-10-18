@@ -24,9 +24,14 @@ export default function company_query(query_obj) {
         if (key == 'name') {
             return query_match[key] = { $regex: query_match[key], $options: 'i'};
         }
-    })
+    });
+
     Object.keys(query_sort).map(key => {
-        return query_sort[key] = parseInt(query_sort[key]) || query_sort[key];
+        // console.log(typeof(query_sort[key])) //string 1
+        if (query_sort[key] != 1 && query_sort[key] != -1) {
+            return query_sort[key] =  1 
+        } 
+        return query_sort[key] = parseInt(query_sort[key])
     })
 
     /*

@@ -22,12 +22,14 @@ html(lang=lang)
                                 | #{err}
                 div(id='table_search')
                     div(class='input_div')
-                        select(class='table_search_select')
+                        select(class='table_search_select' data-table-search-type)
                             option(value='name')=langData.main.search_filter.by_name[lang]
                             option(value='brand_id')=langData.main.search_filter.by_id[lang]
                         input(type='text' placeholder=`${langData.main.search_filter.search[lang]}` data-table-search)
-                        button(class='table_search_button' type='button')
+                        button(class='table_search_button' type='button' data-table-search-btn)
                             i(class="fa-solid fa-magnifying-glass")
+                        button(class='table_search_button' type='button' data-table-clear-search)
+                            i(class='fa-solid fa-eraser')
                 h1 Brand edit
                 div(class='table_container')
                     table(class='company_db_table') 
@@ -37,8 +39,8 @@ html(lang=lang)
                             col(style='width: 10')
                         thead
                             tr 
-                                th(scope='col' class='row-center')=langData.data_management.id[lang]
-                                th(scope='col' class='row-left')=langData.data_management.brand_name[lang] 
+                                th(scope='col' class='row-center' data-table-sort='brand_id')=langData.data_management.id[lang]
+                                th(scope='col' class='row-left' data-table-sort='name')=langData.data_management.brand_name[lang] 
                                 th
                                     button(class='table_inline_btn' type='button' title=`${langData.data_management.create[lang]}`)
                                         i(class='fa-solid fa-square-plus fa-xl')

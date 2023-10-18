@@ -213,6 +213,16 @@ MAIN SECTION
     cursor: pointer;
 }
 
+[data-table-sort]:hover {
+    cursor: pointer;
+    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-grey-l));
+}
+
+.sort_caret {
+    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    padding-left: 5px;
+}
+
 /*Alingments*/
 th.row_left,
 td.row_left {
