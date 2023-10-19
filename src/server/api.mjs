@@ -477,7 +477,6 @@ let apiRoute = function (app, db) {
 
             //console.log(company_query(query)) //need to process strings and shit
             // console.log(query)
-            console.log(query)
             let user = { profile_name: 'testerino', account_settings: { role: 'company'}}
 
             let flash_message = {
