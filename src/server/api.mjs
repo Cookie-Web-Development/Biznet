@@ -473,9 +473,11 @@ let apiRoute = function (app, db) {
             req.session._csrf = csrf_token;
             
             //param
-            let query = req.query || {}
+            let query = req.query || {};
+
             //console.log(company_query(query)) //need to process strings and shit
             // console.log(query)
+            console.log(query)
             let user = { profile_name: 'testerino', account_settings: { role: 'company'}}
 
             let flash_message = {

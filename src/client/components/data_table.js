@@ -93,7 +93,6 @@ function table_text_search () {
 
     let redirect_query = url_query_constructor(search_query)
     return redirect_query;
-    //return redirect with params
 }
 
 function table_sort (tableSort) {
@@ -120,8 +119,9 @@ function url_query_constructor(query_obj) {
             queryArr.push(queryString)
         })
     })
-    let queryString = queryArr.join("&")
+    let queryString = encodeURI(queryArr.join("&"))
     let query_encoded = "?" + queryString
+    
     return query_encoded
 }
 
