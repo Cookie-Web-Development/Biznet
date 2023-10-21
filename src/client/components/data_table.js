@@ -184,7 +184,17 @@ function API_FORM(form_node, form_action) {
                         input.value.trim() === '' ||
                         input.value.trim() == input.dataset.defaultValue
                     )
-                ) { break }
+                ) {
+                    notification_display('warning', 'no_change');
+                    let active_dialog = document.querySelector('dialog[open]')
+                    active_dialog.close()
+                    break;
+                } else if (input.value.trim() === '') {
+                    notification_display('error', 'empty_field');
+                    let active_dialog = document.querySelector('dialog[open]')
+                    active_dialog.close()
+                    break;
+                }
                 form_data.payload.payload_content = { [input.name]: input.value }
                 break;
         }
@@ -218,6 +228,7 @@ Para los actions que sean update, no procesar inputs que no hayan cambiado
 
 //API_SEND
 function API_SEND(formData) {
+    console.log(formData)
     fetch(formData.endpoint, {
         method: formData.method,
         headers: {
@@ -260,14 +271,12 @@ function action_button_display(target_container) {
 
     //action_cell button functionality
     action_edit_btn = document.querySelector('[data-action-type="update"]');
-    // action_edit_btn.setAttribute('onclick', 'edit_modal_open;')
     action_edit_btn.onclick = function () { modal_open('update'); };
 
     action_del_btn = document.querySelector('[data-action-type="delete"]');
     action_del_btn.onclick = function () { modal_open('delete'); }
 
 }
-
 
 function modal_open(action_type) {
     let modal = document.querySelector(`[data-table-modal="${action_type}"]`);
@@ -278,7 +287,7 @@ function modal_open(action_type) {
     modal_form_creator(form_elem)
 
     modal.showModal();
-}
+};
 
 function modal_form_creator(form_elem) {
     let row_selected = document.querySelector('.selected');
@@ -329,4 +338,45 @@ function modal_form_creator(form_elem) {
     csrf_input.addAttribute('readonly');
     csrf_input.addAttribute('value', csrf_token);
     form_elem.appendChild(csrf_input.getElement());
-}
+};
+
+//functions: notification bar
+let noti_container = document.querySelector('[data-noti-container]');
+
+noti_container.addEventListener('click', (e) => { 
+    //remove notifications on click
+    noti_container.removeChild(e.target)
+})
+
+function notification_display(type, message) { 
+    //creates a notification without reload. Only accepts one notification per call
+    
+    let new_noti = new HTML_ELEM('p');
+    let noti_i
+    
+    switch(type) {
+        case 'notification':
+            new_noti.addClass('green');
+            noti_i = new_noti.addElement('i');
+            noti_i.addClass('fa-solid');
+            noti_i.addClass('fa-check');
+            break;
+        case 'error':
+            new_noti.addClass('red');
+            noti_i = new_noti.addElement('i');
+            noti_i.addClass('fa-solid');
+            noti_i.addClass('fa-ban');
+            break;
+        case 'warning':
+            new_noti.addClass('orange');
+            noti_i = new_noti.addElement('i');
+            noti_i.addClass('fa-solid');
+            noti_i.addClass('fa-triangle-exclamation');
+            break;
+        default: 
+            return;
+    };
+    let noti_text = new_noti.addElement('span');
+    noti_text.addText(` ${langData.error[message][lang]}`);
+    noti_container.appendChild(new_noti.getElement())
+};

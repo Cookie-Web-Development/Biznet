@@ -434,6 +434,10 @@
         "no_change": {
             "en": "No changes were made.",
             "es": "No se ha realizado ningún cambio."
+        },
+        "empty_field": {
+            "en": "Empty required field.",
+            "es": "Campo requerido vacío."
         }
     },
     "notification": {

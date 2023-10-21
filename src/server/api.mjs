@@ -480,8 +480,8 @@ let apiRoute = function (app, db) {
             let user = { profile_name: 'testerino', account_settings: { role: 'company'}}
 
             let flash_message = {
-                notification: [],
-                error: []
+                notification: req.flash('notification') || [],
+                error: req.flash('error') || []
             }
 
             let brand_db = await Brands.aggregate(company_query(query))
@@ -489,8 +489,33 @@ let apiRoute = function (app, db) {
 
             res.render('data_management/brand_edit', { lang, csrf, langData, user, flash_message, db_result: brand_db })
         })
+        .post( async (req, res) => {
+            let payload_csrf = req.body.validate;
+            let payload_content = req.body.payload_content;
+
+            if(payload_csrf._csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ url: `/brand_edit`}) //placeholder
+                return;
+            }
+
+            console.log(payload_content);
+
+            try {
+                await Brands.createBrand([payload_content])
+            } catch(err) {
+                req.flash ('error', 'unexpected_error');
+                res.json({ url: '/brand_edit' }) //placeholder
+                return;
+            }
+
+            req.flash('notification', 'save_success');
+            return res.json({ url: '/brand_edit' })
+
+
+        })
         .put( async (req, res) => {
-            console.log(req.body);
             let payload_csrf = req.body.validate;
             let payload_id = req.body.payload_id;
             let payload_content = req.body.payload_content;
@@ -498,7 +523,7 @@ let apiRoute = function (app, db) {
             if(payload_csrf._csrf !== req.session._csrf) {
                 req.flash('error', 'save_fail');
                 console.log('invalid token');
-                res.json({ url: `/brand_edit`}) //placeholder;
+                res.json({ url: `/brand_edit` }) //placeholder;
                 return;
             };
 
@@ -507,8 +532,10 @@ let apiRoute = function (app, db) {
                 payload_content
             );
 
-            console.log('Normal')
-            console.log(update);
+            if (update === null) {
+                req.flash('error', 'save_fail')
+                return res.json({ url: '/brand_edit' })
+            }
             
             req.flash('notification', 'save_success');
             return res.json({ url: '/brand_edit'})

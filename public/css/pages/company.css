@@ -124,6 +124,11 @@ MAIN SECTION
     border: 2px solid hsla(var(--color-red-h), var(--color-red-s), var(--color-red-l));   
 }
 
+.company_notification_container > p.orange {
+    background-color: hsla(var(--color-orange-h), var(--color-orange-s), var(--color-greylight-l), var(--color-opacity-high));
+    border: 2px solid hsla(var(--color-orange-h), var(--color-orange-s), var(--color-orange-l));  
+}
+
 /*Table searchbar*/
 #table_search {
     width: 100%;
