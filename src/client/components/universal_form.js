@@ -54,13 +54,13 @@ function formCheck() {
             submit_data.validate._csrf = value
         }
 
-        if(key !== 'token' && value !== default_val && value !== '') {
+        if(key !== 'token' && value.trim() !== default_val && value.trim() !== '') {
             switch(key) {
                 case 'prefered_language':
-                    submit_data.update['user_preferences.lang'] = value
+                    submit_data.update['user_preferences.lang'] = value.trim()
                     break;
                 default:
-                    submit_data.update[key] = value
+                    submit_data.update[key] = value.trim()
             }
         }
     })

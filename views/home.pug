@@ -18,7 +18,7 @@ html(lang=lang)
                                     span=" / " 
                                     span(href='')=featured_list[0].brand_name
                                 h3
-                                    a(href=`/product/${featured_list[0]._id}`)=featured_list[0].name[lang]
+                                    a(href=`/product/${featured_list[0]._id}`)=featured_list[0].product_name[lang]
                                 div.product_card_price_tag
                                     a(class='price_sell', href=`/product/${featured_list[0]._id}`)=featured_list[0].listing[0].format_price_discounted
                                     if(featured_list[0].listing[0].discount_percent > 0)
@@ -42,7 +42,7 @@ html(lang=lang)
                                         span=" / " 
                                         span(href=`/catalog?brand=${item.brand_name}`)=item.brand_name
                                     h3
-                                        a(href=`/product/${item._id}`)=item.name[lang]
+                                        a(href=`/product/${item._id}`)=item.product_name[lang]
                                     a(class='product_card_price_tag', href=`/product/${item._id}`)
                                         p.price_sell=item.listing[0].format_price_discounted
                                         if(item.listing[0].discount_percent > 0)
@@ -53,7 +53,7 @@ html(lang=lang)
                                     ul.product_card_tags
                                         each tag in item.tag_array
                                             li
-                                                span(href=`/product?selected_tags=${tag.name[lang]}`)=tag.name[lang] 
+                                                span(href=`/product?selected_tags=${tag.tag_name[lang]}`)=tag.tag_name[lang] 
                         div(id='carousel_prev' class='carousel_btn')
                             i(class="fa-solid fa-chevron-left fa-xl")
                         div(id='carousel_next' class='carousel_btn')

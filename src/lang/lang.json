@@ -309,6 +309,10 @@
             "en": "Create",
             "es": "Crear"
         },
+        "create_entry": {
+            "en": "New entry",
+            "es": "Nueva entrada"
+        },
         "edit": {
             "en": "Edit",
             "es": "Editar"

@@ -44,15 +44,15 @@ let search_query = {};
 for (let [key, value] of urlSearchParam) {
     let match = key.match(/(\w+)\[(\w+)\]/);
     let mainKey = match[1], subKey = match[2];
-    
+
     //field populate
-    if(mainKey == 'search') {
+    if (mainKey == 'search') {
         let search_type_selection = Array.from(table_search_type.children).findIndex(option => option.value == subKey)
         table_search.value = value;
         table_search_type.selectedIndex = search_type_selection
     }
 
-    if(mainKey == 'sort') {
+    if (mainKey == 'sort') {
         let header_target = Array.from(table_sort_header).find(header => header.dataset.tableSort == subKey);
         let caret_i = new HTML_ELEM('i');
         caret_i.addClass('fa-solid');
@@ -84,10 +84,10 @@ Array.from(table_sort_header).forEach(header => {
     })
 })
 
-function table_text_search () {
+function table_text_search() {
     let search_type = table_search_type.value;
     let search_input = table_search.value;
-    
+
     search_query.search = {} //clears old searches
     search_query.search[search_type] = search_input
 
@@ -95,10 +95,10 @@ function table_text_search () {
     return redirect_query;
 }
 
-function table_sort (tableSort) {
+function table_sort(tableSort) {
     search_query.sort = search_query.sort || {};
-    
-    if(search_query.sort[tableSort] == 1) {
+
+    if (search_query.sort[tableSort] == 1) {
         search_query.sort[tableSort] = -1
     } else {
         search_query.sort = {} //clear sorts
@@ -121,12 +121,20 @@ function url_query_constructor(query_obj) {
     })
     let queryString = encodeURI(queryArr.join("&"))
     let query_encoded = "?" + queryString
-    
+
     return query_encoded
 }
 
 
 //Modal Functions
+//// create entry
+let create_action_btn = document.querySelector('[data-action-type="create"]')
+let create_modal = document.querySelector('[data-table-modal="create"]')
+
+create_action_btn.addEventListener('click', () => {
+    create_modal.showModal()
+})
+
 
 //Modal Function: close modal btn
 let modal_close_btn = document.querySelectorAll('[data-close-modal]');
@@ -138,8 +146,90 @@ Array.from(modal_close_btn).forEach(btn => {
     })
 })
 
-//API_SEND
+//Modal Function: form send BTN
+let form_submit_btn = document.querySelectorAll('[data-modal-action-btn]')
 
+Array.from(form_submit_btn).forEach(btn => {
+    btn.addEventListener('click', () => {
+        let target_form = document.querySelector(`[data-modal-action-form="${btn.dataset.modalActionBtn}"]`);
+
+        let target_action = btn.dataset.modalActionBtn;
+        console.log(target_form)
+        API_FORM(target_form, target_action);
+    })
+})
+
+function API_FORM(form_node, form_action) {
+    let form_data = {
+        payload: {}
+    };
+    let form_inputs = form_node.querySelectorAll('input');
+
+    let endpoint = new URL(form_node.action).pathname;
+    let id_regex = /^\/([^_]+)/;
+    let prefix_id = endpoint.match(id_regex);
+
+    Array.from(form_inputs).forEach(input => {
+        switch (input.name) {
+            case `${prefix_id[1]}_id`:
+                form_data.payload.payload_id = { [input.name]: input.value }
+                break;
+            case 'token':
+                form_data.payload.validate = { _csrf: input.value }
+                break;
+            default:
+                if (
+                    form_action == 'update' &&
+                    (
+                        input.value.trim() === '' ||
+                        input.value.trim() == input.dataset.defaultValue
+                    )
+                ) { break }
+                form_data.payload.payload_content = { [input.name]: input.value }
+                break;
+        }
+    });
+
+    if (!form_data.payload.payload_content) {
+        console.log('aint nothing to update broo');
+        return;
+    }
+
+    Object.assign(form_data, {
+        endpoint: endpoint,
+        method: form_node.dataset.method,
+    })
+    // console.log(form_data)
+    API_SEND(form_data)
+};
+
+/*
+    form_data = {
+        endpoint: '/brand_edit',
+        method: 'PUT',
+        payload: {
+            validate: { _csrf: value },
+            payload_id = { brand_id: 1 },
+            payload_content = { //todos los inputs name : value que hayan cambiado}
+        }
+    }
+Para los actions que sean update, no procesar inputs que no hayan cambiado
+*/
+
+//API_SEND
+function API_SEND(formData) {
+    fetch(formData.endpoint, {
+        method: formData.method,
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        },
+        body: JSON.stringify(formData.payload),
+    })
+        .then(response => {
+            window.location.href = response.url
+        })
+        .catch(err => { })
+}
 
 //Functions
 let action_edit_btn;
@@ -150,7 +240,7 @@ function action_button_display(target_container) {
     edit_btn.addClass('table_inline_btn');
     edit_btn.addAttribute('type', 'button');
     edit_btn.addAttribute('title', langData.data_management.edit[lang]);
-    edit_btn.addAttribute('data-action-type', 'edit')
+    edit_btn.addAttribute('data-action-type', 'update')
     let edit_i = edit_btn.addElement('i')
     edit_i.addClass('fa-solid')
     edit_i.addClass('fa-pen-to-square')
@@ -169,9 +259,9 @@ function action_button_display(target_container) {
     target_container.appendChild(del_btn.getElement())
 
     //action_cell button functionality
-    action_edit_btn = document.querySelector('[data-action-type="edit"]');
+    action_edit_btn = document.querySelector('[data-action-type="update"]');
     // action_edit_btn.setAttribute('onclick', 'edit_modal_open;')
-    action_edit_btn.onclick = function () { modal_open('edit'); };
+    action_edit_btn.onclick = function () { modal_open('update'); };
 
     action_del_btn = document.querySelector('[data-action-type="delete"]');
     action_del_btn.onclick = function () { modal_open('delete'); }
@@ -181,7 +271,7 @@ function action_button_display(target_container) {
 
 function modal_open(action_type) {
     let modal = document.querySelector(`[data-table-modal="${action_type}"]`);
-    let form_elem = modal.querySelector('[data-management-modal-form]');
+    let form_elem = modal.querySelector('form');
     //form_elem reset
     Array.from(form_elem.children).forEach(child => child.remove())
 
@@ -223,6 +313,7 @@ function modal_form_creator(form_elem) {
                     input_elem.addAttribute('name', key);
                     input_elem.addAttribute('id', key);
                     input_elem.addAttribute('value', obj[key]);
+                    input_elem.addAttribute('data-default-value', obj[key])
                     if (form_elem.dataset.modalAction == 'delete') {
                         input_elem.addAttribute('readonly')
                     }

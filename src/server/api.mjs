@@ -163,7 +163,7 @@ let apiRoute = function (app, db) {
             let lang = req.session.lang || "es";
             let discount_list = await Products.aggregate(search_query({ discount: "true" }));
             let featured_list = await Products.aggregate(search_query({ featured: "true" }, { sample: 8 }))
-
+            
             priceFormatter(discount_list);
             priceFormatter(featured_list);
 
@@ -392,7 +392,7 @@ let apiRoute = function (app, db) {
             return res.render(`profile_overview`, { lang, langData, loginCheck, user })
         })
 
-    app.route('/password')
+    app.route('/profile/password')
         .get(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
             let flash_message = req.flash() || {};
             let csrf_token = crypto.randomBytes(16).toString('hex');
@@ -418,7 +418,7 @@ let apiRoute = function (app, db) {
             if (user_update.validate._csrf !== req.session._csrf) {
                 req.flash('error', 'save_fail')
                 console.log('invalid token')
-                res.json({ url: `/password` })
+                res.json({ url: `/profile/password` })
                 return;
             }
 
@@ -433,7 +433,7 @@ let apiRoute = function (app, db) {
             ) {
                 req.flash('error', 'save_fail')
                 console.log('new password not valid')
-                res.json({ url: `/password` })
+                res.json({ url: `/profile/password` })
                 return;
             }
 
@@ -443,14 +443,14 @@ let apiRoute = function (app, db) {
             //validate current password
             if (!bcrypt.compareSync(user_update.validate.password, user.password)) {
                 req.flash('error', 'wrong_password');
-                res.json({ url: '/password' });
+                res.json({ url: '/profile/password' });
                 return;
             }
 
             //check if updating same password
             if (bcrypt.compareSync(user_update.update.password, user.password)) {
                 req.flash('error', 'no_change');
-                res.json({ url: '/password' });
+                res.json({ url: '/profile/password' });
                 return;
             }
 
@@ -462,7 +462,7 @@ let apiRoute = function (app, db) {
             )
 
             req.flash('notification', 'save_success')
-            return res.json({ url: '/password' })
+            return res.json({ url: '/profile/password' })
         })
 
     app.route('/brand_edit') //workbench
@@ -488,6 +488,30 @@ let apiRoute = function (app, db) {
 
 
             res.render('data_management/brand_edit', { lang, csrf, langData, user, flash_message, db_result: brand_db })
+        })
+        .put( async (req, res) => {
+            console.log(req.body);
+            let payload_csrf = req.body.validate;
+            let payload_id = req.body.payload_id;
+            let payload_content = req.body.payload_content;
+
+            if(payload_csrf._csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ url: `/brand_edit`}) //placeholder;
+                return;
+            };
+
+            let update = await Brands.findOneAndUpdate(
+                payload_id,
+                payload_content
+            );
+
+            console.log('Normal')
+            console.log(update);
+            
+            req.flash('notification', 'save_success');
+            return res.json({ url: '/brand_edit'})
         })
 
 
