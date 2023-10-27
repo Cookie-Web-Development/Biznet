@@ -121,10 +121,10 @@ let apiRoute = function (app, db) {
     function check_role(req, res, next) {
         //Role hierarchy webmaster > company > user
         //user.account_settings.role
-        let route_regex = /^\/[^\/]+/
+        let route_regex = /\/[^\/]+$/
         let path = req.originalUrl;
         let route = path.match(route_regex)[0];
-        console.log('route from check_role', route)
+        // console.log('route from check_role', route)
         let user_role = req.user.account_settings.role || undefined;
         switch (route) {
             //webmaster
@@ -466,7 +466,7 @@ let apiRoute = function (app, db) {
         })
 
     app.route('/company/:main_route') //workbench
-        .get(async (req, res) => {
+        .get(check_auth('/login', true), check_role, async (req, res, next) => {
             let company_route = req.params.main_route
             let lang = req.session.lang || 'es'
             let csrf_token = crypto.randomBytes(16).toString('hex');
@@ -498,7 +498,12 @@ let apiRoute = function (app, db) {
             //param
             let query = req.query || {};
 
-            let user = { profile_name: 'testerino', account_settings: { role: 'company' } }
+            //user object
+            let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
+            }
 
             let flash_message = {
                 notification: req.flash('notification') || [],
@@ -508,10 +513,14 @@ let apiRoute = function (app, db) {
             // let brand_db = await Brands.aggregate(company_query(query))
             let query_result = await db_selector.aggregate(company_query(query, route_prefix[0]))
 
-
-            res.render(`data_management/${company_route}`, { lang, csrf, langData, user, flash_message, db_result: query_result })
+            try {
+                res.render(`data_management/${company_route}`, { lang, csrf, langData, user, flash_message, db_result: query_result })
+            } catch(err) {
+                err.status = 404;
+                next(err);
+            }
         })
-        .post(async (req, res) => {
+        .post(check_auth('/login', true), check_role, async (req, res) => {
             let company_route = req.params.main_route
             let payload_csrf = req.body.validate;
             let payload_content = req.body.payload_content;
@@ -556,7 +565,7 @@ let apiRoute = function (app, db) {
             req.flash('notification', 'save_success');
             return res.json({ url: `/company/${company_route}` })
         })
-        .put(async (req, res) => {
+        .put(check_auth('/login', true), check_role, async (req, res) => {
             let company_route = req.params.main_route
             let payload_csrf = req.body.validate;
             let payload_id = req.body.payload_id;

@@ -341,6 +341,7 @@ function modal_form_creator(form_elem) {
             switch (key) {
                 case 'brand_id':
                 case 'category_id':
+                case 'tag_id':
                     input_elem.addAttribute('readonly');
                     if (form_elem.dataset.modalAction == 'edit') {
                         input_elem.addAttribute('title', langData.data_management.id_change[lang]);

@@ -5,6 +5,7 @@ VARIABLES
     --height-company-header: 70px;
     --height-table-searchbar: 50px;
     --height-table-footer: 100px;
+    overflow: hidden;
 }
 
 /*####
@@ -31,6 +32,24 @@ HEADER
 
 .company_header_logo > svg {
     max-width: 165px;
+}
+
+.user_corner {
+    width: 20%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.company_button {
+    background-color: transparent;
+    border: none;
+    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    font-size: var(--fs-body);
+}
+
+.company_button:hover {
+    cursor: pointer;
 }
 
 .company_header_greeting {

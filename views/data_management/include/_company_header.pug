@@ -17,7 +17,11 @@ header.company_header
                     path(d="M10 80V75.5H36.5V80H10Z")
                     path(d="M10 103.5V99H36.5V103.5H10Z")
                     path(d="M10 111V107.5H36.5V111H10Z") 
-    div.company_header_greeting
-        p
-            | #{langData.profile.greeting[lang]}
-            | #{user.profile_name}
+    div.user_corner
+        div.company_header_greeting
+            form(id='lang_selector', class='lang_selector', action='/lang_change', method='get')
+                button(class='company_button all_caps')=lang
+        div.company_header_greeting
+            p
+                | #{langData.profile.greeting[lang]}
+                | #{user.profile_name}

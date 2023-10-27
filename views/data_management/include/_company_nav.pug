@@ -14,11 +14,11 @@ nav.company_nav
             li(data-profile-active='/company/catalog_edit')
                 a(class='disabled' href='/company/catalog_edit')=langData.data_management.catalog_edit[lang]
             li(data-profile-active='/company/category_edit')
-                a(class='disabled' href='/company/category_edit')=langData.data_management.category_edit[lang]
+                a(href='/company/category_edit')=langData.data_management.category_edit[lang]
             li(data-profile-active='/company/brand_edit')
-                a(class='disabled' href='/company/brand_edit')=langData.data_management.brand_edit[lang]
+                a(href='/company/brand_edit')=langData.data_management.brand_edit[lang]
             li(data-profile-active='/company/tag_edit')
-                a(class='disabled' href='/company/tag_edit')=langData.data_management.tag_edit[lang]
+                a(href='/company/tag_edit')=langData.data_management.tag_edit[lang]
     if (user.account_settings.role == 'webmaster')
         section.company_nav_section 
             h2 Webmaster 
