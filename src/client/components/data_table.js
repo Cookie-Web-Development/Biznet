@@ -7,16 +7,6 @@ import { HTML_ELEM } from '../modules/moduleHTMLElemMaker.js'
 let table_rows = document.querySelectorAll('[data-table-row]');
 let table_action_cell = document.querySelectorAll('[data-table-action-cell]');
 let lang = document.documentElement.lang;
-/* 
-    Table action buttons must follow this structure:
-    <-- td will be already in DOM -->
-    td(class='row_center' data-table-action-cell=`${entry.brand_id}`) 
-        button(class='table_inline_btn' type='button' title=`${langData.data_management.edit[lang]}`)
-            i(class='fa-solid fa-pen-to-square fa-lg')
-        span 
-        button(class='table_inline_btn' type='button' title=`${langData.data_management.delete[lang]}`)
-            i(class='fa-solid fa-trash fa-lg')
-*/
 
 Array.from(table_rows).forEach(row => {
     row.addEventListener('click', (e) => {
@@ -26,9 +16,10 @@ Array.from(table_rows).forEach(row => {
         });
 
         row.classList.add('selected');
-        let target_cell = row.querySelector(`[data-table-action-cell="${row.dataset.tableRow}"]`);
+        let target_cell = row.querySelector(`[data-table-action-cell]`);
 
         action_button_display(target_cell);
+
     })
 })
 
@@ -154,8 +145,11 @@ Array.from(form_submit_btn).forEach(btn => {
         let target_form = document.querySelector(`[data-modal-action-form="${btn.dataset.modalActionBtn}"]`);
 
         let target_action = btn.dataset.modalActionBtn;
-        console.log(target_form)
-        API_FORM(target_form, target_action);
+        try {
+            API_FORM(target_form, target_action);
+        } catch (err) {
+            notification_display(err.type, err.message)
+        }
     })
 })
 
@@ -166,7 +160,7 @@ function API_FORM(form_node, form_action) {
     let form_inputs = form_node.querySelectorAll('input');
 
     let endpoint = new URL(form_node.action).pathname;
-    let id_regex = /^\/([^_]+)/;
+    let id_regex = /^\/\w+\/([^_]+)/;
     let prefix_id = endpoint.match(id_regex);
 
     Array.from(form_inputs).forEach(input => {
@@ -184,32 +178,28 @@ function API_FORM(form_node, form_action) {
                         input.value.trim() === '' ||
                         input.value.trim() == input.dataset.defaultValue
                     )
-                ) {
-                    notification_display('warning', 'no_change');
+                ) { break; } else if (input.value.trim() === '') {
                     let active_dialog = document.querySelector('dialog[open]')
-                    active_dialog.close()
-                    break;
-                } else if (input.value.trim() === '') {
-                    notification_display('error', 'empty_field');
-                    let active_dialog = document.querySelector('dialog[open]')
-                    active_dialog.close()
-                    break;
+                    active_dialog.close();
+                    throw { type: 'error', message: 'empty_field' }
                 }
-                form_data.payload.payload_content = { [input.name]: input.value }
+                form_data.payload.payload_content = form_data.payload.payload_content || {};
+                form_data.payload.payload_content[input.name] = input.value
                 break;
         }
     });
 
     if (!form_data.payload.payload_content) {
-        console.log('aint nothing to update broo');
-        return;
+        let active_dialog = document.querySelector('dialog[open]');
+        active_dialog.close();
+        throw { type: 'warning', message: 'no_change' }
     }
 
     Object.assign(form_data, {
         endpoint: endpoint,
         method: form_node.dataset.method,
     })
-    // console.log(form_data)
+
     API_SEND(form_data)
 };
 
@@ -244,7 +234,7 @@ function API_SEND(formData) {
 
 //Functions
 let action_edit_btn;
-let action_del_btn;
+let action_del_btn; //disabled delete button until further notice
 function action_button_display(target_container) {
     //specifically for edit and delete buttons per row
     let edit_btn = new HTML_ELEM('button');
@@ -256,26 +246,28 @@ function action_button_display(target_container) {
     edit_i.addClass('fa-solid')
     edit_i.addClass('fa-pen-to-square')
     edit_i.addClass('fa-lg')
-    let del_btn = new HTML_ELEM('button');
-    del_btn.addClass('table_inline_btn');
-    del_btn.addAttribute('type', 'button');
-    del_btn.addAttribute('title', langData.data_management.delete[lang]);
-    del_btn.addAttribute('data-action-type', 'delete')
-    let del_i = del_btn.addElement('i')
-    del_i.addClass('fa-solid')
-    del_i.addClass('fa-trash')
-    del_i.addClass('fa-lg')
+    // let del_btn = new HTML_ELEM('button');
+    // del_btn.addClass('table_inline_btn');
+    // del_btn.addAttribute('type', 'button');
+    // del_btn.addAttribute('title', langData.data_management.delete[lang]);
+    // del_btn.addAttribute('data-action-type', 'delete')
+    // let del_i = del_btn.addElement('i')
+    // del_i.addClass('fa-solid')
+    // del_i.addClass('fa-trash')
+    // del_i.addClass('fa-lg')
+    //disabled delete button until further notice
+
 
     target_container.appendChild(edit_btn.getElement())
-    target_container.appendChild(del_btn.getElement())
+    // target_container.appendChild(del_btn.getElement())
 
     //action_cell button functionality
     action_edit_btn = document.querySelector('[data-action-type="update"]');
     action_edit_btn.onclick = function () { modal_open('update'); };
 
-    action_del_btn = document.querySelector('[data-action-type="delete"]');
-    action_del_btn.onclick = function () { modal_open('delete'); }
-
+    // action_del_btn = document.querySelector('[data-action-type="delete"]');
+    // action_del_btn.onclick = function () { modal_open('delete'); }
+    //disabled delete button until further notice
 }
 
 function modal_open(action_type) {
@@ -291,42 +283,76 @@ function modal_open(action_type) {
 
 function modal_form_creator(form_elem) {
     let row_selected = document.querySelector('.selected');
-    let data_cells = row_selected.querySelectorAll('[data-row-key]');
+    let data_obj = JSON.parse(row_selected.dataset.tableRow);
+    
+    Object.keys(data_obj).forEach(key => {
+        if (Object(data_obj[key]) === data_obj[key]) { //for when lang is an issue
 
-    let data_array = Array.from(data_cells).map((cell) => ({
-        [cell.dataset.rowKey]: cell.dataset.rowValue
-    }));
+            //label and input of SELECTED lang
+            let current_name_label = new HTML_ELEM('label');
+            current_name_label.addAttribute('for', `${key}.${lang}`);
+            current_name_label.addText(`${langData.data_management[key][lang]} (${langData.profile.language_sel[lang]})`)
+            form_elem.appendChild(current_name_label.getElement());
 
-    data_array.forEach((obj) => {
-        for (let key in obj) {
+            let current_name_input = new HTML_ELEM('input');
+            current_name_input.addClass('input_box');
+            current_name_input.addAttribute('name', `${key}.${lang}`);
+            current_name_input.addAttribute('id', `${key}.${lang}`);
+            current_name_input.addAttribute('value', data_obj[key][lang]);
+            current_name_input.addAttribute('data-default-value', data_obj[key][lang]);
+            if (form_elem.dataset.modalAction == 'delete') {
+                current_name_input.addAttribute('readonly')
+            };
+            form_elem.appendChild(current_name_input.getElement())
+
+            //label and input of NON SELECTED lang
+            let unsel_lang = Object.keys(data_obj[key]).filter((lang_opts) => lang_opts != lang);
+
+            unsel_lang.forEach(notLang => {
+                let other_name_label = new HTML_ELEM('label')
+                other_name_label.addAttribute('for', `${key}.${notLang}`);
+                other_name_label.addText(`${langData.data_management[key][lang]} (${langData.profile.language_sel[notLang]})`);
+                form_elem.appendChild(other_name_label.getElement());
+
+                let other_name_input = new HTML_ELEM('input');
+                other_name_input.addClass('input_box');
+                other_name_input.addAttribute('name', `${key}.${notLang}`);
+                other_name_input.addAttribute('id', `${key}.${notLang}`);
+                other_name_input.addAttribute('value', data_obj[key][notLang]);
+                other_name_input.addAttribute('data-default-value', data_obj[key][notLang]);
+                if (form_elem.dataset.modalAction == 'delete') {
+                    other_name_input.addAttribute('readonly')
+                };
+                form_elem.appendChild(other_name_input.getElement());
+            });
+
+        } else { //for when lang is NOT an issue
+            //label and input of EVERYTHING ELSE
             let label_elem = new HTML_ELEM('label');
-            label_elem.addAttribute('for', key)
+            label_elem.addAttribute('for', key);
             label_elem.addText(langData.data_management[key][lang]);
             form_elem.appendChild(label_elem.getElement());
-            let input_elem
+
+            let input_elem = new HTML_ELEM('input');
+            input_elem.addClass('input_box');
+            input_elem.addAttribute('name', key);
+            input_elem.addAttribute('id', key);
+            input_elem.addAttribute('value', data_obj[key])
             switch (key) {
                 case 'brand_id':
-                    input_elem = new HTML_ELEM('input');
-                    input_elem.addClass('input_box')
-                    input_elem.addAttribute('name', key);
-                    input_elem.addAttribute('id', key);
-                    input_elem.addAttribute('value', obj[key]);
+                case 'category_id':
                     input_elem.addAttribute('readonly');
                     if (form_elem.dataset.modalAction == 'edit') {
                         input_elem.addAttribute('title', langData.data_management.id_change[lang]);
                     }
                     break;
                 default:
-                    input_elem = new HTML_ELEM('input');
-                    input_elem.addClass('input_box')
-                    input_elem.addAttribute('name', key);
-                    input_elem.addAttribute('id', key);
-                    input_elem.addAttribute('value', obj[key]);
-                    input_elem.addAttribute('data-default-value', obj[key])
+                    input_elem.addAttribute('data-default-value', data_obj[key]);
                     if (form_elem.dataset.modalAction == 'delete') {
-                        input_elem.addAttribute('readonly')
+                        input_elem.addAttribute('readonly');
                     }
-            };
+                    break;
+            }
             form_elem.appendChild(input_elem.getElement());
         }
     })
@@ -343,18 +369,18 @@ function modal_form_creator(form_elem) {
 //functions: notification bar
 let noti_container = document.querySelector('[data-noti-container]');
 
-noti_container.addEventListener('click', (e) => { 
+noti_container.addEventListener('click', (e) => {
     //remove notifications on click
     noti_container.removeChild(e.target)
 })
 
-function notification_display(type, message) { 
+function notification_display(type, message) {
     //creates a notification without reload. Only accepts one notification per call
-    
+
     let new_noti = new HTML_ELEM('p');
     let noti_i
-    
-    switch(type) {
+
+    switch (type) {
         case 'notification':
             new_noti.addClass('green');
             noti_i = new_noti.addElement('i');
@@ -373,7 +399,7 @@ function notification_display(type, message) {
             noti_i.addClass('fa-solid');
             noti_i.addClass('fa-triangle-exclamation');
             break;
-        default: 
+        default:
             return;
     };
     let noti_text = new_noti.addElement('span');

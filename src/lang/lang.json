@@ -361,9 +361,17 @@
             "en": "Brand Id",
             "es": "Ident. Marca"
         },
+        "category_id": {
+            "en": "Category Id",
+            "es": "Ident. Categoría"
+        },
         "brand_name": {
             "en": "Brand name",
             "es": "Nombre de la marca"
+        },
+        "category_name": {
+            "en": "Category Name",
+            "es": "Nombre de categoría"
         }
     },
     "error": {

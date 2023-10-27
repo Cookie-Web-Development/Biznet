@@ -46,10 +46,10 @@ html(lang=lang)
                                         i(class='fa-solid fa-square-plus fa-xl')
                         tbody
                             for entry in db_result
-                                tr(data-table-row=`{ "brand_id": ${entry.brand_id}, "brand_name": "${entry.brand_name}" }`)
-                                    td(class='row_center')=entry.brand_id
-                                    td(class='row_center')=entry.brand_name
-                                    td(class='row_center' data-table-action-cell)
+                                tr(data-table-row=`${entry.brand_id}`)
+                                    td(class='row_center' data-row-key='brand_id' data-row-value=`${entry.brand_id}`)=entry.brand_id
+                                    td(class='row_center' data-row-key='brand_name' data-row-value=`${entry.brand_name}`)=entry.brand_name
+                                    td(class='row_center' data-table-action-cell=`${entry.brand_id}`)
         footer 
         dialog(class='api_modal' data-table-modal='create')
             h2=langData.data_management.create_entry[lang]

@@ -114,6 +114,10 @@ MAIN SECTION
     text-align: center;
 }
 
+.company_notification_container > p > * {
+    pointer-events: none;
+}
+
 .company_notification_container > p.green {
     background-color: hsla(var(--color-green-h), var(--color-green-s), var(--color-greylight-l), var(--color-opacity-high));
     border: 2px solid hsla(var(--color-green-h), var(--color-green-s), var(--color-green-l));

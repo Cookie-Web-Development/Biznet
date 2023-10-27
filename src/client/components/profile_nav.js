@@ -1,5 +1,5 @@
 let path = window.location.pathname;
-let route_regex = /^\/[^\/]+/
+let route_regex = /^\/[^?]+/
 let route = path.match(route_regex);
 
 let active_li = route[0];

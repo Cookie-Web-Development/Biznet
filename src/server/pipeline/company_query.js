@@ -1,7 +1,7 @@
 "use strict";
 import mongoose from 'mongoose';
 
-export default function company_query(query_obj) {
+export default function company_query(query_obj, route) {
     /*
     query structure will be
         { search: { key : value }, sort: { key: value } }
@@ -14,7 +14,7 @@ export default function company_query(query_obj) {
     */
 
     let query_match = query_obj.search || {};
-    let query_sort = query_obj.sort || { brand_id: 1};
+    let query_sort = query_obj.sort || { [`${route}_id`]: 1};
 
     Object.keys(query_match).map(key => {
         let regex = /_?id$/;
