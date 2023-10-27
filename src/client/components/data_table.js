@@ -219,7 +219,6 @@ Para los actions que sean update, no procesar inputs que no hayan cambiado
 
 //API_SEND
 function API_SEND(formData) {
-    console.log(formData)
     fetch(formData.endpoint, {
         method: formData.method,
         headers: {

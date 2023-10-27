@@ -365,6 +365,10 @@
             "en": "Category Id",
             "es": "Ident. Categoría"
         },
+        "tag_id": {
+            "en": "Tag Id",
+            "es": "Ident. Etiqueta"
+        },
         "brand_name": {
             "en": "Brand name",
             "es": "Nombre de la marca"
@@ -372,6 +376,10 @@
         "category_name": {
             "en": "Category Name",
             "es": "Nombre de categoría"
+        },
+        "tag_name": {
+            "en": "Tag Name",
+            "es": "Nombre de etiqueta"
         }
     },
     "error": {
