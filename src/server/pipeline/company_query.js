@@ -17,11 +17,12 @@ export default function company_query(query_obj, route) {
     let query_sort = query_obj.sort || { [`${route}_id`]: 1};
 
     Object.keys(query_match).map(key => {
-        let regex = /_?id$/;
-        if (regex.test(key)) {
+        let regex_id = /_?id$/;
+        let regex_name = /_?name/;
+        if (regex_id.test(key)) {
             return query_match[key] = parseInt(query_match[key]) || query_match[key];
         }
-        if (key == 'name') {
+        if (regex_name.test(key)) {
             return query_match[key] = { $regex: query_match[key], $options: 'i'};
         }
     });

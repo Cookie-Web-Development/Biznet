@@ -25,7 +25,7 @@ html(lang=lang)
                 div(id='table_search')
                     div(class='input_div')
                         select(class='table_search_select' data-table-search-type)
-                            option(value=`category_name`)=langData.main.search_filter.by_name[lang]
+                            option(value=`category_name.${lang}`)=langData.main.search_filter.by_name[lang]
                             option(value='category_id')=langData.main.search_filter.by_id[lang]
                         input(type='text' placeholder=`${langData.main.search_filter.search[lang]}` data-table-search)
                         button(class='table_search_button' type='button' data-table-search-btn)

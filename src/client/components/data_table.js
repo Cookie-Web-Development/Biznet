@@ -32,8 +32,9 @@ let table_sort_header = document.querySelectorAll('[data-table-sort]');
 let urlSearchParam = new URLSearchParams(window.location.search);
 
 let search_query = {};
+
 for (let [key, value] of urlSearchParam) {
-    let match = key.match(/(\w+)\[(\w+)\]/);
+    let match = key.match(/(\w+)\[([\w.]+)\]/);
     let mainKey = match[1], subKey = match[2];
 
     //field populate
