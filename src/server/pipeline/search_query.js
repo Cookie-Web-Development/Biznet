@@ -4,7 +4,7 @@ import mongoose from 'mongoose';
 export default function search_query(query_input, option = undefined) {
     /*
     query_input: { //A.K.A req.body
-      name: 'Batidora',
+      product_name: 'Batidora',
       price_range_min: '164',
       price_range_max: '785',
       category: '2',
@@ -34,10 +34,10 @@ export default function search_query(query_input, option = undefined) {
     }
 
     //name
-    if (query_input.name) {
+    if (query_input.product_name) {
         queryObj.$or = [
-            { "name.en": { $regex: query_input.name, $options: 'i' } },
-            { "name.es": { $regex: query_input.name, $options: 'i' } }
+            { "product_name.en": { $regex: query_input.product_name, $options: 'i' } },
+            { "product_name.es": { $regex: query_input.product_name, $options: 'i' } }
         ]
     }
 
@@ -116,7 +116,7 @@ export default function search_query(query_input, option = undefined) {
 
     // sorting option
     let sort = {};
-    let sort_name = `name.${query_input.search_lang}`;
+    let sort_name = `product_name.${query_input.search_lang}`;
     switch (query_input.sort_option) {
         case '9-0':
             sort = { "listing.price_discounted": -1 }
@@ -186,22 +186,22 @@ export default function search_query(query_input, option = undefined) {
                 from: "categories",
                 localField: "category_id",
                 foreignField: "category_id",
-                as: "category_name"
+                as: "category"
             }
         },
         {
-            $unwind: "$category_name"
+            $unwind: "$category"
         },
         {
             $lookup: {
                 from: "brands",
                 localField: "brand_id",
                 foreignField: "brand_id",
-                as: "brand_name"
+                as: "brand"
             }
         },
         {
-            $unwind: "$brand_name"
+            $unwind: "$brand"
         },
         {
             $lookup: {
@@ -214,22 +214,22 @@ export default function search_query(query_input, option = undefined) {
         {
             $project: {
                 _id: 1,
-                name: 1,
+                product_name: 1,
                 description: 1,
                 reviews: 1,
                 listing: 1,
                 brand_id: 1,
                 category_id: 1,
                 featured: 1,
-                category_name: "$category_name.name",
-                brand_name: "$brand_name.name",
+                category_name: "$category.category_name",
+                brand_name: "$brand.brand_name",
                 tag_id: 1,
                 tag_array: {
                     $map: {
                         input: "$tag_collection",
                         as: "tag",
                         in: {
-                            name: "$$tag.name",
+                            tag_name: "$$tag.tag_name",
                             tag_id: "$$tag.tag_id"
                         }
                     }

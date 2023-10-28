@@ -1,4 +1,4 @@
-#login_modal, #disclaimer_modal {
+#login_modal, #disclaimer_modal, .api_modal {
     padding: 1.5rem 2rem;
     background-color: hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), var(--color-opacity-high));
     backdrop-filter: blur(6px);
@@ -89,6 +89,11 @@ DISCLAIMER MODAL
     margin-top: 1.5rem;
     text-align: center;
 }
+
+/*#######
+API_MODAL
+#########*/
+
 
 /*###################
 RESPONSIVE WEB DESIGN

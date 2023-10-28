@@ -3,7 +3,7 @@
 import mongoose from 'mongoose';
 
 export let tags_schema = mongoose.Schema({
-    name: {
+    tag_name: {
         es: {
             type: String,
             required: true

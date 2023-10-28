@@ -31,7 +31,7 @@ let listing_schema = mongoose.Schema({
 });
 
 let products_schema = mongoose.Schema({
-    name: {
+    product_name: {
         es: {
             type: String,
             required: true

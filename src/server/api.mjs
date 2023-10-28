@@ -16,6 +16,7 @@ import { users_schema } from './schema/users_schema.js';
 import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
 import { INPUT_CHECK } from './modules/moduleInputCheck.js';
+import company_query from './pipeline/company_query.js';
 
 
 let apiRoute = function (app, db) {
@@ -24,7 +25,7 @@ let apiRoute = function (app, db) {
     #########
     for schemas: used to assign customs_ids before saving*/
     //brand
-    brands_schema.statics.createBrand = async function (data) {
+    brands_schema.statics.createEntry = async function (data) {
         let last_entry = await this.findOne({}, { _id: 0, brand_id: 1 }, { sort: { brand_id: -1 } }) || { brand_id: 0 };
 
         let indexTracker = 0;  // one of the obj in the array contains brand_id
@@ -38,7 +39,7 @@ let apiRoute = function (app, db) {
         return this.create(data)
     }
     //category
-    categories_schema.statics.createCategory = async function (data) {
+    categories_schema.statics.createEntry = async function (data) {
         let last_entry = await this.findOne({}, { _id: 0, category_id: 1 }, { sort: { category_id: -1 } }) || { category_id: 0 };
 
         let indexTracker = 0;
@@ -52,7 +53,7 @@ let apiRoute = function (app, db) {
         return this.create(data)
     }
     //tags
-    tags_schema.statics.createTag = async function (data) {
+    tags_schema.statics.createEntry = async function (data) {
         let last_entry = await this.findOne({}, { _id: 0, tag_id: 1 }, { sort: { tag_id: -1 } }) || { tag_id: 0 };
 
         let indexTracker = 0;
@@ -117,35 +118,38 @@ let apiRoute = function (app, db) {
         }
     }
 
-    function check_role(minimum_role) {
+    function check_role(req, res, next) {
         //Role hierarchy webmaster > company > user
-        //user.account_settings.role        
-        let entry_level = minimum_role;
-        switch (entry_level) {
-            case 'webmaster':
-                return function (req, res, next) {
-                    if (req.user.account_settings.role !== 'webmaster') {
-                        return res.status(403).send('Access denied');
-                    }
-                    return next();
+        //user.account_settings.role
+        let route_regex = /\/[^\/]+$/
+        let path = req.originalUrl;
+        let route = path.match(route_regex)[0];
+        // console.log('route from check_role', route)
+        let user_role = req.user.account_settings.role || undefined;
+        switch (route) {
+            //webmaster
+            case "/webmaster_test":
+                if (user_role !== 'webmaster') {
+                    return res.status(401).send('Forbidden')
                 }
-            case 'company':
-                return function (req, res, next) {
-                    if (
-                        req.user.account_settings.role !== 'webmaster' &&
-                        req.user.account_settings.role !== 'company'
-                    ) {
-                        return res.status(403).send('Access denied');
-                    }
-                    return next();
+                return next()
+            //company
+            case "/product_edit":
+            case "/brand_edit":
+            case "/category_edit":
+            case "/tags_edit":
+                if (user_role !== 'webmaster' && user_role !== 'company') {
+                    return res.status(401).send('Forbidden')
                 }
+                return next();
             default:
-                return function (req, res, next) {
-                    res.status(403).send('Access denied.')
+                if (!user_role) {
+                    //notification
+                    return res.redirect('/')
                 }
+                return next();
         }
     }
-
 
     /*####
     ROUTES
@@ -388,7 +392,7 @@ let apiRoute = function (app, db) {
             return res.render(`profile_overview`, { lang, langData, loginCheck, user })
         })
 
-    app.route('/password')
+    app.route('/profile/password')
         .get(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
             let flash_message = req.flash() || {};
             let csrf_token = crypto.randomBytes(16).toString('hex');
@@ -414,7 +418,7 @@ let apiRoute = function (app, db) {
             if (user_update.validate._csrf !== req.session._csrf) {
                 req.flash('error', 'save_fail')
                 console.log('invalid token')
-                res.json({ url: `/password` })
+                res.json({ url: `/profile/password` })
                 return;
             }
 
@@ -429,7 +433,7 @@ let apiRoute = function (app, db) {
             ) {
                 req.flash('error', 'save_fail')
                 console.log('new password not valid')
-                res.json({ url: `/password` })
+                res.json({ url: `/profile/password` })
                 return;
             }
 
@@ -439,14 +443,14 @@ let apiRoute = function (app, db) {
             //validate current password
             if (!bcrypt.compareSync(user_update.validate.password, user.password)) {
                 req.flash('error', 'wrong_password');
-                res.json({ url: '/password' });
+                res.json({ url: '/profile/password' });
                 return;
             }
 
             //check if updating same password
             if (bcrypt.compareSync(user_update.update.password, user.password)) {
                 req.flash('error', 'no_change');
-                res.json({ url: '/password' });
+                res.json({ url: '/profile/password' });
                 return;
             }
 
@@ -458,22 +462,162 @@ let apiRoute = function (app, db) {
             )
 
             req.flash('notification', 'save_success')
-            return res.json({ url: '/password' })
+            return res.json({ url: '/profile/password' })
         })
 
+    app.route('/company/:main_route') //workbench
+        .get(check_auth('/login', true), check_role, async (req, res, next) => {
+            let company_route = req.params.main_route
+            let lang = req.session.lang || 'es'
+            let csrf_token = crypto.randomBytes(16).toString('hex');
+            let csrf = csrf_token;
+            req.session._csrf = csrf_token;
 
-    app.route('/company_test') //check_role test routes
-        .get(check_auth('/login', true), check_role('company'), (req, res) => {
-            res.send('company');
-        })
+            let route_regex = /^[^_]+/
+            let route_prefix = company_route.match(route_regex)
+            let db_selector;
 
-    app.route('/webmaster_test') //check_role test routes
-        .get(check_auth('/login', true), check_role('webmaster'), (req, res) => {
-            res.send('webmaster')
+            switch(route_prefix[0]){
+                case 'brand':
+                    db_selector = Brands;
+                    break;
+                case 'category':
+                    db_selector = Categories;
+                    break;
+                case 'tag':
+                    db_selector = Tags;
+                    break;
+                case 'catalog':
+                    db_selector = Products;
+                    break;
+                default:
+                    try { throw new Error('internal error') } catch (err) { next(err) }
+                    return; 
+            }
+
+            //param
+            let query = req.query || {};
+
+            //user object
+            let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
+            }
+            // let user = { profile_name: 'longASSnameJUSTcus', account_settings: {role: "webmaster"}}
+
+
+            let flash_message = {
+                notification: req.flash('notification') || [],
+                error: req.flash('error') || []
+            }
+
+            // let brand_db = await Brands.aggregate(company_query(query))
+            let query_result = await db_selector.aggregate(company_query(query, route_prefix[0]))
+
+            try {
+                res.render(`data_management/${company_route}`, { lang, csrf, langData, user, flash_message, db_result: query_result })
+            } catch(err) {
+                err.status = 404;
+                next(err);
+            }
         })
+        .post(check_auth('/login', true), check_role, async (req, res) => {
+            let company_route = req.params.main_route
+            let payload_csrf = req.body.validate;
+            let payload_content = req.body.payload_content;
+
+            if (payload_csrf._csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ url: `/company/${company_route}` }) //placeholder
+                return;
+            }
+            
+            let route_regex = /^[^_]+/
+            let route_prefix = company_route.match(route_regex)
+            let db_selector;
+
+            switch(route_prefix[0]){
+                case 'brand':
+                    db_selector = Brands;
+                    break;
+                case 'category':
+                    db_selector = Categories;
+                    break;
+                case 'tag':
+                    db_selector = Tags;
+                    break;
+                case 'catalog':
+                    db_selector = Products;
+                    break;
+                default:
+                    try { throw new Error('internal error') } catch (err) { next(err) }
+                    return; 
+            }
+
+            try {
+                await db_selector.createEntry([payload_content])
+            } catch (err) {
+                req.flash('error', 'unexpected_error');
+                res.json({ url: `/company/${company_route}` }) //placeholder
+                return;
+            }
+
+            req.flash('notification', 'save_success');
+            return res.json({ url: `/company/${company_route}` })
+        })
+        .put(check_auth('/login', true), check_role, async (req, res) => {
+            let company_route = req.params.main_route
+            let payload_csrf = req.body.validate;
+            let payload_id = req.body.payload_id;
+            let payload_content = req.body.payload_content;
+
+            if (payload_csrf._csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ url: `/company/${company_route}` })
+                return;
+            };
+
+            let route_regex = /^[^_]+/
+            let route_prefix = company_route.match(route_regex)
+            let db_selector;
+
+            switch(route_prefix[0]){
+                case 'brand':
+                    db_selector = Brands;
+                    break;
+                case 'category':
+                    db_selector = Categories;
+                    break;
+                case 'tag':
+                    db_selector = Tags;
+                    break;
+                case 'catalog':
+                    db_selector = Products;
+                    break;
+                default:
+                    try { throw new Error('internal error') } catch (err) { next(err) }
+                    return; 
+            }
+
+            let update = await db_selector.findOneAndUpdate(
+                payload_id,
+                payload_content
+            );
+
+            if (update === null) {
+                req.flash('error', 'save_fail')
+                return res.json({ url: `/company/${company_route}` })
+            }
+
+            req.flash('notification', 'save_success');
+            return res.json({ url: `/company/${company_route}` })
+        });
 
     app.route('/:main') //universal route
-        .get(check_auth('/login', true)/*, check_role()*/, async (req, res, next) => {
+        .get(check_auth('/login', true), check_role, async (req, res, next) => {
             let main_dir = req.params.main;
             let csrf_token = crypto.randomBytes(16).toString('hex');
             let csrf = csrf_token;
@@ -511,37 +655,38 @@ let apiRoute = function (app, db) {
                 return;
             }
 
-            switch (main_dir) {
-                case 'profile':
-                    db_selector = Users;
-                    user_update.target._id = req.session.passport.user;
-                    req.session.lang = user_update.update['user_preferences.lang']
-                    break;
-                case 'products':
-                    db_selector = Products
-                    break;
-                case 'brands':
-                    db_selector = Brands
-                    break;
-                case 'tags':
-                    db_selector = Tags
-                    break;
-                case 'categories':
-                    db_selector = Categories
-                    break;
-                // case '':
-                //     db_selector = 
-                //     break;
-                // case '':
-                //     db_selector = 
-                //     break;
-                default:
-                    try { throw new Error('internal error') } catch (err) { next(err) }
-                    return;
-            }
+            user_update.target._id = req.session.passport.user;
+            req.session.lang = user_update.update['user_preferences.lang']
+
+            // switch (main_dir) {
+            //     case 'profile':
+            //         db_selector = Users;
+            //         break;
+            //     case 'products':
+            //         db_selector = Products
+            //         break;
+            //     case 'brands':
+            //         db_selector = Brands
+            //         break;
+            //     case 'tags':
+            //         db_selector = Tags
+            //         break;
+            //     case 'categories':
+            //         db_selector = Categories
+            //         break;
+            //     // case '':
+            //     //     db_selector = 
+            //     //     break;
+            //     // case '':
+            //     //     db_selector = 
+            //     //     break;
+            //     default:
+            //         try { throw new Error('internal error') } catch (err) { next(err) }
+            //         return;
+            // }
 
 
-            await db_selector.findOneAndUpdate(
+            await Users.findOneAndUpdate(
                 user_update.target,
                 user_update.update,
             )
@@ -566,7 +711,7 @@ let apiRoute = function (app, db) {
         console.log('Routing API error:')
         console.error(err)
         res.status(err.status || 500)
-        return res.json({error: err.status})
+        return res.json({ error: err.status })
     })
 };
 
