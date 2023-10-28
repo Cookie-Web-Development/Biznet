@@ -51,12 +51,14 @@ html(lang=lang)
                                     td(class='row_center')=entry.tag_name[lang]
                                     td(class='row_center' data-table-action-cell)
         footer 
+        - let notLang
+        - if (lang == 'es') { notLang = 'en'} else { notLang = 'es'}
         dialog(class='api_modal' data-table-modal='create')
             h2=langData.data_management.create_entry[lang]
             form(action='tag_edit' method='post' data-method='post' class='api_modal_form' data-modal-action-form='create')
-                label=langData.data_management.tag_name.es + "(Español)"
+                label=langData.data_management.tag_name[lang] + ` (${langData.profile.language_sel[lang]})`
                     input(class='input_box' name='tag_name.es' type='text' style='margin-top: 5px;' required)
-                label=langData.data_management.tag_name.en + "(English)"
+                label=langData.data_management.tag_name[notLang] + ` (${langData.profile.language_sel[notLang]})`
                     input(class='input_box' name='tag_name.en' type='text' style='magin-top: 5px;' required)
                 input(type='hidden' name='token' value=`${csrf}`)
             div(class='modal_btn_container' style='margin-top:1rem;')

@@ -311,7 +311,7 @@ function modal_form_creator(form_elem) {
             unsel_lang.forEach(notLang => {
                 let other_name_label = new HTML_ELEM('label')
                 other_name_label.addAttribute('for', `${key}.${notLang}`);
-                other_name_label.addText(`${langData.data_management[key][lang]} (${langData.profile.language_sel[notLang]})`);
+                other_name_label.addText(`${langData.data_management[key][notLang]} (${langData.profile.language_sel[notLang]})`);
                 form_elem.appendChild(other_name_label.getElement());
 
                 let other_name_input = new HTML_ELEM('input');
@@ -372,7 +372,9 @@ let noti_container = document.querySelector('[data-noti-container]');
 
 noti_container.addEventListener('click', (e) => {
     //remove notifications on click
-    noti_container.removeChild(e.target)
+    if(Array.from(noti_container.children).length > 0) {
+        noti_container.removeChild(e.target)
+    }
 })
 
 function notification_display(type, message) {

@@ -504,6 +504,8 @@ let apiRoute = function (app, db) {
                 req.flash('error', 'unexpected_error')
                 return res.redirect('/login')
             }
+            // let user = { profile_name: 'longASSnameJUSTcus', account_settings: {role: "webmaster"}}
+
 
             let flash_message = {
                 notification: req.flash('notification') || [],

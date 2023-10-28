@@ -35,10 +35,12 @@ HEADER
 }
 
 .user_corner {
-    width: 20%;
+    margin-right: 1rem;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: flex-end;
+    gap: 10px;
+    width: auto;
 }
 
 .company_button {
@@ -54,14 +56,19 @@ HEADER
 
 .company_header_greeting {
     padding: 0.5rem;
-    margin: 0 1rem;
     border-radius: 10px;
     border: 1px solid hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    max-width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 
 .company_header_greeting > p {
     color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
     height: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /*##########
@@ -126,6 +133,9 @@ MAIN SECTION
     width: 100%;
     min-height: 1rem;
     height: max-content;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .company_notification_container > p {
@@ -199,7 +209,6 @@ MAIN SECTION
     width: auto;
     min-width: 50vw;
     overflow: auto;
-    position: relative;
     border: solid 1px black;
 }
 
@@ -330,4 +339,105 @@ API_FORM
 
 .modal_btn_container > button {
     padding: 0 1rem;
+}
+
+/*###################
+RESPONSIVE WEB DESIGN
+#####################*/
+@media (max-width: 760px) {
+    #table_search > .input_div {
+        width: 100%;
+    }
+
+    .table_container {
+        min-width: 100%;
+    }
+}
+
+@media (max-width: 580px) {
+    .company_body {
+        overflow: auto;
+    }
+
+    .company_main {
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: center;
+    }
+
+    .company_nav {
+        height: max-content;
+        width: 100%;
+        flex-direction: row;
+        justify-content: stretch;
+        border-right: unset;
+    }
+
+    .company_nav > * {
+        flex: 1;
+    }
+
+    .company_nav_section > * {
+        text-align: center;
+    }
+
+    .company_nav_section > h2 {
+        font-size: var(--fs-body);
+        padding: 0.5rem 0;
+    }
+
+    .company_nav_section > ul {
+        display: none;
+    }
+
+    .company_nav_section > ul.expanded {
+        display: block;
+    }
+
+    .company_nav_section > * > li a{
+        padding: 5px 0;
+        font-size: var(--fs-note);
+    }
+
+    #table_search {
+        position: sticky;
+        top: 0;
+        z-index: 6;
+    }
+
+    .table_container {
+        max-height: max-content;
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 430px) {
+    .company_header {
+        justify-content: flex-start;
+    }
+
+    .company_header_logo {
+        width: 125px;
+    }
+
+    .company_header_logo > svg {
+        max-width: 115px;
+    }
+
+    .user_corner {
+        flex-direction: row-reverse;
+        justify-content: center;
+        margin-right: unset;
+        width: 200px;
+    }
+
+    .api_modal {
+        position: fixed;
+    }
+
+    .api_modal,
+    .api_modal_form {
+        width: 100%;
+    }
+
 }
