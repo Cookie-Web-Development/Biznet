@@ -1,46 +1,10 @@
-/* 
-BASE: 
-CSS rules that apply to all elements
-*/
 @import './base/_reset.css';
 @import './base/global.css';
-@import './base/typography.css'; /*Here goes EVERYTHING about [fonts], [font-sizes] and [font-color]*/
+@import './base/typography.css';
 @import './base/utility.css';
-
-/* 
-COMPONENTS: 
-Visible apperances such as [sizes] and [color] for individual components.
-*/
 @import './components/buttons.css'; 
-@import './components/carousel.css'; 
-@import './components/filter-and-result.css'; 
 @import './components/input-box.css';
-@import './components/modals.css'; 
-@import './components/product-card.css';
-@import './components/product-list.css';
-
-/* 
-LAYOUT: 
-CSS rules that affects elements such as [header], [main], or [footer]; and modifies properties such as [position] or [display] for either itself or its children.
-*/
 @import './layout/header.css';
-@import './layout/main.css';
-@import './layout/user-form.css'; /*account info: logins forms, register, profile, etc.*/
-
-/*
-PAGES:
-CSS rules that applies onto elements such as [body] and modifies the position or structure layout of the website; divided by its page/route. Styles here apply only to a single page/route and nowhere else.
-*/
-
-@import './pages/home.css';
-@import './pages/product.css';
-@import './pages/profile.css';
-@import './pages/company.css';
-
-/*
-THEME:
-CSS rules that affect theme changes such as [dark-theme]
-*/
 
 /*DEV ONLY*/
 .disabled, .disabled:hover {

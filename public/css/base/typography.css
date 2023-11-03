@@ -26,7 +26,7 @@
     /*## grey ##*/
     --color-text-grey-s: 0%;
     --color-text-grey-l: 35%;
-    --color-text-grey: var(--color-text-main-h), var(--color-text-grey-s), var(--color-text-grey-s);
+    --color-text-grey: var(--color-text-main-h), var(--color-text-grey-s), var(--color-text-grey-l);
     /*## red ##*/
     --color-text-red-h: 360;
     --color-text-red-s: 100%;
@@ -36,7 +36,7 @@
     --color-text-green-h: 131;
     --color-text-green-s: 100%;
     --color-text-green-l: 32%;
-    --color-text-green: var(--color-text-green-h), var(--color-text-green-l), var(--color-text-green-s);
+    --color-text-green: var(--color-text-green-h), var(--color-text-green-s), var(--color-text-green-l);
 }
 
 /*-----------------------------------------------*\
@@ -63,6 +63,10 @@ button {
 
 select {
     font-size: var(--fs-subtext)
+}
+
+span {
+    color: inherit;
 }
 
 /*-----------------------------------------------*\
@@ -101,6 +105,7 @@ select {
 .error_notification {
     font-size: var(--fs-subtext);
     color: hsl(var(--color-text-red));
+    text-align: left;
 }
 
 .error_notification::before {

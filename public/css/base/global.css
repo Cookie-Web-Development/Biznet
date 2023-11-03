@@ -1,5 +1,5 @@
-:root { 
-/*VARIABLES*/
+:root {
+    /*VARIABLES*/
     /*COLORS*/
     /*## dark blue ##*/
     --color-p1-h: 238;
@@ -32,7 +32,7 @@
     --color-green-s: 100%;
     --color-green-l: 32%;
     --color-green: var(--color-green-h), var(--color-green-s), var(--color-green-l);
-    --color-green-light: var(--color-green-h), var(--color-green-s), var(--color-grey-light-l); 
+    --color-green-light: var(--color-green-h), var(--color-green-s), var(--color-grey-light-l);
     /*## orange (alerts) ##*/
     --color-orange-h: 38;
     --color-orange-s: 80%;
@@ -44,13 +44,15 @@
     --color-opacity-medium: 0.5;
     --color-opacity-light: 0.3;
     /* PRODUCT-CARD*/
-    --card-width: 1000px; /*PLACEHOLDER*/
-    --card-height: 1000px; /*PLACEHOLDER*/
+    --card-width: 1000px;
+    /*PLACEHOLDER*/
+    --card-height: 1000px;
+    /*PLACEHOLDER*/
     --card-width-medium: 650px;
     --card-height-medium: 300px;
     --card-width-small: 240px;
     --card-height-small: 400px;
-/* RESPONSIVE WEB DESIGN (rwd) */
+    /* RESPONSIVE WEB DESIGN (rwd) */
     --rwd-full-width: 85vw;
     /* HEADER */
     /*## (rwd) NAVBAR ##*/
@@ -63,14 +65,12 @@
     --display_limit: 5;
     /* ## (rwd) CATALOG ##*/
     --rwd-grid-gap: 1.5rem;
-    
+
     /* ## (rwd) SEARCH FIELDS ##*/
-    --rwd-search-form-border: linear-gradient(
-        to bottom, 
-        hsl(var(--color-grey-light)), 
-        hsl(var(--color-p1)), 
-        hsl(var(--color-grey-light))
-        ) 1;
+    --rwd-search-form-border: linear-gradient(to bottom,
+            hsl(var(--color-grey-light)),
+            hsl(var(--color-p1)),
+            hsl(var(--color-grey-light))) 1;
 }
 
 /*-----------------------------------------------*\
@@ -80,6 +80,34 @@
 body {
     background-color: hsl(var(--color-p2))
 }
+
+main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+
+main>h2 {
+    margin-top: 0.5rem;
+}
+
+footer {
+    height: 50px;
+}
+
+/*-----------------------------------------------*\
+++ CLASS LEVEL ELEMENTS
+\*-----------------------------------------------*/
+
+.section_divider {
+    width: var(--rwd-full-width);
+    color: hsl(var(--color-text));
+    border-radius: 50%;
+}
+
 
 /*-----------------------------------------------*\
 ++ RESPONSIVE WEB DESIGN
@@ -105,12 +133,10 @@ body {
 
 @media (max-width: 1010px) {
     :root {
-        --rwd-search-form-border: linear-gradient(
-            to right, 
-            hsl(var(--color-grey-light)), 
-            hsl(var(--color-p1)), 
-            hsl(var(--color-grey-light))
-        ) 1;
+        --rwd-search-form-border: linear-gradient(to right,
+                hsl(var(--color-grey-light)),
+                hsl(var(--color-p1)),
+                hsl(var(--color-grey-light))) 1;
     }
 }
 
@@ -139,20 +165,20 @@ body {
         --rwd-navbar-decor: 50px;
         --card-height-small: 300px;
     }
-}    
+}
 
 
 @media (max-width: 510px) {
     :root {
-        --card-width-small: 200px; 
+        --card-width-small: 200px;
     }
-}    
+}
 
 @media (max-width: 420px) {
     :root {
         --rwd-carousel-width: 100vw;
         --rwd-carousel-height: 100vw;
-        --card-width-small: 180px; 
+        --card-width-small: 180px;
         --card-height-small: 210px;
     }
 }
@@ -162,4 +188,4 @@ body {
         --card-width-small: auto;
         --card-height-small: auto;
     }
-}    
+}
