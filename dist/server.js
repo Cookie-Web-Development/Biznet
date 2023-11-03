@@ -29,7 +29,7 @@ _dotenv["default"].config({
 });
 
 /*Directory Traversal Prevent*/
-
+var forbidden_url = ['..', '\\src\\server'];
 app.use(function (req, res, next) {
   // Get the requested URL path
   var urlPath = req.url;
@@ -37,7 +37,7 @@ app.use(function (req, res, next) {
   var normalizedPath = _path["default"].normalize(urlPath);
 
   // Check if the normalized path contains '..' or starts with '/server/'
-  if (normalizedPath.includes('..') || normalizedPath.startsWith('\\src\\server') || normalizedPath.startsWith('\\dist\\server')) {
+  if (normalizedPath.includes('..') || normalizedPath.startsWith('\\src\\server') || normalizedPath.startsWith('\\dist\\server') || normalizedPath.startsWith('/dist/server') || normalizedPath.startsWith('/src/server')) {
     // If it contains '..', it's a directory traversal attempt
     res.status(403).send('Access to this path is forbidden.');
   } else {
@@ -46,7 +46,6 @@ app.use(function (req, res, next) {
   }
 });
 app.set('view engine', 'pug');
-//app.set('views', './views');
 app.set('views', './views');
 app.use((0, _cookieParser["default"])());
 app.use((0, _expressFlash["default"])());
@@ -74,12 +73,13 @@ DB.on('error', function (err) {
 });
 
 //DEV ENVIORMENT; DELETE FOR PRODUCTION
-DB.on('connected', function () {
-  console.log('Connected to Database');
-});
-DB.on('disconnect', function () {
-  console.log('Disconnected from Database');
-});
+// DB.on('connected', () => {
+//   console.log('Connected to Database');
+// });
+
+// DB.on('disconnect', () => {
+//   console.log('Disconnected from Database')
+// });
 
 //** DEV HELMET
 // app.use(helmet({
@@ -115,7 +115,7 @@ app.use((0, _expressSession["default"])({
     sameSite: 'lax',
     httpOnly: true,
     //Prevent client-side scripting
-    secure: false,
+    secure: true,
     //Sends cookies only HTTPS. true for Production. false for dev
     maxAge: 300000 //5min FOR DEV ONLY!
   },

@@ -1,0 +1,1 @@
+(()=>{"use strict";var a=window.location.pathname.match(/^\/[^?]+/)[0];"/profile/password"===a&&(a="/profile"),document.querySelector("[data-profile-active='".concat(a,"']")).classList.add("active")})();

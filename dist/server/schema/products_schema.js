@@ -35,7 +35,7 @@ var listing_schema = _mongoose["default"].Schema({
 });
 exports.listing_schema = listing_schema;
 var products_schema = _mongoose["default"].Schema({
-  name: {
+  product_name: {
     es: {
       type: String,
       required: true

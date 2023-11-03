@@ -20,6 +20,7 @@ var _users_schema = require("./schema/users_schema.js");
 var _search_list = require("./pipeline/search_list.js");
 var _search_query = _interopRequireDefault(require("./pipeline/search_query.js"));
 var _moduleInputCheck = require("./modules/moduleInputCheck.js");
+var _company_query = _interopRequireDefault(require("./pipeline/company_query.js"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -41,7 +42,7 @@ var apiRoute = function apiRoute(app, db) {
   #########
   for schemas: used to assign customs_ids before saving*/
   //brand
-  _brands_schema.brands_schema.statics.createBrand = /*#__PURE__*/function () {
+  _brands_schema.brands_schema.statics.createEntry = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(data) {
       var last_entry, indexTracker, i;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -86,7 +87,7 @@ var apiRoute = function apiRoute(app, db) {
     };
   }();
   //category
-  _categories_schema.categories_schema.statics.createCategory = /*#__PURE__*/function () {
+  _categories_schema.categories_schema.statics.createEntry = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(data) {
       var last_entry, indexTracker, i;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
@@ -131,7 +132,7 @@ var apiRoute = function apiRoute(app, db) {
     };
   }();
   //tags
-  _tags_schema.tags_schema.statics.createTag = /*#__PURE__*/function () {
+  _tags_schema.tags_schema.statics.createEntry = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(data) {
       var last_entry, indexTracker, i;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
@@ -227,15 +228,36 @@ var apiRoute = function apiRoute(app, db) {
       next();
     };
   }
-  function check_token(req, res, next) {
-    var form_token = req.body._csrf || undefined;
-    var token = req.session._csrf || undefined;
-    if (!form_token || !token || form_token !== token) {
-      console.log(new Date(), 'Invalid Token');
-      var referer = req.headers.referer || '/';
-      res.redirect(referer);
-    } else {
-      next();
+  function check_role(req, res, next) {
+    //Role hierarchy webmaster > company > user
+    //user.account_settings.role
+    var route_regex = /\/[^\/]+$/;
+    var path = req.originalUrl;
+    var route = path.match(route_regex)[0];
+    // console.log('route from check_role', route)
+    var user_role = req.user.account_settings.role || undefined;
+    switch (route) {
+      //webmaster
+      case "/webmaster_test":
+        if (user_role !== 'webmaster') {
+          return res.status(401).send('Forbidden');
+        }
+        return next();
+      //company
+      case "/product_edit":
+      case "/brand_edit":
+      case "/category_edit":
+      case "/tags_edit":
+        if (user_role !== 'webmaster' && user_role !== 'company') {
+          return res.status(401).send('Forbidden');
+        }
+        return next();
+      default:
+        if (!user_role) {
+          //notification
+          return res.redirect('/');
+        }
+        return next();
     }
   }
 
@@ -728,7 +750,7 @@ var apiRoute = function apiRoute(app, db) {
       return _ref10.apply(this, arguments);
     };
   }());
-  app.route('/password').get(check_auth('/login', true) /*, check_role()*/, /*#__PURE__*/function () {
+  app.route('/profile/password').get(check_auth('/login', true) /*, check_role()*/, /*#__PURE__*/function () {
     var _ref11 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee11(req, res) {
       var flash_message, csrf_token, csrf, user, lang, loginCheck;
       return _regeneratorRuntime().wrap(function _callee11$(_context11) {
@@ -797,7 +819,7 @@ var apiRoute = function apiRoute(app, db) {
             req.flash('error', 'save_fail');
             console.log('invalid token');
             res.json({
-              url: "/password"
+              url: "/profile/password"
             });
             return _context12.abrupt("return");
           case 6:
@@ -810,7 +832,7 @@ var apiRoute = function apiRoute(app, db) {
             req.flash('error', 'save_fail');
             console.log('new password not valid');
             res.json({
-              url: "/password"
+              url: "/profile/password"
             });
             return _context12.abrupt("return");
           case 12:
@@ -833,7 +855,7 @@ var apiRoute = function apiRoute(app, db) {
             }
             req.flash('error', 'wrong_password');
             res.json({
-              url: '/password'
+              url: '/profile/password'
             });
             return _context12.abrupt("return");
           case 22:
@@ -843,7 +865,7 @@ var apiRoute = function apiRoute(app, db) {
             }
             req.flash('error', 'no_change');
             res.json({
-              url: '/password'
+              url: '/profile/password'
             });
             return _context12.abrupt("return");
           case 26:
@@ -860,7 +882,7 @@ var apiRoute = function apiRoute(app, db) {
           case 31:
             req.flash('notification', 'save_success');
             return _context12.abrupt("return", res.json({
-              url: '/password'
+              url: '/profile/password'
             }));
           case 33:
           case "end":
@@ -872,12 +894,259 @@ var apiRoute = function apiRoute(app, db) {
       return _ref12.apply(this, arguments);
     };
   }());
-  app.route('/:main') //universal route
-  .get(check_auth('/login', true) /*, check_role()*/, /*#__PURE__*/function () {
-    var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee13(req, res) {
-      var main_dir, csrf_token, csrf, flash_message, user, lang, loginCheck;
+  app.route('/company/:main_route') //workbench
+  .get(check_auth('/login', true), check_role, /*#__PURE__*/function () {
+    var _ref13 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee13(req, res, next) {
+      var company_route, lang, csrf_token, csrf, route_regex, route_prefix, db_selector, query, user, flash_message, query_result;
       return _regeneratorRuntime().wrap(function _callee13$(_context13) {
         while (1) switch (_context13.prev = _context13.next) {
+          case 0:
+            company_route = req.params.main_route;
+            lang = req.session.lang || 'es';
+            csrf_token = _crypto["default"].randomBytes(16).toString('hex');
+            csrf = csrf_token;
+            req.session._csrf = csrf_token;
+            route_regex = /^[^_]+/;
+            route_prefix = company_route.match(route_regex);
+            _context13.t0 = route_prefix[0];
+            _context13.next = _context13.t0 === 'brand' ? 10 : _context13.t0 === 'category' ? 12 : _context13.t0 === 'tag' ? 14 : _context13.t0 === 'catalog' ? 16 : 18;
+            break;
+          case 10:
+            db_selector = Brands;
+            return _context13.abrupt("break", 26);
+          case 12:
+            db_selector = Categories;
+            return _context13.abrupt("break", 26);
+          case 14:
+            db_selector = Tags;
+            return _context13.abrupt("break", 26);
+          case 16:
+            db_selector = Products;
+            return _context13.abrupt("break", 26);
+          case 18:
+            _context13.prev = 18;
+            throw new Error('internal error');
+          case 22:
+            _context13.prev = 22;
+            _context13.t1 = _context13["catch"](18);
+            next(_context13.t1);
+          case 25:
+            return _context13.abrupt("return");
+          case 26:
+            //param
+            query = req.query || {}; //user object
+            _context13.next = 29;
+            return Users.findOne({
+              _id: req.user._id
+            }, {
+              password: 0,
+              __v: 0
+            });
+          case 29:
+            _context13.t2 = _context13.sent;
+            if (_context13.t2) {
+              _context13.next = 32;
+              break;
+            }
+            _context13.t2 = null;
+          case 32:
+            user = _context13.t2;
+            if (user) {
+              _context13.next = 36;
+              break;
+            }
+            //fallback incase user is not found for some reason
+            req.flash('error', 'unexpected_error');
+            return _context13.abrupt("return", res.redirect('/login'));
+          case 36:
+            // let user = { profile_name: 'longASSnameJUSTcus', account_settings: {role: "webmaster"}}
+            flash_message = {
+              notification: req.flash('notification') || [],
+              error: req.flash('error') || []
+            }; // let brand_db = await Brands.aggregate(company_query(query))
+            _context13.next = 39;
+            return db_selector.aggregate((0, _company_query["default"])(query, route_prefix[0]));
+          case 39:
+            query_result = _context13.sent;
+            try {
+              res.render("data_management/".concat(company_route), {
+                lang: lang,
+                csrf: csrf,
+                langData: _lang["default"],
+                user: user,
+                flash_message: flash_message,
+                db_result: query_result
+              });
+            } catch (err) {
+              err.status = 404;
+              next(err);
+            }
+          case 41:
+          case "end":
+            return _context13.stop();
+        }
+      }, _callee13, null, [[18, 22]]);
+    }));
+    return function (_x22, _x23, _x24) {
+      return _ref13.apply(this, arguments);
+    };
+  }()).post(check_auth('/login', true), check_role, /*#__PURE__*/function () {
+    var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(req, res) {
+      var company_route, payload_csrf, payload_content, route_regex, route_prefix, db_selector;
+      return _regeneratorRuntime().wrap(function _callee14$(_context14) {
+        while (1) switch (_context14.prev = _context14.next) {
+          case 0:
+            company_route = req.params.main_route;
+            payload_csrf = req.body.validate;
+            payload_content = req.body.payload_content;
+            if (!(payload_csrf._csrf !== req.session._csrf)) {
+              _context14.next = 8;
+              break;
+            }
+            req.flash('error', 'save_fail');
+            console.log('invalid token');
+            res.json({
+              url: "/company/".concat(company_route)
+            }); //placeholder
+            return _context14.abrupt("return");
+          case 8:
+            route_regex = /^[^_]+/;
+            route_prefix = company_route.match(route_regex);
+            _context14.t0 = route_prefix[0];
+            _context14.next = _context14.t0 === 'brand' ? 13 : _context14.t0 === 'category' ? 15 : _context14.t0 === 'tag' ? 17 : _context14.t0 === 'catalog' ? 19 : 21;
+            break;
+          case 13:
+            db_selector = Brands;
+            return _context14.abrupt("break", 29);
+          case 15:
+            db_selector = Categories;
+            return _context14.abrupt("break", 29);
+          case 17:
+            db_selector = Tags;
+            return _context14.abrupt("break", 29);
+          case 19:
+            db_selector = Products;
+            return _context14.abrupt("break", 29);
+          case 21:
+            _context14.prev = 21;
+            throw new Error('internal error');
+          case 25:
+            _context14.prev = 25;
+            _context14.t1 = _context14["catch"](21);
+            next(_context14.t1);
+          case 28:
+            return _context14.abrupt("return");
+          case 29:
+            _context14.prev = 29;
+            _context14.next = 32;
+            return db_selector.createEntry([payload_content]);
+          case 32:
+            _context14.next = 39;
+            break;
+          case 34:
+            _context14.prev = 34;
+            _context14.t2 = _context14["catch"](29);
+            req.flash('error', 'unexpected_error');
+            res.json({
+              url: "/company/".concat(company_route)
+            }); //placeholder
+            return _context14.abrupt("return");
+          case 39:
+            req.flash('notification', 'save_success');
+            return _context14.abrupt("return", res.json({
+              url: "/company/".concat(company_route)
+            }));
+          case 41:
+          case "end":
+            return _context14.stop();
+        }
+      }, _callee14, null, [[21, 25], [29, 34]]);
+    }));
+    return function (_x25, _x26) {
+      return _ref14.apply(this, arguments);
+    };
+  }()).put(check_auth('/login', true), check_role, /*#__PURE__*/function () {
+    var _ref15 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee15(req, res) {
+      var company_route, payload_csrf, payload_id, payload_content, route_regex, route_prefix, db_selector, update;
+      return _regeneratorRuntime().wrap(function _callee15$(_context15) {
+        while (1) switch (_context15.prev = _context15.next) {
+          case 0:
+            company_route = req.params.main_route;
+            payload_csrf = req.body.validate;
+            payload_id = req.body.payload_id;
+            payload_content = req.body.payload_content;
+            if (!(payload_csrf._csrf !== req.session._csrf)) {
+              _context15.next = 9;
+              break;
+            }
+            req.flash('error', 'save_fail');
+            console.log('invalid token');
+            res.json({
+              url: "/company/".concat(company_route)
+            });
+            return _context15.abrupt("return");
+          case 9:
+            ;
+            route_regex = /^[^_]+/;
+            route_prefix = company_route.match(route_regex);
+            _context15.t0 = route_prefix[0];
+            _context15.next = _context15.t0 === 'brand' ? 15 : _context15.t0 === 'category' ? 17 : _context15.t0 === 'tag' ? 19 : _context15.t0 === 'catalog' ? 21 : 23;
+            break;
+          case 15:
+            db_selector = Brands;
+            return _context15.abrupt("break", 31);
+          case 17:
+            db_selector = Categories;
+            return _context15.abrupt("break", 31);
+          case 19:
+            db_selector = Tags;
+            return _context15.abrupt("break", 31);
+          case 21:
+            db_selector = Products;
+            return _context15.abrupt("break", 31);
+          case 23:
+            _context15.prev = 23;
+            throw new Error('internal error');
+          case 27:
+            _context15.prev = 27;
+            _context15.t1 = _context15["catch"](23);
+            next(_context15.t1);
+          case 30:
+            return _context15.abrupt("return");
+          case 31:
+            _context15.next = 33;
+            return db_selector.findOneAndUpdate(payload_id, payload_content);
+          case 33:
+            update = _context15.sent;
+            if (!(update === null)) {
+              _context15.next = 37;
+              break;
+            }
+            req.flash('error', 'save_fail');
+            return _context15.abrupt("return", res.json({
+              url: "/company/".concat(company_route)
+            }));
+          case 37:
+            req.flash('notification', 'save_success');
+            return _context15.abrupt("return", res.json({
+              url: "/company/".concat(company_route)
+            }));
+          case 39:
+          case "end":
+            return _context15.stop();
+        }
+      }, _callee15, null, [[23, 27]]);
+    }));
+    return function (_x27, _x28) {
+      return _ref15.apply(this, arguments);
+    };
+  }());
+  app.route('/:main') //universal route
+  .get(check_auth('/login', true), check_role, /*#__PURE__*/function () {
+    var _ref16 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee16(req, res, next) {
+      var main_dir, csrf_token, csrf, flash_message, user, lang, loginCheck;
+      return _regeneratorRuntime().wrap(function _callee16$(_context16) {
+        while (1) switch (_context16.prev = _context16.next) {
           case 0:
             main_dir = req.params.main;
             csrf_token = _crypto["default"].randomBytes(16).toString('hex');
@@ -890,7 +1159,7 @@ var apiRoute = function apiRoute(app, db) {
             flash_message.error = req.flash('error') || undefined;
 
             //user object
-            _context13.next = 9;
+            _context16.next = 9;
             return Users.findOne({
               _id: req.user._id
             }, {
@@ -898,25 +1167,26 @@ var apiRoute = function apiRoute(app, db) {
               __v: 0
             });
           case 9:
-            _context13.t0 = _context13.sent;
-            if (_context13.t0) {
-              _context13.next = 12;
+            _context16.t0 = _context16.sent;
+            if (_context16.t0) {
+              _context16.next = 12;
               break;
             }
-            _context13.t0 = null;
+            _context16.t0 = null;
           case 12:
-            user = _context13.t0;
+            user = _context16.t0;
             if (user) {
-              _context13.next = 16;
+              _context16.next = 16;
               break;
             }
             //fallback incase user is not found for some reason
             req.flash('error', 'unexpected_error');
-            return _context13.abrupt("return", res.redirect('/login'));
+            return _context16.abrupt("return", res.redirect('/login'));
           case 16:
             lang = req.session.lang || 'es';
             loginCheck = true;
-            return _context13.abrupt("return", res.render("data_management/".concat(main_dir), {
+            _context16.prev = 18;
+            return _context16.abrupt("return", res.render("data_management/".concat(main_dir), {
               lang: lang,
               langData: _lang["default"],
               loginCheck: loginCheck,
@@ -924,25 +1194,30 @@ var apiRoute = function apiRoute(app, db) {
               csrf: csrf,
               flash_message: flash_message
             }));
-          case 19:
+          case 22:
+            _context16.prev = 22;
+            _context16.t1 = _context16["catch"](18);
+            _context16.t1.status = 404;
+            next(_context16.t1);
+          case 26:
           case "end":
-            return _context13.stop();
+            return _context16.stop();
         }
-      }, _callee13);
+      }, _callee16, null, [[18, 22]]);
     }));
-    return function (_x22, _x23) {
-      return _ref13.apply(this, arguments);
+    return function (_x29, _x30, _x31) {
+      return _ref16.apply(this, arguments);
     };
   }()).post(check_auth('/login', true) /*, check_role()*/, /*#__PURE__*/function () {
-    var _ref14 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee14(req, res) {
+    var _ref17 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee17(req, res) {
       var main_dir, db_selector, user_update;
-      return _regeneratorRuntime().wrap(function _callee14$(_context14) {
-        while (1) switch (_context14.prev = _context14.next) {
+      return _regeneratorRuntime().wrap(function _callee17$(_context17) {
+        while (1) switch (_context17.prev = _context17.next) {
           case 0:
             main_dir = req.params.main;
             user_update = req.body;
             if (!(user_update.validate._csrf !== req.session._csrf)) {
-              _context14.next = 7;
+              _context17.next = 7;
               break;
             }
             req.flash('error', 'save_fail');
@@ -950,53 +1225,52 @@ var apiRoute = function apiRoute(app, db) {
             res.json({
               url: "/".concat(main_dir)
             });
-            return _context14.abrupt("return");
+            return _context17.abrupt("return");
           case 7:
-            _context14.t0 = main_dir;
-            _context14.next = _context14.t0 === 'profile' ? 10 : _context14.t0 === 'products' ? 14 : _context14.t0 === 'brands' ? 16 : _context14.t0 === 'tags' ? 18 : _context14.t0 === 'categories' ? 20 : 22;
-            break;
-          case 10:
-            db_selector = Users;
             user_update.target._id = req.session.passport.user;
             req.session.lang = user_update.update['user_preferences.lang'];
-            return _context14.abrupt("break", 30);
-          case 14:
-            db_selector = Products;
-            return _context14.abrupt("break", 30);
-          case 16:
-            db_selector = Brands;
-            return _context14.abrupt("break", 30);
-          case 18:
-            db_selector = Tags;
-            return _context14.abrupt("break", 30);
-          case 20:
-            db_selector = Categories;
-            return _context14.abrupt("break", 30);
-          case 22:
-            _context14.prev = 22;
-            throw new Error('internal error');
-          case 26:
-            _context14.prev = 26;
-            _context14.t1 = _context14["catch"](22);
-            next(_context14.t1);
-          case 29:
-            return _context14.abrupt("return");
-          case 30:
-            _context14.next = 32;
-            return db_selector.findOneAndUpdate(user_update.target, user_update.update);
-          case 32:
+
+            // switch (main_dir) {
+            //     case 'profile':
+            //         db_selector = Users;
+            //         break;
+            //     case 'products':
+            //         db_selector = Products
+            //         break;
+            //     case 'brands':
+            //         db_selector = Brands
+            //         break;
+            //     case 'tags':
+            //         db_selector = Tags
+            //         break;
+            //     case 'categories':
+            //         db_selector = Categories
+            //         break;
+            //     // case '':
+            //     //     db_selector = 
+            //     //     break;
+            //     // case '':
+            //     //     db_selector = 
+            //     //     break;
+            //     default:
+            //         try { throw new Error('internal error') } catch (err) { next(err) }
+            //         return;
+            // }
+            _context17.next = 11;
+            return Users.findOneAndUpdate(user_update.target, user_update.update);
+          case 11:
             req.flash('notification', 'save_success');
-            return _context14.abrupt("return", res.json({
+            return _context17.abrupt("return", res.json({
               url: "/".concat(main_dir)
             }));
-          case 34:
+          case 13:
           case "end":
-            return _context14.stop();
+            return _context17.stop();
         }
-      }, _callee14, null, [[22, 26]]);
+      }, _callee17);
     }));
-    return function (_x24, _x25) {
-      return _ref14.apply(this, arguments);
+    return function (_x32, _x33) {
+      return _ref17.apply(this, arguments);
     };
   }());
 
@@ -1005,10 +1279,18 @@ var apiRoute = function apiRoute(app, db) {
     console.log('Non-existance route');
     return res.redirect('/');
   });
+  app.use(function (req, res, next) {
+    var err = new Error('Not Found');
+    err.status = 404;
+    next(err);
+  });
   app.use(function (err, req, res, next) {
     console.log('Routing API error:');
     console.error(err);
-    return res.redirect('/');
+    res.status(err.status || 500);
+    return res.json({
+      error: err.status
+    });
   });
 };
 var _default = apiRoute;

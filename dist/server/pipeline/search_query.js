@@ -26,7 +26,7 @@ function search_query(query_input) {
   var option = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
   /*
   query_input: { //A.K.A req.body
-    name: 'Batidora',
+    product_name: 'Batidora',
     price_range_min: '164',
     price_range_max: '785',
     category: '2',
@@ -53,15 +53,15 @@ function search_query(query_input) {
   }
 
   //name
-  if (query_input.name) {
+  if (query_input.product_name) {
     queryObj.$or = [{
-      "name.en": {
-        $regex: query_input.name,
+      "product_name.en": {
+        $regex: query_input.product_name,
         $options: 'i'
       }
     }, {
-      "name.es": {
-        $regex: query_input.name,
+      "product_name.es": {
+        $regex: query_input.product_name,
         $options: 'i'
       }
     }];
@@ -141,7 +141,7 @@ function search_query(query_input) {
 
   // sorting option
   var sort = {};
-  var sort_name = "name.".concat(query_input.search_lang);
+  var sort_name = "product_name.".concat(query_input.search_lang);
   switch (query_input.sort_option) {
     case '9-0':
       sort = {
@@ -235,19 +235,19 @@ function search_query(query_input) {
       from: "categories",
       localField: "category_id",
       foreignField: "category_id",
-      as: "category_name"
+      as: "category"
     }
   }, {
-    $unwind: "$category_name"
+    $unwind: "$category"
   }, {
     $lookup: {
       from: "brands",
       localField: "brand_id",
       foreignField: "brand_id",
-      as: "brand_name"
+      as: "brand"
     }
   }, {
-    $unwind: "$brand_name"
+    $unwind: "$brand"
   }, {
     $lookup: {
       from: "tags",
@@ -258,22 +258,22 @@ function search_query(query_input) {
   }, {
     $project: {
       _id: 1,
-      name: 1,
+      product_name: 1,
       description: 1,
       reviews: 1,
       listing: 1,
       brand_id: 1,
       category_id: 1,
       featured: 1,
-      category_name: "$category_name.name",
-      brand_name: "$brand_name.name",
+      category_name: "$category.category_name",
+      brand_name: "$brand.brand_name",
       tag_id: 1,
       tag_array: {
         $map: {
           input: "$tag_collection",
           as: "tag",
           "in": {
-            name: "$$tag.name",
+            tag_name: "$$tag.tag_name",
             tag_id: "$$tag.tag_id"
           }
         }

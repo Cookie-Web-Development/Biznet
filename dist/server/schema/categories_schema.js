@@ -7,7 +7,7 @@ exports.categories_schema = void 0;
 var _mongoose = _interopRequireDefault(require("mongoose"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 var categories_schema = _mongoose["default"].Schema({
-  name: {
+  category_name: {
     es: {
       type: String,
       required: true

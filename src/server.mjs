@@ -51,7 +51,6 @@ app.use((req, res, next) => {
 })
  
 app.set('view engine', 'pug');
-//app.set('views', './views');
 app.set('views', './views');
 app.use(cookieParser());
 app.use(flash());
@@ -84,13 +83,13 @@ DB.on('error', (err) => {
 })
 
 //DEV ENVIORMENT; DELETE FOR PRODUCTION
-DB.on('connected', () => {
-  console.log('Connected to Database');
-});
+// DB.on('connected', () => {
+//   console.log('Connected to Database');
+// });
 
-DB.on('disconnect', () => {
-  console.log('Disconnected from Database')
-});
+// DB.on('disconnect', () => {
+//   console.log('Disconnected from Database')
+// });
 
 
 //** DEV HELMET
@@ -124,7 +123,7 @@ app.use(session({ //from ChatGPT
   cookie: {
     sameSite: 'lax',
     httpOnly: true, //Prevent client-side scripting
-    secure: false, //Sends cookies only HTTPS. true for Production. false for dev
+    secure: true, //Sends cookies only HTTPS. true for Production. false for dev
     maxAge: 300000 //5min FOR DEV ONLY!
   },
   store: store

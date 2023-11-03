@@ -45,7 +45,8 @@ var auth = function auth(app, db) {
       _id: objectId
     }, {
       _id: 1,
-      profile_name: 1
+      profile_name: 1,
+      "account_settings.role": 1
     }).then(function (user) {
       done(null, user);
     });

@@ -7,7 +7,7 @@ exports.brands_schema = void 0;
 var _mongoose = _interopRequireDefault(require("mongoose"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 var brands_schema = _mongoose["default"].Schema({
-  name: {
+  brand_name: {
     type: String,
     "default": "Original"
   },
