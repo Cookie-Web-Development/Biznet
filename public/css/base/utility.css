@@ -1,3 +1,7 @@
+/*-----------------------------------------------*\
+++ UTILITY CLASSES
+\*-----------------------------------------------*/
+
 .u-flexcol {
     display: flex;
     flex-direction: column;
@@ -15,5 +19,12 @@
 
 .u-spacearound {
     justify-content: space-around;
+    align-items: center;
+}
+
+.inline-flex-center {
+    display: flex;
+    flex-direction: center;
+    justify-content: center;
     align-items: center;
 }

@@ -126,3 +126,11 @@ search_session:"
         "featured":"true",
         "search_lang":"es"
     }"
+
+
+
+CSS Restructure
+1. Top Level Elements
+2. Structural Elements
+3. Class Level Elements
+4. ID or Single use elements

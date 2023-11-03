@@ -1,11 +1,11 @@
 .input_box {
     height: 2rem;
-    border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    border: solid 1px hsl(var(--color-p1));
     width: 100%;
 }
 
 .input_div {
-    border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    border: solid 1px hsl(var(--color-p1));
     position: relative;
 }
 
