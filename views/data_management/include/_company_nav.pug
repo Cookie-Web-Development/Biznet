@@ -1,0 +1,31 @@
+nav.company_nav
+    section.company_nav_section
+        h2(data-nav-title)=langData.profile.menu[lang]
+        ul(data-nav-list)
+            li(data-profile-active='/profile_overview')
+                a(href='/profile_overview')=langData.profile[lang]
+            li(data-profile-active='/profile')
+                a(href='/profile')=langData.profile.edit[lang]
+            li
+                a(href='/logout' style='width: 100%;')=langData.profile.logout[lang]
+    section.company_nav_section 
+        h2(data-nav-title)=langData.data_management.business[lang]
+        ul(data-nav-list)
+            li(data-profile-active='/company/catalog_edit')
+                a(class='disabled' href='/company/catalog_edit')=langData.data_management.catalog_edit[lang]
+            li(data-profile-active='/company/category_edit')
+                a(href='/company/category_edit')=langData.data_management.category_edit[lang]
+            li(data-profile-active='/company/brand_edit')
+                a(href='/company/brand_edit')=langData.data_management.brand_edit[lang]
+            li(data-profile-active='/company/tag_edit')
+                a(href='/company/tag_edit')=langData.data_management.tag_edit[lang]
+    if (user.account_settings.role == 'webmaster')
+        section.company_nav_section 
+            h2(data-nav-title) Webmaster 
+            ul(data-nav-list) 
+                li(data-profile-active='/')
+                    a(class='disabled' href='/') Admin
+                li(data-profile-active='/')
+                    a(class='disabled' href='/') Session
+    script(src='/src/client/components/profile_nav.js')
+    script(src='/src/client/components/company_nav.js')

@@ -17,7 +17,7 @@ section(class= `similar_product_section ${api_obj_argument.header_section}`)
                                 span=" / " 
                                 span(href='')=item.brand_name
                             h3
-                                a(href=`/product/${item._id}`)=item.name[lang]
+                                a(href=`/product/${item._id}`)=item.product_name[lang]
                             div.product_card_price_tag
                                 a(class="price_sell", href=`/product/${item._id}`)=item.listing[0].format_price_discounted
                                 if(item.listing[0].discount_percent > 0)
@@ -28,7 +28,7 @@ section(class= `similar_product_section ${api_obj_argument.header_section}`)
                             ul.product_card_tags 
                                 each tag in item.tag_array 
                                     li
-                                        a(href='')=tag.name[lang]
+                                        a(href='')=tag.tag_name[lang]
         div(class='drag_display_btn drag_display_next', data-drag-btn=`${api_obj_argument.header_section}`, data-function='next')
             i(class="fa-solid fa-chevron-right fa-xl")
         div(class='drag_indicator_container')

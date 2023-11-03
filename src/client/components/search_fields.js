@@ -117,10 +117,10 @@ tags_select_container.addEventListener('click', (e) => { //deleting tags
         unselectedTags = [...unselectedTags, ...tag_target];
 
         unselectedTags.sort((a, b) => {
-            if (a.name[search_fields_lang] > b.name[search_fields_lang]){
+            if (a.tag_name[search_fields_lang] > b.tag_name[search_fields_lang]){
                 return 1
             }
-            if (a.name[search_fields_lang] < b.name[search_fields_lang]) {
+            if (a.tag_name[search_fields_lang] < b.tag_name[search_fields_lang]) {
                 return -1
             }
 
@@ -128,7 +128,7 @@ tags_select_container.addEventListener('click', (e) => { //deleting tags
         });
         
         tagListCreator();
-        tags_dropdown.dispatchEvent(new Event(eventAPI))
+        tags_dropdown.dispatchEvent(new Event('sendToAPI'))
     }
     
 })
@@ -148,7 +148,7 @@ function tagListCreator() {
         unselectedTags.forEach(tag_unselected => {
             let option = document.createElement('option');
             option.value = tag_unselected.tag_id;
-            option.text= tag_unselected.name[search_fields_lang];
+            option.text= tag_unselected.tag_name[search_fields_lang];
             option.dataset.tag = tag_unselected.tag_id;
             tags_dropdown.appendChild(option);
         });
@@ -167,7 +167,7 @@ function tagListCreator() {
             selection_checkbox.value = tag.tag_id;
             selection_checkbox.dataset.tag = tag.tag_id;
             selection_checkbox.name = 'selected_tags';
-            selection_text.textContent = tag.name[search_fields_lang];
+            selection_text.textContent = tag.tag_name[search_fields_lang];
 
             selection_label.appendChild(selection_checkbox);
             selection_label.appendChild(selection_text);

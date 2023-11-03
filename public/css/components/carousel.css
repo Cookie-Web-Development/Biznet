@@ -3,7 +3,7 @@
     width: var(--rwd-carousel-width);
     height: var(--rwd-carousel-height);
     overflow: hidden;
-    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    background-color: hsl(var(--color-p1));
 }
 
 [data-carousel] {
@@ -50,7 +50,7 @@
     height: 100%;
     width: 35px;
     z-index: 10;
-    background-color: hsla(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l), 0.5);
+    background-color: hsla(var(--color-grey-light), var(--color-opacity-medium));
 }
 
 .carousel_btn:hover {
@@ -87,19 +87,16 @@
     width: 15px;
     height: 15px;
     border-radius: 50%;
-    background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
-    /*DEV*/
-
+    background-color: hsl(var(--color-grey-light));
 }
 
 .carousel_dot:hover {
-    --color-greylight-l: 100%;
+    background-color: hsl(var(--color-p2));
     cursor: pointer;
-    /*DEV*/
 }
 
 .carousel_dot.current {
-    --color-greylight-l: 40%;
+    background-color: hsl(var(--color-grey));
     pointer-events: none;
 }
 
@@ -133,7 +130,3 @@
         translate: 0 -100%;
     }
 }
-
-/*###################
-RESPONSIVE WEB DESIGN
-#####################*/

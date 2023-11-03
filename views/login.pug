@@ -2,6 +2,7 @@ doctype html
 html(lang=lang)
     head
         include partials/_head.pug
+        link(rel="stylesheet", href="/public/css/layout/user-form.css")
     body
         include partials/_header.pug
         main 
@@ -26,6 +27,6 @@ html(lang=lang)
                     div.form_divider
             p(style='margin-bottom: 2rem;') 
                 span=langData.profile.redirect_register.text[lang]
-                a(class='text_link_inline' href='/register')=langData.profile.redirect_register.link[lang]
+                a(class='text_link' href='/register')=langData.profile.redirect_register.link[lang]
         footer
         script(src='/src/client/components/password_icon.js' defer)

@@ -2,10 +2,14 @@ doctype html
 html(lang=lang)
     head
         include partials/_head.pug
+        link(rel="stylesheet", href="/public/css/components/filter-and-result.css")
+        link(rel="stylesheet", href="/public/css/components/modals.css")
+        link(rel="stylesheet", href="/public/css/components/product-card.css")
+        link(rel="stylesheet", href="/public/css/layout/user-form.css")
     body
         include partials/_header.pug
         main 
-            h2=langData.header.navbar.catalog[lang] 
+            h1=langData.header.navbar.catalog[lang] 
             section#product_search_section
                 include include/search_fields.pug
                 div.product_display_container

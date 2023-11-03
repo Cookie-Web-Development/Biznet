@@ -1,0 +1,30 @@
+nav.profile_nav
+    section.profile_menu
+        h2=langData.profile.menu[lang]
+        ul
+            li(data-profile-active='/profile_overview')
+                a(href='/profile_overview')=langData.profile[lang]
+            li(data-profile-active='/profile')
+                a(href='/profile')=langData.profile.edit[lang]
+            li
+                a(href='/logout' style='width: 100%;')=langData.profile.logout[lang]
+    if (user.account_settings.role == 'company')
+        section.profile_menu 
+            h2=langData.data_management.business[lang]
+            ul
+                li(data-profile-active='/catalog_edit')
+                    a(class='disabled' href='/company/catalog_edit')=langData.data_management.catalog_edit[lang]
+                li(data-profile-active='/category_edit')
+                    a(href='/company/category_edit')=langData.data_management.category_edit[lang]
+                li(data-profile-active='/brand_edit')
+                    a(href='/company/brand_edit')=langData.data_management.brand_edit[lang]
+                li(data-profile-active='/tag_edit')
+                    a(href='/company/tag_edit')=langData.data_management.tag_edit[lang]
+    //- if (user.account_settings.role == 'super_admin')
+    //-if (true)
+        section.profile_menu
+            h2 Webmaster
+            ul
+                li Admin
+                li Sessions
+script(src='/src/client/components/profile_nav.js' defer)

@@ -3,7 +3,7 @@
 import mongoose from 'mongoose';
 
 export let brands_schema = mongoose.Schema({
-    name: {
+    brand_name: {
         type: String,
         default: "Original"
     },

@@ -15,7 +15,7 @@ div.product_filter_container
         div.search_container
             label 
                 p.search_container_title=langData.main.search_filter.by_price[lang]
-                p#price_range_display.search_container_desc
+                p#price_range_display
             div.range_container
                 div(id='range_slider_visual')
                 input(type='range', class='price_range_input', id='min_range_slider', name='price_range_min', data-reset='range_min')
@@ -26,14 +26,14 @@ div.product_filter_container
                 select(data-reset='select', class='input_box', name='category')
                     option(value='')=langData.main.search_filter.by_category.select[lang]
                     each category in search_fields.categories
-                        option(value=category.category_id)=category.name[lang] 
+                        option(value=category.category_id)=category.category_name[lang] 
         div.search_container
             label 
                 p.search_container_title=langData.main.search_filter.by_brand[lang]
                 select(data-reset='select', class='input_box', name='brand') 
                     option(value='')=langData.main.search_filter.by_brand.select[lang]
                     each brand in search_fields.brands
-                        option(value=brand.brand_id)=brand.name
+                        option(value=brand.brand_id)=brand.brand_name
         div.search_container#tags_filter
             label(for='tags_filter_input')
                 p.search_container_title=langData.main.search_filter.by_tags[lang]
@@ -52,4 +52,4 @@ div.product_filter_container
         input(type='hidden', name='search_lang', value=lang)
         button(type='button', class='button btn_inline', id='search_field_reset')=langData.main.search_filter.clear_fields[lang]
     button(type='button', id='search_fields_toggle')
-        i(class='fa-solid fa-sliders')
+        i(class='fa-solid fa-sliders fa-xl')

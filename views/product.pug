@@ -2,6 +2,10 @@ doctype html
 html(lang=lang)
     head
         include partials/_head.pug
+        link(rel="stylesheet", href="/public/css/components/modals.css")
+        link(rel="stylesheet", href="/public/css/components/product-card.css")
+        link(rel="stylesheet", href="/public/css/layout/user-form.css")
+        link(rel="stylesheet", href="/public/css/pages/product.css")
     body
         include partials/_header.pug
         main 
@@ -17,7 +21,7 @@ html(lang=lang)
                         img(data-thumbnail-target, src='/public/img/products-images/' + api_results.listing[0].images[0])
                     div.text_display
                         p.text_container_header #{ api_results.category_name[lang] } / #{ api_results.brand_name }
-                        h3=api_results.name[lang]
+                        h3=api_results.product_name[lang]
                         //Pending add average rating
                         div.product_display_price_tag
                             p.price_sell=api_results.listing[0].format_price_discounted 
@@ -29,7 +33,7 @@ html(lang=lang)
                         //Pending add product variations
                         ul.product_card_tags 
                             each tag in api_results.tag_array
-                                li=tag.name[lang]
+                                li=tag.tag_name[lang]
             - let api_obj_argument;
             if(similar.by_brand.length > 0)
                 - api_obj_argument = {header_section: 'similar_brand', api_response: similar.by_brand}

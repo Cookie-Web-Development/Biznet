@@ -2,12 +2,12 @@
     height: 3rem;
     min-width: 3rem;
     background-color: transparent;
-    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
-    border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    background-color: hsl(var(--color-p2));
+    border: solid 1px hsl(var(--color-p1));
     border-radius: 10px;
 }
 
-.button > i {
+.button i {
     pointer-events: none;
 }
 
@@ -26,25 +26,11 @@
 
 .button_pagination {
     border-radius: 5px;
-    height: var(--fs-max);
-    width: var(--fs-max);
+    height: var(--fs-h1);
 }
 
 .button:hover {
     cursor: pointer;
-    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
-    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
-}
-
-.button:hover > * {
-    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
-}
-
-
-/*########
-TEXT LINKS
-##########*/
-/*these are here due to being clickable | interactive elements*/
-.text_link:hover {
-    cursor: pointer;
+    background-color: hsl(var(--color-p1));
+    color: hsl(var(--color-text-contrast));
 }

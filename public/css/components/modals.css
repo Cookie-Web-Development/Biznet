@@ -1,6 +1,6 @@
-#login_modal, #disclaimer_modal {
+#login_modal, #disclaimer_modal, .api_modal {
     padding: 1.5rem 2rem;
-    background-color: hsla(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l), var(--color-opacity-high));
+    background-color: hsla(var(--color-p2), var(--color-opacity-high));
     backdrop-filter: blur(6px);
     border: none;
     border-radius: 15px;
@@ -15,9 +15,10 @@
 }
 
 
-/*#########
-LOGIN MODAL
-###########*/
+/*-----------------------------------------------*\
+++ LOGIN MODAL
+\*-----------------------------------------------*/
+
 #modal_form {
     display: flex;
     flex-direction: column;
@@ -42,9 +43,11 @@ LOGIN MODAL
     scale: 1.1
 }
 
-/*#############
-DISCLAIMER MODAL
-################*/
+
+/*-----------------------------------------------*\
+++ DISCLAIMER MODAL
+\*-----------------------------------------------*/
+
 #disclaimer_modal {
     position: fixed;
     height: min-content;
@@ -72,8 +75,8 @@ DISCLAIMER MODAL
 }
 
 [data-disclaimer-select].active {
-    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
-    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
+    background-color: hsl(var(--color-p1));
+    color: hsl(var(--color-text-contrast));
 }
 
 .disclaimer {
@@ -90,9 +93,20 @@ DISCLAIMER MODAL
     text-align: center;
 }
 
-/*###################
-RESPONSIVE WEB DESIGN
-#####################*/
+.disclaimer h2 {
+    text-align: center;
+    padding: 0.5rem 0;
+}
+
+.disclaimer p {
+    text-align: justify;
+    padding-bottom: 1rem;
+}
+
+
+/*-----------------------------------------------*\
+++ RESPONSIVE WEB DESIGN
+\*-----------------------------------------------*/
 
 @media (max-width: 580px) {
     .disclaimer {

@@ -47,7 +47,7 @@ export function display_results (result_arr, lang, result_container) {
 
         const text_name = text_container.addElement('h3');
         const text_name_link = text_name.addElement('a');
-        text_name_link.addText(`${product.name[lang]}`);
+        text_name_link.addText(`${product.product_name[lang]}`);
         text_name_link.addAttribute('href', `/product/${product._id}`)
 
         const price_container = text_container.addElement('a');
@@ -81,7 +81,7 @@ export function display_results (result_arr, lang, result_container) {
         product.tag_array.forEach(tag => {
             let text_tag = tags_list.addElement('li');
             let anchor_tag = text_tag.addElement('a');
-            anchor_tag.addText(tag.name[lang]);
+            anchor_tag.addText(tag.tag_name[lang]);
             anchor_tag.addAttribute('href', `/catalog?selected_tags=${tag.tag_id}`);
         })
 

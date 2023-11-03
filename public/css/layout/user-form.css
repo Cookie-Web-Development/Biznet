@@ -10,7 +10,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    background-color: hsla(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l), var(--color-opacity-light));
+    background-color: hsla(var(--color-grey-light), var(--color-opacity-light));
 }
 
 .user_form {
@@ -20,6 +20,10 @@
     align-items: center;
     column-gap: 1rem;
     grid-template-columns: 200px max-content 1fr;
+}
+
+.user_form label {
+    text-align: right;
 }
 
 #login_form.user_form {
@@ -81,7 +85,7 @@
     padding-bottom: 0.5rem;
 }
 
-.universal_notification{
+.universal_notification {
     width: 100%;
 }
 
@@ -90,40 +94,45 @@
     margin: 0 1rem 0.5rem 1rem;
 }
 
-.universal_notification>p, .universal_alert>p {
+.universal_notification>p,
+.universal_alert>p {
     padding: 0.5rem;
     border-radius: 20px;
+    backdrop-filter: blur(5px);
+    z-index: 10;
 }
 
 .universal_notification>p.green {
-    border: 2px solid hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
-    background-color: hsla(var(--color-green-h), var(--color-green-s), var(--color-greylight-l), var(--color-opacity-medium));
+    border: 2px solid hsl(var(--color-green));
+    background-color: hsla(var(--color-green-light), var(--color-opacity-high));
 }
 
 .universal_notification>p.red {
-    border: 2px solid hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
-    background-color: hsla(var(--color-red-h), var(--color-red-s), var(--color-greylight-l), var(--color-opacity-medium));
+    border: 2px solid hsl(var(--color-red));
+    background-color: hsla(var(--color-red-light), var(--color-opacity-high));
 }
 
 .universal_alert>p.orange {
-    border: 2px solid hsl(var(--color-orange-h), var(--color-orange-s), var(--color-orange-l));
-    background-color: hsla(var(--color-orange-h), var(--color-orange-s), var(--color-greylight-l), var(--color-opacity-medium));
+    border: 2px solid hsl(var(--color-orange));
+    background-color: hsla(var(--color-orange-light), var(--color-opacity-high));
 }
 
 .input_checklist {
-    border: 1px solid hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    border: 1px solid hsl(var(--color-p1));
     border-radius: 15px;
-    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    background-color: hsl(var(--color-p2));
     align-self: flex-start;
     padding: 0.5rem;
 }
 
-.checklist_requirement.red, .checklist_requirement.red > * {
-    color: hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
+.checklist_requirement.red,
+.checklist_requirement.red>* {
+    color: hsl(var(--color-text-red));
 }
 
-.checklist_requirement.green, .checklist_requirement.green > * {
-    color: hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
+.checklist_requirement.green,
+.checklist_requirement.green>* {
+    color: hsl(var(--color-text-green));
 }
 
 .checklist_requirement:before {
@@ -138,13 +147,12 @@
     background-color: transparent;
     border-right: 2px transparent solid;
     border-image: linear-gradient(to bottom,
-            hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l)),
-            hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l)),
-            hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l))) 1;
+            hsl(var(--color-grey-light)),
+            hsl(var(--color-p1)),
+            hsl(var(--color-grey-light))) 1;
     grid-area: divider;
 }
 
-#show_password_checkbox,
 .show_password_checkbox {
     display: none;
 }
@@ -161,6 +169,10 @@
 
 .login_notification {
     grid-area: login_noti;
+}
+
+.login_notification > * {
+    text-align: right !important;
 }
 
 .username_label {
@@ -224,6 +236,7 @@
 }
 
 .text_link_form {
+    /*"forgot password" anchor container in login page*/
     align-self: flex-start;
     grid-area: forgot_password;
 }

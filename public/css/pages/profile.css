@@ -1,5 +1,7 @@
 .profile_title {
     margin: 2rem auto;
+    text-transform: uppercase;
+    text-align: center;
 }
 
 .profile_section {
@@ -14,7 +16,7 @@
 
 .profile_nav {
     grid-area: nav;
-    border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    border: solid 1px hsl(var(--color-p1));
     border-radius: 10px;
 }
 
@@ -23,37 +25,38 @@
     flex-direction: column;
 }
 
-.profile_menu > h2 {
+.profile_menu h2 {
     padding: 0.5rem;
-    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    color: hsl(var(--color-text-contrast));
+    background-color: hsl(var(--color-p1));
 }
 
-.profile_menu:first-of-type > h2 {
+.profile_menu:first-of-type h2 {
     border-radius: 8px 8px 0 0 ;
 }
 
-.profile_menu > ul {
+.profile_menu ul {
     padding: 1rem 0;
     line-height: 2rem;
 }
 
-.profile_menu > ul > li {
+.profile_menu li {
     cursor: pointer;
     padding-left: 3rem;
     user-select: none;
 }
 
-.profile_menu > ul > li a{
+.profile_menu a{
     display: block;
     width: 100%;
 }
 
-.profile_menu > ul > li.active {
-    background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
+.profile_menu li.active {
+    background-color: hsl(var(--color-grey-light));
 }
 
-.profile_menu > ul > li:hover {
-    background-color: hsla(var(--color-lightblue-h), var(--color-lightblue-s), var(--color-lightblue-l), var(--color-opacity-light));
+.profile_menu li:hover {
+    background-color: hsl(var(--color-p1-light));
 }
 
 .profile_container {
@@ -65,12 +68,13 @@
     justify-content: flex-start;
     align-items: center;
     gap: 1rem;
+    text-align: center;
 }
 
-.profile_container > .profile_picture {
+.profile_container .profile_picture {
     width: 150px;
     margin: 1rem;
-    border: 2px solid hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    border: 2px solid hsl(var(--color-p1));
     border-radius: 50%;
 } 
 

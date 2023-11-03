@@ -32,7 +32,7 @@ let auth = (app, db) => {
     
     passport.deserializeUser((id, done) => {
         const objectId = new mongoose.Types.ObjectId(id)
-        userDB.findOne({_id: objectId}, {_id: 1, profile_name: 1})
+        userDB.findOne({_id: objectId}, {_id: 1, profile_name: 1, "account_settings.role": 1})
             .then(user => {
                 done(null, user)
             })

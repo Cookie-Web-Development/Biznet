@@ -46,7 +46,7 @@ header.header
             li.disabled=langData.header.navbar.deals[lang]
 if (!loginCheck && !user)
     dialog(id='login_modal')
-        span.login_text=langData.profile.login[lang]
+        h2.login_text=langData.profile.login[lang]
         form(method="post" action='/login' id='modal_form')
             label(for="username")=langData.profile.username[lang]
             input(class='input_box' id='username' name='username' type='text' autocomplete="off")
