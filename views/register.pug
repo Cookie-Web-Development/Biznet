@@ -55,7 +55,7 @@ html(lang=lang)
                     div.form_divider
             p(style='margin-bottom: 2rem;')
                 span=langData.profile.redirect_login.text[lang]
-                a(class='text_link_inline' href='/login')=langData.profile.redirect_login.link[lang]
+                a(class='text_link' href='/login')=langData.profile.redirect_login.link[lang]
         footer
         script(src='/src/client/components/password_icon.js' defer)
         script(type='module', src='/src/client/components/registration_form.js' defer)

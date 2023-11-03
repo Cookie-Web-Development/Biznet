@@ -32,10 +32,9 @@
 .user_profile {
     width: 14rem;
     height: 4rem;
-    border: solid 1px hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
-    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    border: solid 1px hsl(var(--color-p1));
+    background-color: hsl(var(--color-p2));
     border-radius: 10px;
-    /*DEV*/
 }
 
 .user_profile_greeting {
@@ -44,7 +43,8 @@
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
-    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    color: hsl(var(--color-text-contrast));
+    background-color: hsl(var(--color-p1));
 }
 
 .user_profile_links {
@@ -65,16 +65,16 @@ LOGO START
 }
 
 .logo_main {
-    fill: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    fill: hsl(var(--color-p1));
 }
 
 .logo_sub {
-    fill: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
+    fill: hsl(var(--color-grey));
 }
 
 .logo_white {
     --color-grey-l: 60%;
-    fill: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
+    fill: hsl(var(--color-grey));
 }
 
 /*#############
@@ -112,8 +112,12 @@ HEADER_BOT START
     width: var(--rwd-full-width);
     justify-content: space-around;
     padding: 1rem 1.5rem;
-    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    background-color: hsl(var(--color-p1));
     position: relative;
+}
+
+.navbar > li {
+    color: hsl(var(--color-text-contrast));
 }
 
 .navbar::before {
@@ -121,7 +125,7 @@ HEADER_BOT START
     width: var(--rwd-navbar-decor);
     position: absolute;
     border-right: var(--rwd-navbar-decor) solid transparent;
-    border-top: 50px solid hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
+    border-top: 50px solid hsl(var(--color-grey));
     left: 0;
     top: 0;
 }
@@ -131,33 +135,8 @@ HEADER_BOT START
     width: var(--rwd-navbar-decor);
     position: absolute;
     border-top: 50px solid transparent;
-    border-right: var(--rwd-navbar-decor) solid hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
+    border-right: var(--rwd-navbar-decor) solid hsl(var(--color-grey));
     right: 0;
-}
-
-.breadcrumb_container {
-    width: var(--rwd-full-width);
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-
-.breadcrumb {
-    display: flex;
-    width: 100%;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-}
-
-.breadcrumb_trail:not(:last-child)::after {
-    content: ' >';
-    padding-right: 0.5rem;
-}
-
-.return_search_result>li:before {
-    content: '<-';
-    padding-right: 0.5rem;
 }
 
 /*###################

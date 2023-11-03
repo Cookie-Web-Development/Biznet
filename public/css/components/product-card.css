@@ -14,8 +14,7 @@
     width: var(--card-width-small);
     height: var(--card-height-small);
     padding: 10px;
-    /* DEV MODE */
-    border: solid 1px hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
+    border: solid 1px hsl(var(--color-grey-light));
 }
 
 
@@ -30,7 +29,7 @@
 /*.image_container*/
 [data-product-card]>.image_container {
     overflow: hidden;
-    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    background-color: hsl(var(--color-p2));
 }
 
 [data-product-card='small']>.image_container {
@@ -56,21 +55,64 @@
     flex: 1;
     height: 100%;
     width: 100%;
-    padding: 10px;
-    gap: 10px;
+    padding: 15px 10px 10px 10px;
+    gap: 5px;
     display: flex;
     position: relative;
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+    background-color: hsl(var(--color-p2));
 }
 
-[data-product-card='small']>.text_container {
-    gap: 5px;
+.text_container .text_container_header {
+    font-size: var(--fs-subtext);
+    color: hsl(var(--color-text-grey));
+}
+
+.price_sell {
+    font-size: var(--fs-price-main);  
+}
+
+.price_discount {
+    font-size: var(--fs-subtext);
+    margin-top: 3px;
+}
+
+.price_discount > .price_before {
+    color: hsl(var(--color-text-red));
+    position: relative;
+}
+
+.price_discount .price_before::before { 
+    /* discount red line" */
+    content: '';
+    height: 0px;
+    width: 90%;
+    border-bottom: solid 1px hsl(var(--color-red));
+    position: absolute;
+    bottom: 50%;
+    rotate: -10deg;
+}
+
+.price_discount > .discount_percent {
+    color: hsl(var(--color-text-contrast));
+    background-color: hsl(var(--color-green));
+    margin-left: 5px;
+    padding: 2px 4px;
+    border-radius: 5px;
+}
+
+.price_discount > .discount_percent:before {
+    content: '-';
+}
+
+.product_card_description {
+    font-size: var(--fs-subtext);
 }
 
 .product_card_tags {
+    font-size: var(--fs-subtext);
     position: absolute;
     bottom: 0;
     display: flex;
@@ -82,12 +124,21 @@
     height: max-content;
 }
 
-.product_card_tags>* {
+.product_card_tags > * {
     height: max-content;
     width: max-content;
+    background-color: hsl(var(--color-grey-light));
+    padding: 1px 2px;
+    border-radius: 5px;
 }
 
-[data-product-card='small']>.text_container>.product_card_description {
+[data-product-card='small'] {
+    --fs-h3: 1.3rem;
+    --fs-price-main: 1rem;
+    --fs-subtext: 0.7rem;
+}
+
+[data-product-card='small'] .product_card_description {
     display: none;
 }
 
@@ -126,7 +177,7 @@ similar_container
     width: 2rem;
     height: 2rem; 
     border-radius: 50%;
-    background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
+    background-color: hsl(var(--color-grey-light));
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -163,7 +214,7 @@ similar_container
 }
 
 .drag_indicator_container {
-    background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
+    background-color: hsl(var(--color-grey-light));
     width: 100%;
     display: none;
 }
@@ -173,7 +224,7 @@ similar_container
 }
 
 .drag_indicator_slider {
-    background-color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    background-color: hsl(var(--color-p1));
 }
 
 
@@ -182,7 +233,7 @@ RESPONSIVE WEB DESIGN
 #####################*/
 @media (max-width: 749px) {
     [data-product-card='medium'] {
-        background-color: white;
+        background-color: hsl(var(--color-p2));
         flex-direction: column;
         width: 300px;
     }
@@ -191,16 +242,15 @@ RESPONSIVE WEB DESIGN
         width: 100%;
     }
 
-    [data-product-card='medium'] > .text_container > .text_container_header,
-    [data-product-card='medium'] > .text_container > .product_card_price_tag > .price_sell,
-    [data-product-card='medium'] > .text_container > .product_card_price_tag > .price_discount > .price_before,
-    [data-product-card='medium'] > .text_container > .product_card_description,
-    [data-product-card='medium'] > .text_container > .product_card_tags  {
+    [data-product-card='medium'] .text_container_header,
+    [data-product-card='medium'] .price_sell,
+    [data-product-card='medium'] .price_before,
+    [data-product-card='medium'] .product_card_description,
+    [data-product-card='medium'] .product_card_tags  {
         display: none;
     }
 
-    [data-product-card='medium'] > .text_container > .product_card_price_tag > .price_discount > .discount_percent {
-        --fs-note: 1.5rem;
+    [data-product-card='medium'] .discount_percent {
         position: absolute;
         top: -1.5rem; 
         left: 0.5rem;
@@ -211,18 +261,16 @@ RESPONSIVE WEB DESIGN
     .similar_product_section {
         display: relative;
         width: 100%;
-        /*DEV MODE*/
     }
 
     .similar_product_section > h2 {
         position: sticky;
         top: 0;
         width: 100%;
-        background-color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+        background-color: hsl(var(--color-p2));
         text-align: center;
         z-index: 20;
         padding-bottom: 0.5rem;
-        /*DEV MODE*/
     }
 
     .similar_container {
@@ -251,13 +299,13 @@ RESPONSIVE WEB DESIGN
         display: none;
     }
 
-    [data-product-card='small'] > .text_container > .product_card_tags {
+    [data-product-card='small'] .product_card_tags {
         display: none;
     }
 }
 
 @media (max-width: 510px) {
-    [data-product-card='small'] > .text_container > .text_container_header {
+    [data-product-card='small'] .text_container_header {
         display: none;
     }
 
@@ -274,7 +322,6 @@ RESPONSIVE WEB DESIGN
     }
 
     [data-product-card='small'] {
-        --fs-note: 1.2rem;
         padding: 5px;
         position: relative;
     }
@@ -283,7 +330,7 @@ RESPONSIVE WEB DESIGN
         position: unset;
     }
 
-    [data-product-card='small'] > .text_container > .product_card_price_tag {
+    [data-product-card='small'] .product_card_price_tag {
         position: absolute;
         top: 0.5rem;
         right: 0.5rem;
@@ -291,8 +338,8 @@ RESPONSIVE WEB DESIGN
     }
 
 
-    [data-product-card='small'] > .text_container > .product_card_price_tag > .price_sell,
-    [data-product-card='small'] > .text_container > .product_card_price_tag > .price_discount > .price_before {
+    [data-product-card='small'] .price_sell,
+    [data-product-card='small'] .price_before {
         display: none;
     }
 }

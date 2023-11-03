@@ -1,17 +1,73 @@
-/*Here goes EVERYTHING about [fonts], [font-sizes] and [font-color]*/
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;500;900&display=swap');
+
 :root {
-    font-size: 16px;
+    font-size: 18px;
+    --font-family: 'Roboto', sans-serif;
+    /*TEXT*/
+    --fw-b: 900;
+    --fw-m: 500;
+    --fw-l: 100;
+    /*TEXT restructure*/
+    --fs-h1: 1.9rem;
+    --fs-h2: 1.7rem;
+    --fs-h3: 1.4rem;
+    --fs-price-main: 1.2rem;
+    --fs-p: 1rem;
+    --fs-subtext: 0.8rem;
+    /*TEXT COLORS*/
+    /*## dark blue ##*/
+    --color-text-main-h: 238;
+    --color-text-main-s: 100%;
+    --color-text-main-l: 10%;
+    --color-text: var(--color-text-main-h), var(--color-text-main-s), var(--color-text-main-l);
+    /*## light blue ##*/
+    --color-text-main-contrast: 100%;
+    --color-text-contrast: var(--color-text-main-h), var(--color-text-main-s), var(--color-text-main-contrast);
+    /*## grey ##*/
+    --color-text-grey-s: 0%;
+    --color-text-grey-l: 35%;
+    --color-text-grey: var(--color-text-main-h), var(--color-text-grey-s), var(--color-text-grey-s);
+    /*## red ##*/
+    --color-text-red-h: 360;
+    --color-text-red-s: 100%;
+    --color-text-red-l: 44%;
+    --color-text-red: var(--color-text-red-h), var(--color-text-red-s), var(--color-text-red-l);
+    /*## green ##*/
+    --color-text-green-h: 131;
+    --color-text-green-s: 100%;
+    --color-text-green-l: 32%;
+    --color-text-green: var(--color-text-green-h), var(--color-text-green-l), var(--color-text-green-s);
 }
+
+/*-----------------------------------------------*\
+++ TOP LEVEL ELEMENTS
+\*-----------------------------------------------*/
 
 * {
     font-family: var(--font-family);
-    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-dark-l));
+    color: hsl(var(--color-text));
 }
 
-.navbar > li {
-    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-light-l));
-    font-size: var(--fs-body);
+h1 { font-size: var(--fs-h1); }
+
+h2 { font-size: var(--fs-h2); }
+
+h3 { font-size: var(--fs-h3); }
+
+p { font-size: var(--fs-p); }
+
+input, 
+button {
+    font-size: inherit;
 }
+
+select {
+    font-size: var(--fs-subtext)
+}
+
+/*-----------------------------------------------*\
+++ CLASS LEVEL ELEMENTS (UTILITY)
+\*-----------------------------------------------*/
 
 .anchor_inline {
     text-decoration: underline;
@@ -26,260 +82,27 @@
 }
 
 .warning_red {
-    color: red;
-}
-
-/*########
-DISCLAIMER
-##########*/
-[data-disclaimer-select] {
-    font-size: var(--fs-body);
-}
-
-.disclaimer > header {
-    font-size: var(--fs-title);
-    text-align: center;
-    /*The following code is here cuz I treat them as "line-height"*/
-    padding: 1rem 0;
-}
-
-.disclaimer > p {
-    font-size:  var(--fs-body);
-    text-align: justify;
-    padding-bottom: 1rem;
-}
-
-#disclaimer_close {
-    font-size: var(--fs-body);
-}
-
-/*#####
-BUTTONS
-#######*/
-.button {
-    font-size: var(--fs-body);
-}
-
-.btn_inline {
-    font-size: var(--fs-note)
-}
-
-/*##########
-INPUT BOXES
-############*/
-.input_box {
-    font-size: var(--fs-note)
-}
-
-/*#######################
-Search and Filter Fields
-#########################*/
-.search_container_title {
-    font-size: var(--fs-body);
-    /*The following code is here cuz I treat them as "line-height"*/
-    padding-bottom: 3px;
-}
-
-.search_container_desc {
-    font-size: var(--fs-note);
-    text-align: center;
-}
-
-#selected_tags > li {
-    font-size: var(--fs-note-s);
-}
-
-/*############
-Product Cards
-##############*/
-.text_container > h3 {
-    font-size: var(--fs-title);
-}
-
-.text_container > .text_container_header {
-    font-size: var(--fs-note);
-    color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
-}
-
-/*Price Tag*/
-.product_card_price_tag > .price_sell {
-    font-size: var(--fs-price-main);  
-}
-
-.price_discount > * {
-    font-size: var(--fs-note)
-}
-
-.price_discount > .price_before {
-    color: hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
-    position: relative;
-}
-
-.price_discount > .price_before::before { 
-    /* discount red line. This is here cuz I treat this as "text-decoration" */
-    content: '';
-    height: 0px;
-    width: 90%;
-    border-bottom: solid 1px hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
-    position: absolute;
-    bottom: 50%;
-    rotate: -10deg;
-}
-
-.price_discount > .discount_percent {
-    --color-text-white-l: 100%;
-    color: hsl(var(--color-text-main-h), var(--color-text-main-s), var(--color-text-white-l));
-    /*The following code is here cuz I treat them as "text-decoration*/
-    background-color: hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
-    margin-left: 5px;
-    padding: 2px 4px;
-    border-radius: 5px;
-}
-
-.price_discount > .discount_percent:before {
-    content: '-';
-}
-
-/*Product description*/
-.product_card_description {
-    font-size: var(--fs-body);
-}
-
-/*Product tags*/
-.product_card_tags > * {
-    font-size: var(--fs-note);
-    /*The following code is here cuz I treat them as "text-decoration"*/
-    background-color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-greylight-l));
-    padding: 1px 2px;
-    border-radius: 5px;
-}
-/*LARGE*/
-
-/*SMALL*/
-[data-product-card='small'] {
-    --fs-title: 1.3rem;
-    --fs-price-main: 1.2rem;
-    --fs-note: 0.7rem;
-    /*
-    --fs-title
-    --fs-price-main
-    --fs-note
-    */
-}
-
-/*#########
-Product Display
-###########*/
-.text_display > .text_container_header {
-    font-size: var(--fs-body);
-    color: hsl(var(--color-grey-h), var(--color-grey-s), var(--color-grey-l));
-}
-
-.text_display > h3 {
-    font-size: var(--fs-max);
-}
-
-.product_display_price_tag > .price_sell {
-    font-size: var(--fs-price-main);
-    font-weight: var(--fw-b);
-}
-
-.product_display_price_tag > .price_discount > * {
-    font-size: var(--fs-body);
-}
-
-.text_display > .product_display_description {
-    font-size: var(--fs-body);
-}
-
-/*###########
-Login Modal
-#############*/ 
-.login_text { /*Literally is the text that says LOGIN*/
-    font-size: var(--fs-max);
+    color: hsl(var(--color-text-red));
 }
 
 .text_link {
     text-decoration: underline;
-    font-size: var(--fs-note);
 }
 
-/*#######################
-LOGIN, REGISTER & PROFILE
-#########################*/
-.user_profile_greeting {
-    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
+.login_text { 
+    /*Literally is the text that says LOGIN*/
+    font-size: var(--fs-h1);
 }
 
-.profile_title {
-    text-transform: uppercase;
-    text-align: center;
+.text_link:hover {
+    cursor: pointer;
 }
 
-.profile_menu > h2 {
-    color: hsl(var(--color-bg-h), var(--color-bg-s), var(--color-bg-l));
-    font-size: var(--fs-subtitle);
+.error_notification {
+    font-size: var(--fs-subtext);
+    color: hsl(var(--color-text-red));
 }
 
-.profile_menu > ul {
-    font-size: var(--fs-body);
-}
-
-.profile_container {
-    text-align: center;
-    font-size: var(--fs-body)
-}
-
-.profile_container > .profile_username {
-    font-size: var(--fs-title)
-}
-
-.profile_container > .profile_user_settings {
-    font-size: var(--fs-body);
-}
-
-.user_form > label {
-    text-align: right;
-    font-size: var(--fs-body)
-}
-
-#form_section + p {
-    font-size: var(--fs-body);
-} 
-
-.login_notification > * {
-    text-align: right !important;
-}
-
-.error_notification,
-.error_notification > * {
-    font-size: var(--fs-note);
-    color: hsl(var(--color-red-h), var(--color-red-s), var(--color-red-l));
-    text-align: left;
-}
-
-.success_notification,
-.success_notification > * {
-    font-size: var(--fs-note);
-    color: hsl(var(--color-green-h), var(--color-green-s), var(--color-green-l));
-}
-
-.error_notification::before,
-.success_notification::before {
+.error_notification::before {
     content: '*';
 }
-
-.text_link_inline {
-    text-decoration: underline;
-    font-size: var(--fs-body);
-}
-/*####
-MAIN
-######*/
-/*Sections titles*/
-h2 {
-    font-size: var(--fs-max);
-}
-
-
-

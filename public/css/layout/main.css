@@ -13,6 +13,6 @@ main {
 
 .section_divider {
     width: var(--rwd-full-width);
-    color: hsl(var(--color-main-h), var(--color-main-s), var(--color-main-l));
+    color: hsl(var(--color-text));
     border-radius: 50%;
 }
