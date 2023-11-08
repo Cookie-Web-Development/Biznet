@@ -1,0 +1,100 @@
+doctype html 
+html(lang=lang)
+    head 
+        include ../partials/_head.pug
+        link(rel="stylesheet", href="/public/css/pages/company.css")
+    body.company_body.catalog_edit_body 
+        include include/_company_header.pug
+        main.company_main.catalog_edit_main 
+            include include/_company_nav.pug
+            section.company_workspace
+                div(class='company_notification_container' data-noti-container)
+                    if flash_message.notification.length > 0
+                        each noti in flash_message.notification 
+                            p(class='green')
+                                i(class='fa-solid fa-check')
+                                | 
+                                | #{langData.notiification[noti][lang]}
+                    if flash_message.error.length > 0
+                        each err in flash_message.error
+                            p(class='red')
+                                i(class='fa-solid fa-ban')
+                                | 
+                                | #{langData.error[err][lang]}
+                div(class='table_search catalog_search_group' data-seach-group)
+                    //- inputs container
+                    div(class='catalog_search_input_container input_div')
+                        div(class='catalog_search_pair' data-search-pair='0')
+                            select(class='table_search_select' data-table-search-type)
+                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_name.search[lang]}` value=`product_name.${lang}`)=langData.main.search_filter.by_name[lang]
+                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_category.search[lang]}` value=`category_name.${lang}`)=langData.main.search_filter.by_category[lang]
+                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_brand.search[lang]}` value='brand_name')=langData.main.search_filter.by_brand[lang]
+                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_tags.search[lang]}` value=`tag_name.${lang}`)=langData.main.search_filter.by_tags[lang]
+                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.on_sale.option.discounted[lang]}, ${langData.main.search_filter.on_sale.option.not_discounted[lang]}]` value='discount')=langData.main.search_filter.on_sale[lang]
+                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.best_seller.option.featured[lang]}, ${langData.main.search_filter.best_seller.option.not_featured[lang]}]` value='featured')=langData.main.search_filter.best_seller[lang]
+                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.published_option.published[lang]}, ${langData.main.search_filter.published_option.not_published[lang]}]` value='document_publish')=langData.main.search_filter.published_product[lang]
+                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.published_option.published[lang]}, ${langData.main.search_filter.published_option.not_published[lang]}]` value='listing.publish')=langData.main.search_filter.published_listing[lang]
+                            div(class='multi_input' data-multi-input)
+                                input(type='text' placeholder=`${langData.main.search_filter.search[lang]}` data-table-search)
+                            button(class='table_search_button catalog_search_minus' type='button')
+                                i(class='fa-solid fa-square-minus')
+                        div(class='catalog_search_pair' data-search-pair='1')
+                            select(class='table_search_select' data-table-search-type)
+                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_name.search[lang]}` value=`product_name.${lang}`)=langData.main.search_filter.by_name[lang]
+                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_category.search[lang]}` value=`category_name.${lang}`)=langData.main.search_filter.by_category[lang]
+                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_brand.search[lang]}` value='brand_name')=langData.main.search_filter.by_brand[lang]
+                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_tags.search[lang]}` value=`tag_name.${lang}`)=langData.main.search_filter.by_tags[lang]
+                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.on_sale.option.discounted[lang]}, ${langData.main.search_filter.on_sale.option.not_discounted[lang]}]` value='discount')=langData.main.search_filter.on_sale[lang]
+                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.best_seller.option.featured[lang]}, ${langData.main.search_filter.best_seller.option.not_featured[lang]}]` value='featured')=langData.main.search_filter.best_seller[lang]
+                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.published_option.published[lang]}, ${langData.main.search_filter.published_option.not_published[lang]}]` value='document_publish')=langData.main.search_filter.published_product[lang]
+                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.published_option.published[lang]}, ${langData.main.search_filter.published_option.not_published[lang]}]` value='listing.publish')=langData.main.search_filter.published_listing[lang]
+                            div(class='multi_input' data-multi-input)
+                                input(type='text' placeholder=`${langData.main.search_filter.search[lang]}` data-table-search)
+                            button(class='table_search_button catalog_search_minus' type='button')
+                                i(class='fa-solid fa-square-minus')
+                    //- button container
+                    div(class='catalog_search_btn_container')
+                        button(class='table_search_button' type='button' data-table-search-btn)
+                            i(class='fa-solid fa-magnifying-glass')
+                        button(class='table_search_button' type='button' data-table-clear-search)
+                            i(class='fa-solid fa-eraser')
+                        button(class='table_search_button' type='button')
+                            i(class='fa-solid fa-square-plus')
+                h1 Catalog edit 
+                if (db_result.lenght = 0)
+                    p nothin here bro
+                else 
+                    p=`${db_result.length} ${langData.data_management.result_listing[lang]}`
+                div(class='table_container catalog_edit_table')
+                    table(class='company_db_table')
+                        colgroup 
+                            col(class='catalog_col')
+                            col(class='catalog_col')
+                            col(class='catalog_col')
+                            col(class='catalog_col')
+                            col(class='catalog_col')
+                            col(class='catalog_col')
+                        thead 
+                            tr 
+                                th(scope='col' class='table_column' data-table-sort=`product_name.${lang}`)=langData.data_management.product_name[lang]
+                                th(scope='col' class='table_column' data-table-sort=`brand_name`)=langData.data_management.brand_name[lang]
+                                th(scope='col' class='table_column' data-table-sort=`category_name.${lang}`)=langData.data_management.category_name[lang]
+                                th(scope='col' class='table_column' data-table-sort='listing_length')=langData.data_management.listing_length[lang]
+                                th(scope='col' class='table_column' data-table-sort='tag_length')=langData.data_management.tag_length[lang]
+                                th 
+                                    a(href=`/company/product/new` class='table_inline_btn table_column' title=`${langData.data_management.create[lang]}` data-action-type='create')
+                                        i(class='fa-solid fa-square-plus fa-xl')
+                        tbody 
+                            each entry in db_result 
+                                tr(data-table-row = entry._id)
+                                    td(class='row_center table_column')=entry.product_name[lang]
+                                    td(class='row_center table_column')=entry.brand_name
+                                    td(class='row_center table_column')=entry.category_name[lang]
+                                    td(class='row_center table_column')=entry.listing_length
+                                    td(class='row_center table_column')=entry.tag_length
+                                    td(class='row_center table_column' data-table-action-cell)
+                                        a(href=`/company/product/${entry._id}` class='table_inline_btn' title=`${langData.data_management.edit[lang]}` data-action-type='update')
+                                            i(class='fa-solid fa-pen-to-square fa-lg')
+        footer 
+        script(type='module' src='/src/client/components/data_table_catalog.js')
+        //- script(type='module' src='/src/client/components/data_table.js' defer)

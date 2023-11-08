@@ -27,6 +27,10 @@ let listing_schema = mongoose.Schema({
     sku: {
         type: String, 
         required: true
+    },
+    publish: {
+        type: Boolean,
+        default: false
     }
 });
 
@@ -71,6 +75,10 @@ let products_schema = mongoose.Schema({
     listing: {
         type: [listing_schema],
         required: true
+    },
+    document_publish: {
+        type: Boolean,
+        default: false
     }
 });
 

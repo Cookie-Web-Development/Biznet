@@ -71,7 +71,7 @@ let apiRoute = function (app, db) {
     MODELS
     ######*/
     let Products = db.model('products', products_schema),
-        //Product_Variations = productsDB.model('variations', product_variations_schema),
+        //Product_Variations = productsDB.model('variations', product_variations_schema), ##FLAGGED FOR DELETION##
         Brands = db.model('brands', brands_schema),
         Categories = db.model('categories', categories_schema),
         Reviews = db.model('reviews', reviews_schema),
@@ -79,6 +79,8 @@ let apiRoute = function (app, db) {
     let Sessions = db.model('sessions', session_schema);
     let Users = db.model('users', users_schema);
 
+    //Product SKU uniqueness index
+    Products.collection.createIndex({ 'listing.sku': 1 }, { unique: true});
 
     //format currency in USD with two decimal places
     let formatOptions = {
@@ -465,6 +467,37 @@ let apiRoute = function (app, db) {
             return res.json({ url: '/profile/password' })
         })
 
+    app.route('/company/catalog_edit')
+        .get(async (req, res, next) => {
+            /*
+            main route: /company/catalog_edit/
+            product edit route: /company/product/:product_id
+            product create route: /company/product/new
+            */
+
+            let query = req.query || {};
+
+            // console.log(query)
+
+            let lang = req.session.lang || 'es';
+
+            let user = { profile_name: 'testerino', account_settings: { role: 'company'}}
+
+            let product_db = await Products.aggregate(search_query({}))
+
+            let flash_message = {
+                notification: req.flash('notification') || [],
+                error: req.flash('error') || []
+            }
+
+            try {
+                res.render(`data_management/catalog_edit`, {lang, langData, user, flash_message, db_result: product_db})
+            } catch (err) {
+                err.status=404;
+                next(err);
+            }
+        })
+
     app.route('/company/:main_route') //workbench
         .get(check_auth('/login', true), check_role, async (req, res, next) => {
             let company_route = req.params.main_route
@@ -487,9 +520,9 @@ let apiRoute = function (app, db) {
                 case 'tag':
                     db_selector = Tags;
                     break;
-                case 'catalog':
-                    db_selector = Products;
-                    break;
+                // case 'catalog': //DELETE
+                //     db_selector = Products;
+                //     break;
                 default:
                     try { throw new Error('internal error') } catch (err) { next(err) }
                     return; 

@@ -51,7 +51,6 @@ app.use((req, res, next) => {
 })
  
 app.set('view engine', 'pug');
-//app.set('views', './views');
 app.set('views', './views');
 app.use(cookieParser());
 app.use(flash());
@@ -94,12 +93,12 @@ DB.on('disconnect', () => {
 
 
 //** DEV HELMET
-// app.use(helmet({
-//   hsts: false,
-//   referrerPolicy: { policy: 'same-origin' },
-//   hidePoweredBy: false,
-//   contentSecurityPolicy: false
-// }));
+app.use(helmet({
+  hsts: false,
+  referrerPolicy: { policy: 'same-origin' },
+  hidePoweredBy: false,
+  contentSecurityPolicy: false
+}));
 
 //** PRODUCTION HELMET
 // app.use(helmet({

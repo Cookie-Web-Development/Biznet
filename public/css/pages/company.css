@@ -9,6 +9,9 @@
     /* overflow: hidden; */
 }
 
+.catalog_edit_body {
+    position: relative;
+}
 
 /*-----------------------------------------------*\
 ++ HEADER
@@ -21,6 +24,12 @@
     justify-content: space-between;
     height: min-content;
     background-color: hsl(var(--color-p1));
+    z-index: 10;
+}
+
+.catalog_edit_body .company_header {
+    position: sticky;
+    top: 0;
 }
 
 .company_header_logo {
@@ -96,6 +105,11 @@
     border-image: var(--rwd-search-form-border);
 }
 
+.catalog_edit_main .company_nav {
+    position: sticky;
+    top: var(--height-company-header);
+}
+
 .company_nav_section {
     padding-bottom: 1rem;
 }
@@ -166,8 +180,12 @@
     border: 2px solid hsla(var(--color-orange));  
 }
 
-/*Table searchbar*/
-#table_search {
+
+/*-----------------------------------------------*\
+++ TABLE SEARCHBAR
+\*-----------------------------------------------*/
+
+.table_search {
     width: 100%;
     height: var(--height-table-searchbar);
     background-color: hsl(var(--color-p2));
@@ -177,39 +195,100 @@
     align-items: center;
 }
 
-#table_search > .input_div {
+.table_search .input_div {
     display: flex;
-    flex-direction: row;
-    width: 55%;
 }
 
-#table_search .table_search_select,
-#table_search .table_search_button {
+.table_search_select,
+.table_search_button {
     background-color: transparent;
     border: none;
 }
 
-#table_search .table_search_select {
+.table_search_select {
     border-right: solid hsl(var(--color-p1)) 1px;
 }
 
-#table_search .table_search_button {
+.table_search_button {
     padding: 0 1rem 0 0.5rem;
 }
 
-#table_search .table_search_button:hover {
+.table_search_button:hover {
     background-color: hsl(var(--color-p1));
     cursor: pointer;
 }
 
-#table_search .table_search_button:hover > i {
+.table_search_button:hover > i {
     color: hsl(var(--color-text-contrast));
 }
 
 
+/*## Catalog Table search*/
+.catalog_search_group {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    height: auto;
+}
+
+.catalog_search_input_container {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 3px;
+    width: 750px;
+}
+
+.catalog_search_pair {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.catalog_search_pair input {
+    border: none;
+}
+
+[data-search-pair='0'] .catalog_search_minus {
+    display: none;
+}
+
+.multi_input {
+    flex-grow: 1;
+}
+
+.multi_input > * {
+    width: 100%;
+}
+
 /*-----------------------------------------------*\
 ++ TABLE
 \*-----------------------------------------------*/
+.catalog_col:nth-of-type(1) {
+    width: 31%;
+}
+
+.catalog_col:nth-of-type(2) {
+    width: 22%;
+}
+
+.catalog_col:nth-of-type(3) {
+    width: 22%;
+}
+
+.catalog_col:nth-of-type(4) {
+    width: 10%;
+}
+
+.catalog_col:nth-of-type(5) {
+    width: 10%;
+}
+
+.catalog_col:nth-of-type(6) {
+    width: 5%;
+}
 
 .table_container {
     flex: 1;
@@ -218,6 +297,13 @@
     min-width: 50vw;
     overflow: auto;
     border: solid 1px black;
+}
+
+.table_container.catalog_edit_table {
+    min-width: 100%;
+    height: unset;
+    overflow: unset;
+    max-height: unset;
 }
 
 .company_db_table {
@@ -230,6 +316,10 @@
     background-color: hsl(var(--color-p1));
     position: sticky;
     top: 0;
+}
+
+.catalog_edit_table thead {
+    top: var(--height-company-header) !important;
 }
 
 .company_db_table th {
@@ -263,12 +353,27 @@
     cursor: pointer;
 }
 
+[data-action-type='update'] {
+    display: none;
+}
+
+tr.selected [data-action-type='update'] {
+    display: unset;
+}
+
 .sort_caret {
     color: hsl(var(--color-text-contrast));
     padding-left: 5px;
 }
 
 /*Alingments*/
+td {
+    max-width: 10ch;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 th.row_left,
 td.row_left {
     text-align: left;
@@ -348,17 +453,71 @@ tbody .table_inline_btn:active > i {
 ++ RESPONSIVE WEB DESIGN
 \*-----------------------------------------------*/
 
+@media (max-width: 1020px) {
+    .catalog_search_input_container {
+        width: 100%;
+    }
+
+    .catalog_col:nth-of-type(1) {
+        width: 35%;
+    }
+
+    .catalog_col:nth-of-type(2) {
+        width: 25%;
+    }
+
+    .catalog_col:nth-of-type(3) {
+        width: 25%;
+    }
+
+    .catalog_col:nth-of-type(5) {
+        width: 5%;
+    }
+
+    .catalog_col:nth-of-type(6) {
+        width: 0%;
+    }
+
+    .table_column:nth-of-type(4) {
+        display: none;
+    }
+}
+
 @media (max-width: 760px) {
-    #table_search > .input_div {
+    .table_search > .input_div {
         width: 100%;
     }
 
     .table_container {
         min-width: 100%;
     }
+
+    .catalog_col:nth-of-type(1) {
+        width: 35%;
+    }
+
+    .catalog_col:nth-of-type(2) {
+        width: 30%;
+    }
+
+    .catalog_col:nth-of-type(3) {
+        width: 30%;
+    }
+
+    .catalog_col:nth-of-type(4) {
+        width: 5%;
+    }
+
+    .catalog_col:nth-of-type(5) {
+        width: 0%;
+    }
+
+    .table_column:nth-of-type(5) {
+        display: none;
+    }
 }
 
-@media (max-width: 580px) {
+@media (max-width: 640px) {
     .company_body {
         overflow: auto;
     }
@@ -375,6 +534,10 @@ tbody .table_inline_btn:active > i {
         flex-direction: row;
         justify-content: stretch;
         border-right: unset;
+    }
+
+    .catalog_edit_main .company_nav {
+        position: static;
     }
 
     .company_nav > * {
@@ -402,10 +565,14 @@ tbody .table_inline_btn:active > i {
         font-size: var(--fs-subtext);
     }
 
-    #table_search {
+    .table_search {
         position: sticky;
         top: 0;
         z-index: 6;
+    }
+
+    .table_search.catalog_search_group {
+        position: static;
     }
 
     .table_container {
@@ -441,6 +608,23 @@ tbody .table_inline_btn:active > i {
     .api_modal,
     .api_modal_form {
         width: 100%;
+    }
+
+    /*TABLE*/
+    .catalog_col:nth-of-type(1) {
+        width: 50%;
+    }
+
+    .catalog_col:nth-of-type(2) {
+        width: 45%;
+    }
+
+    .catalog_col:nth-of-type(3) {
+        width: 5%;
+    }
+
+    .table_column:nth-of-type(3) {
+        display: none;
     }
 
 }

@@ -22,7 +22,7 @@ html(lang=lang)
                                 i(class='fa-solid fa-ban')
                                 |  
                                 | #{langData.error[err][lang]}
-                div(id='table_search')
+                div(class='table_search')
                     div(class='input_div')
                         select(class='table_search_select' data-table-search-type)
                             option(value=`tag_name.${lang}`)=langData.main.search_filter.by_name[lang]
@@ -52,6 +52,8 @@ html(lang=lang)
                                     td(class='row_center')=entry.tag_id
                                     td(class='row_center')=entry.tag_name[lang]
                                     td(class='row_center' data-table-action-cell)
+                                        button(class='table_inline_btn' type='button' title=`${langData.data_management.edit[lang]}` data-action-type='update')
+                                            i(class='fa-solid fa-pen-to-square fa-lg')
         footer 
         - let notLang
         - if (lang == 'es') { notLang = 'en'} else { notLang = 'es'}
@@ -59,9 +61,9 @@ html(lang=lang)
             h2=langData.data_management.create_entry[lang]
             form(action='tag_edit' method='post' data-method='post' class='api_modal_form' data-modal-action-form='create')
                 label=langData.data_management.tag_name[lang] + ` (${langData.profile.language_sel[lang]})`
-                    input(class='input_box' name='tag_name.es' type='text' style='margin-top: 5px;' required)
+                    input(class='input_box' name=`tag_name.${lang}` type='text' style='margin-top: 5px;' required)
                 label=langData.data_management.tag_name[notLang] + ` (${langData.profile.language_sel[notLang]})`
-                    input(class='input_box' name='tag_name.en' type='text' style='magin-top: 5px;' required)
+                    input(class='input_box' name=`tag_name.${notLang}` type='text' style='magin-top: 5px;' required)
                 input(type='hidden' name='token' value=`${csrf}`)
             div(class='modal_btn_container' style='margin-top:1rem;')
                 button(class='button' type='button' data-modal-action-btn='create')=langData.data_management.save[lang]
@@ -87,4 +89,5 @@ html(lang=lang)
                     | 
                     i(class='fa-solid fa-triangle-exclamation') 
                 button(class='button' type='button' data-close-modal='delete')=langData.data_management.cancel[lang] 
+        script(type='module' src='/src/client/components/data_table_modal.js' defer)
         script(type='module' src='/src/client/components/data_table.js' defer)

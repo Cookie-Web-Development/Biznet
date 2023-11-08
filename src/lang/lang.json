@@ -244,7 +244,11 @@
             },
             "by_name": {
                 "en": "By name",
-                "es": "Por nombre"
+                "es": "Por nombre",
+                "search": {
+                    "en": "Search by name",
+                    "es": "Buscar por nombre"
+                }
             },
             "by_id": {
                 "en": "By id.",
@@ -260,6 +264,10 @@
                 "select": {
                     "en": "Select a category",
                     "es": "Selecciona una categoría"
+                },
+                "search": {
+                    "en": "Search by category",
+                    "es": "Buscar por categoría"
                 }
             },
             "by_brand": {
@@ -268,19 +276,65 @@
                 "select": {
                     "en": "Select a brand",
                     "es": "Selecciona una marca"
+                },
+                "search": {
+                    "en": "Search by brand",
+                    "es": "Buscar por marca"
                 }
             },
             "by_tags": {
                 "en": "By tags",
-                "es": "Por etiquetas"
+                "es": "Por etiquetas",
+                "search": {
+                    "en": "Search by tag",
+                    "es": "Buscar por etiqueta"
+                }
             },
             "on_sale": {
                 "en": "On sale",
-                "es": "En descuento"
+                "es": "En descuento",
+                "option": {
+                    "discounted": {
+                        "en": "On sale",
+                        "es": "En descuento"
+                    },
+                    "not_discounted": {
+                        "en": "Not on sale",
+                        "es": "Sin descuento"
+                    }
+                }
             },
             "best_seller": {
                 "en": "Best seller",
-                "es": "Más vendidos"
+                "es": "Más vendidos",
+                "option": {
+                    "featured": {
+                        "en": "On best seller",
+                        "es": "En los más vendidos"
+                    },
+                    "not_featured": {
+                        "en": "Not on best seller",
+                        "es": "No está en los más vendidos"
+                    }
+                }
+            },
+            "published_product": {
+                "en": "Published product",
+                "es": "Producto publicado"
+            },
+            "published_listing": {
+                "en": "Published price",
+                "es": "Precio publicado"
+            },
+            "published_option": {
+                "published": {
+                    "en": "Published",
+                    "es": "Publicado"
+                },
+                "not_published": {
+                    "en": "Not published",
+                    "es": "No publicado"
+                }
             },
             "clear_fields": {
                 "en": "Clear search fields",
@@ -380,6 +434,22 @@
         "tag_name": {
             "en": "Tag Name",
             "es": "Nombre de etiqueta"
+        },
+        "tag_length": {
+            "en": "# tags",
+            "es": "# etiquetas"
+        },
+        "listing_length": {
+            "en": "# listing",
+            "es": "# listado"
+        },
+        "product_name": {
+            "en": "Product Name",
+            "es": "Nombre de producto"
+        },
+        "result_listing": {
+            "en": "results listed",
+            "es": "resultados listados"
         }
     },
     "error": {
