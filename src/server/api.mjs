@@ -477,7 +477,7 @@ let apiRoute = function (app, db) {
 
             let query = req.query || {};
 
-            // console.log(query)
+            console.log(query)
 
             let lang = req.session.lang || 'es';
 
