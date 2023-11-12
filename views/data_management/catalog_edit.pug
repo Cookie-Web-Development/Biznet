@@ -21,44 +21,30 @@ html(lang=lang)
                                 i(class='fa-solid fa-ban')
                                 | 
                                 | #{langData.error[err][lang]}
-                div(class='table_search catalog_search_group' data-seach-group)
+                div(class='table_search catalog_search_group')
                     //- inputs container
-                    div(class='catalog_search_input_container input_div')
-                        div(class='catalog_search_pair' data-search-pair='0')
+                    div(class='catalog_search_input_container input_div' data-catalog-search-container)
+                        div(class='catalog_search_pair' data-search-pair)
                             select(class='table_search_select' data-table-search-type)
                                 option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_name.search[lang]}` value=`product_name.${lang}`)=langData.main.search_filter.by_name[lang]
                                 option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_category.search[lang]}` value=`category_name.${lang}`)=langData.main.search_filter.by_category[lang]
                                 option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_brand.search[lang]}` value='brand_name')=langData.main.search_filter.by_brand[lang]
                                 option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_tags.search[lang]}` value=`tag_name.${lang}`)=langData.main.search_filter.by_tags[lang]
-                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.on_sale.option.discounted[lang]}, ${langData.main.search_filter.on_sale.option.not_discounted[lang]}]` value='discount')=langData.main.search_filter.on_sale[lang]
-                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.best_seller.option.featured[lang]}, ${langData.main.search_filter.best_seller.option.not_featured[lang]}]` value='featured')=langData.main.search_filter.best_seller[lang]
-                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.published_option.published[lang]}, ${langData.main.search_filter.published_option.not_published[lang]}]` value='document_publish')=langData.main.search_filter.published_product[lang]
-                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.published_option.published[lang]}, ${langData.main.search_filter.published_option.not_published[lang]}]` value='listing.publish')=langData.main.search_filter.published_listing[lang]
+                                option(data-input-type='select' data-input-fill=`["${langData.main.search_filter.on_sale.option.discounted[lang]}", "${langData.main.search_filter.on_sale.option.not_discounted[lang]}"]` value='discount')=langData.main.search_filter.on_sale[lang]
+                                option(data-input-type='select' data-input-fill=`["${langData.main.search_filter.best_seller.option.featured[lang]}", "${langData.main.search_filter.best_seller.option.not_featured[lang]}"]` value='featured')=langData.main.search_filter.best_seller[lang]
+                                option(data-input-type='select' data-input-fill=`["${langData.main.search_filter.published_option.published[lang]}", "${langData.main.search_filter.published_option.not_published[lang]}"]` value='document_publish')=langData.main.search_filter.published_product[lang]
+                                option(data-input-type='select' data-input-fill=`["${langData.main.search_filter.published_option.published[lang]}", "${langData.main.search_filter.published_option.not_published[lang]}"]` value='listing.publish')=langData.main.search_filter.published_listing[lang]
                             div(class='multi_input' data-multi-input)
-                                input(type='text' placeholder=`${langData.main.search_filter.search[lang]}` data-table-search)
-                            button(class='table_search_button catalog_search_minus' type='button')
-                                i(class='fa-solid fa-square-minus')
-                        div(class='catalog_search_pair' data-search-pair='1')
-                            select(class='table_search_select' data-table-search-type)
-                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_name.search[lang]}` value=`product_name.${lang}`)=langData.main.search_filter.by_name[lang]
-                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_category.search[lang]}` value=`category_name.${lang}`)=langData.main.search_filter.by_category[lang]
-                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_brand.search[lang]}` value='brand_name')=langData.main.search_filter.by_brand[lang]
-                                option(data-input-type='text' data-input-fill=`${langData.main.search_filter.by_tags.search[lang]}` value=`tag_name.${lang}`)=langData.main.search_filter.by_tags[lang]
-                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.on_sale.option.discounted[lang]}, ${langData.main.search_filter.on_sale.option.not_discounted[lang]}]` value='discount')=langData.main.search_filter.on_sale[lang]
-                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.best_seller.option.featured[lang]}, ${langData.main.search_filter.best_seller.option.not_featured[lang]}]` value='featured')=langData.main.search_filter.best_seller[lang]
-                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.published_option.published[lang]}, ${langData.main.search_filter.published_option.not_published[lang]}]` value='document_publish')=langData.main.search_filter.published_product[lang]
-                                option(data-input-type='select' data-input-fill=`[${langData.main.search_filter.published_option.published[lang]}, ${langData.main.search_filter.published_option.not_published[lang]}]` value='listing.publish')=langData.main.search_filter.published_listing[lang]
-                            div(class='multi_input' data-multi-input)
-                                input(type='text' placeholder=`${langData.main.search_filter.search[lang]}` data-table-search)
-                            button(class='table_search_button catalog_search_minus' type='button')
-                                i(class='fa-solid fa-square-minus')
+                                input(type='text' placeholder=`${langData.main.search_filter.by_name.search[lang]}` data-table-search)
+                            button(class='table_search_button catalog_search_minus' type='button' data-table-search-remove)
+                                i(class='fa-solid fa-square-minus' style="pointer-events: none")
                     //- button container
                     div(class='catalog_search_btn_container')
                         button(class='table_search_button' type='button' data-table-search-btn)
                             i(class='fa-solid fa-magnifying-glass')
                         button(class='table_search_button' type='button' data-table-clear-search)
                             i(class='fa-solid fa-eraser')
-                        button(class='table_search_button' type='button')
+                        button(class='table_search_button' type='button' data-table-search-add)
                             i(class='fa-solid fa-square-plus')
                 h1 Catalog edit 
                 if (db_result.lenght = 0)

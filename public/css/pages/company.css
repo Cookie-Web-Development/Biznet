@@ -245,13 +245,14 @@
     display: flex;
     flex-direction: row;
     width: 100%;
+    gap: 10px;
 }
 
 .catalog_search_pair input {
     border: none;
 }
 
-[data-search-pair='0'] .catalog_search_minus {
+[data-search-pair]:first-of-type .catalog_search_minus {
     display: none;
 }
 

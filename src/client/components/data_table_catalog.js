@@ -3,6 +3,7 @@
 import langData from '../../lang/lang.json' assert { type: 'json' }
 import { HTML_ELEM } from '../modules/moduleHTMLElemMaker.js'
 
+let lang = document.documentElement.lang;
 /*--------------------------------------------------------------------------*\
 ++ Tabel Row Selection
 \*--------------------------------------------------------------------------*/
@@ -14,6 +15,88 @@ Array.from(table_rows).forEach(row => {
         Array.from(table_rows).forEach(elem => { elem.classList.remove('selected') })
         row.classList.add('selected');
     })
+})
+
+
+/*--------------------------------------------------------------------------*\
+++ Table Search field
+\*--------------------------------------------------------------------------*/
+let catalog_search_container = document.querySelector('[data-catalog-search-container]');
+
+/*### multi_input ###*/
+
+catalog_search_container.addEventListener('change', (e) => {
+    if(e.target.dataset.tableSearchType) {
+        let select_elem = e.target
+        let selected_option = select_elem.options[select_elem.selectedIndex]
+        let param_obj = {};
+        param_obj.input_type = selected_option.dataset.inputType;
+        param_obj.input_fill = selected_option.dataset.inputFill;
+
+        let parent = e.target.parentNode
+        let multi_input_container = parent.querySelector('[data-multi-input]')
+
+        Array.from(multi_input_container.children).forEach(child => child.remove())
+
+        multi_input_container.appendChild(multi_input_creator(param_obj))
+        
+    }
+})
+
+function multi_input_creator (param_obj) {
+    // param_obj = { input_type: 'text' ; input_fill: 'placeholder_text'} default
+    // param_obj = { input_type: 'select'; input_fill: [options_arr] }
+    
+    //failsafe
+    if(!param_obj.input_type || (param_obj.input_type != 'text' && param_obj.input_type != 'select')) {
+        console.log('multi_input_creator invalid type')
+        return;
+    };
+
+    let input;
+
+    switch(param_obj.input_type) {
+        case 'text':
+            input = new HTML_ELEM('input');
+            input.addAttribute('type', 'text');
+            input.addAttribute('placeholder', param_obj.input_fill || `${langData.main.search_filter.search[lang]}`);
+            input.addAttribute('data-table-search');
+            break; 
+        case 'select':
+            input = new HTML_ELEM('select');
+            input.addAttribute('data-table-search');
+            input.addClass('table_search_select');
+    
+            JSON.parse(param_obj.input_fill).forEach(entry => {
+                let option = input.addElement('option');
+                option.addAttribute('value', entry);
+                option.addText(entry);
+            })
+
+            break;
+        default:
+            return; /*failsafe*/
+    }
+
+    return input.getElement()
+}
+
+/* ### ADD SEARCH ### */
+let add_search_btn = document.querySelector('[data-table-search-add]')
+
+add_search_btn.addEventListener('click', () => {
+    let node = document.querySelector('[data-search-pair]');
+    let new_search = node.cloneNode(true);
+    new_search.querySelector('[data-table-search-type]').selectedIndex = node.querySelector('[data-table-search-type]').selectedIndex
+    catalog_search_container.appendChild(new_search)
+})
+
+/* ### REMOVE SEARCH ### */
+catalog_search_container.addEventListener('click', (e) => {
+    if (e.target.dataset.tableSearchRemove) {
+        let parent = e.target.parentElement;
+        parent.remove();
+    }
 })
 
 
