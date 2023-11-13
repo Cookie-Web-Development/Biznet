@@ -17,6 +17,7 @@ import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
 import { INPUT_CHECK } from './modules/moduleInputCheck.js';
 import company_query from './pipeline/company_query.js';
+import company_catalog_query from './pipeline/company_catalog.js'
 
 
 let apiRoute = function (app, db) {
@@ -477,13 +478,11 @@ let apiRoute = function (app, db) {
 
             let query = req.query || {};
 
-            console.log(query)
-
             let lang = req.session.lang || 'es';
 
             let user = { profile_name: 'testerino', account_settings: { role: 'company'}}
 
-            let product_db = await Products.aggregate(search_query({}))
+            let product_db = await Products.aggregate(company_catalog_query(query))
 
             let flash_message = {
                 notification: req.flash('notification') || [],

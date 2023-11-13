@@ -177,9 +177,7 @@ export default function search_query(query_input, option = undefined) {
                             ]
                         }
                     }
-                },
-                listing_length: { $size: "$listing" },
-                tag_length: { $size: "$tag_id"}
+                }
             }
         },
         {
@@ -219,14 +217,12 @@ export default function search_query(query_input, option = undefined) {
                 description: 1,
                 reviews: 1,
                 listing: 1,
-                listing_length: 1,
                 brand_id: 1,
                 category_id: 1,
                 featured: 1,
                 category_name: "$category.category_name",
                 brand_name: "$brand.brand_name",
                 tag_id: 1,
-                tag_length: 1,
                 tag_array: {
                     $map: {
                         input: "$tag_collection",
