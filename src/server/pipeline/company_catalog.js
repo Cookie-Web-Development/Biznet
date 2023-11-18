@@ -123,6 +123,8 @@ export default function company_catalog_query(query_input, option = undefined) {
                 _id: 1,
                 product_name: 1,
                 description: 1,
+                document_publish: 1,
+                variation_type: 1,
                 reviews: 1,
                 listing: 1,
                 listing_length: 1,

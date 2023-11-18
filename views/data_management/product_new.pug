@@ -1,0 +1,25 @@
+doctype html 
+html(lang=lang)
+    head 
+        include ../partials/_head.pug
+        link(rel="stylesheet", href="/public/css/pages/company.css")
+    body.company_body.catalog_edit_body 
+        include include/_company_header.pug
+        main.company_main.catalog_edit_main 
+            include include/_company_nav.pug
+            section.company_workspace
+                div(class='company_notification_container' data-noti-container)
+                    if flash_message.notification.length > 0
+                        each noti in flash_message.notification 
+                            p(class='green')
+                                i(class='fa-solid fa-check')
+                                | 
+                                | #{langData.notification[noti][lang]}
+                    if flash_message.error.length > 0
+                        each err in flash_message.error
+                            p(class='red')
+                                i(class='fa-solid fa-ban')
+                                | 
+                                | #{langData.error[err][lang]}
+                h1 Product NEW
+        footer 

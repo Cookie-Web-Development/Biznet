@@ -431,6 +431,10 @@
             "en": "Category Name",
             "es": "Nombre de categoría"
         },
+        "tag": {
+            "en": "Tags",
+            "es": "Etiquetas"
+        },
         "tag_name": {
             "en": "Tag Name",
             "es": "Nombre de etiqueta"
@@ -446,6 +450,22 @@
         "product_name": {
             "en": "Product Name",
             "es": "Nombre de producto"
+        },
+        "product_description": { 
+            "en": "Product Description", 
+            "es": "Descripción del producto" 
+        },
+        "price": {
+            "en": "Price",
+            "es": "Precio"
+        },
+        "price_discounted": {
+            "en": "Discounted Price",
+            "es": "Precio con descuento"
+        },
+        "discount_percent": {
+            "en": "Discount Percent (in decimal)",
+            "es": "Porcentaje de descuento (en decimal)"
         },
         "result_listing": {
             "en": "results listed",

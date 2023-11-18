@@ -14,7 +14,7 @@ html(lang=lang)
                             p(class='green')
                                 i(class='fa-solid fa-check')
                                 | 
-                                | #{langData.notiification[noti][lang]}
+                                | #{langData.notification[noti][lang]}
                     if flash_message.error.length > 0
                         each err in flash_message.error
                             p(class='red')
@@ -68,7 +68,7 @@ html(lang=lang)
                                 th(scope='col' class='table_column' data-table-sort='listing_length')=langData.data_management.listing_length[lang]
                                 th(scope='col' class='table_column' data-table-sort='tag_length')=langData.data_management.tag_length[lang]
                                 th 
-                                    a(href=`/company/product/new` class='table_inline_btn table_column' title=`${langData.data_management.create[lang]}` data-action-type='create')
+                                    a(href=`/company/catalog_edit/new` class='table_inline_btn table_column' title=`${langData.data_management.create[lang]}` data-action-type='create')
                                         i(class='fa-solid fa-square-plus fa-xl')
                         tbody 
                             each entry in db_result 
@@ -79,8 +79,7 @@ html(lang=lang)
                                     td(class='row_center table_column')=entry.listing_length
                                     td(class='row_center table_column')=entry.tag_length
                                     td(class='row_center table_column' data-table-action-cell)
-                                        a(href=`/company/product/${entry._id}` class='table_inline_btn' title=`${langData.data_management.edit[lang]}` data-action-type='update')
+                                        a(href=`/company/catalog_edit/${entry._id}` class='table_inline_btn' title=`${langData.data_management.edit[lang]}` data-action-type='update')
                                             i(class='fa-solid fa-pen-to-square fa-lg')
         footer 
         script(type='module' src='/src/client/components/data_table_catalog.js')
-        //- script(type='module' src='/src/client/components/data_table.js' defer)

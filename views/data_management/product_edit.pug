@@ -1,0 +1,167 @@
+doctype html 
+html(lang=lang)
+    head 
+        include ../partials/_head.pug
+        link(rel="stylesheet", href="/public/css/components/filter-and-result.css")
+        link(rel="stylesheet", href="/public/css/pages/company.css")
+    body.company_body.catalog_edit_body 
+        include include/_company_header.pug
+        main.company_main.catalog_edit_main 
+            include include/_company_nav.pug
+            section.company_workspace
+                div(class='company_notification_container' data-noti-container)
+                    if flash_message.notification.length > 0
+                        each noti in flash_message.notification 
+                            p(class='green')
+                                i(class='fa-solid fa-check')
+                                | 
+                                | #{langData.notification[noti][lang]}
+                    if flash_message.error.length > 0
+                        each err in flash_message.error
+                            p(class='red')
+                                i(class='fa-solid fa-ban')
+                                | 
+                                | #{langData.error[err][lang]}
+                h1 Product Edit 
+                if !db_result
+                    p Nothing Here bro 
+                else 
+                    - let notLang 
+                    - if (lang == 'es') { notLang = 'en'} else { notLang = 'es' }
+                    form(class='company_form')
+                        section(class='general_info')
+                            section(class='general_name')
+                                p=langData.data_management.product_name[lang]
+                                label(for=`product_name_${lang}`)=langData.profile.language_sel[lang]
+                                input(class='input_box' id=`product_name_${lang}` name=`product_name.${lang}` type='text' data-default-value=db_result.product_name[lang] value=db_result.product_name[lang])
+                                label(for=`product_name_${notLang}`)=langData.profile.language_sel[notLang]
+                                input(class='input_box' id=`product_name_${notLang}` name=`product_name.${notLang}` type='text' data-default-value=db_result.product_name[notLang] value=db_result.product_name[notLang])
+                            section(class='general_description')
+                                p=langData.data_management.product_description[lang]
+                                label(for=`product_description_${lang}`)=langData.profile.language_sel[lang]
+                                textarea(class='input_box' id=`product_description_${lang}` name=`description.${lang}` cols='20' rows='3' type='text' data-default-value=db_result.description[lang])=db_result.description[lang]
+                                label(for=`product_description_${notLang}`)=langData.profile.language_sel[notLang]
+                                textarea(class='input_box' id=`product_description_${notLang}` name=`description.${notLang}` cols='20' rows='3' type='text' data-default-value=db_result.description[notLang])=db_result.description[notLang]
+                            section(class='general_search')
+                                div
+                                    label()=langData.data_management.brand_name[lang]
+                                    select(class='input_box' name='brand_id' data-brand-input data-default-value=db_result.brand_id)
+                                        each brand in product_info.brands
+                                            if (brand.brand_id === db_result.brand_id)
+                                                option(value=brand.brand_id selected)=brand.brand_name
+                                            else
+                                                option(value=brand.brand_id)=brand.brand_name
+                                div
+                                    label()=langData.data_management.category_name[lang]
+                                    select(class='input_box' name='category' data-default-value=db_result.category_id)
+                                        each category in product_info.categories
+                                            if (category.category_id === db_result.category_id)
+                                                option(value=category.category_id selected)=category.category_name[lang]
+                                            else 
+                                                option(value=category.category_id)=category.category_name[lang]
+                                div
+                                    label()=langData.data_management.tag[lang]
+                                    div#tags_input_dropdown_container
+                                        input(type='text' id='tags_filter_input' class='input_box' data-tag-search)
+                                        select(id='tags_dropdown' size='8' data-tag-list)    
+                                            each tag in product_info.tags
+                                                option(value=tag.tag_id data-tag=tag.tag_id data-selected='false')=tag.tag_name[lang]
+                                    ul(data-default-value=db_result.tag_id data-tag-selected id='selected_tags')
+                            section(class='general_listing')
+                                div(class='checkbox_container')
+                                    if (db_result.featured)
+                                        input(class='product_checkbox' type='checkbox' id='product_featured' name='featured' data-default-value='true' checked)
+                                    else 
+                                        input(class='product_checkbox' type='checkbox' id='product_featured' data-default-value='false' name='featured')
+                                    label(for='product_featured')=langData.main.search_filter.best_seller.option.featured[lang]
+                                div(class='checkbox_container')
+                                    if (db_result.document_publish)
+                                        input(type='checkbox' id='published_product' name='document_publish' data-default-value='true' checked)
+                                    else 
+                                        input(type='checkbox' id='published_product' name='document_publish' data-default-value='false')
+                                    label(for='published_product')=langData.main.search_filter.published_product[lang]
+                        //- Listings
+                        section(class='listing_info')
+                            div()
+                                p LISTING TYPE CONTAINER 
+                            p LISTING CONTAINER 
+                            each listing in db_result.listing
+                                div 
+                                    p Listing variation placeholder 
+                                    label(for=`${listing.sky}_sku`) SKU
+                                    input(type='text' id=`${listing.sku}_sku` name='sku' data-listing-sku=listing.sku data-default-value=listing.sku value=listing.sku)
+                                    label(for=`${listing.sku}_price`)=langData.data_management.price[lang]
+                                    input(id=`${listing.sku}_price` name='price' type='text' data-listing-sku=listing.sku data-default-value=listing.price value=listing.price)
+                                    label(for=`${listing.sku}_discount_percent`)=langData.data_management.discount_percent[lang]
+                                    input(type='text' id=`${listing.sky}_discount_percent` name='discount_percent' data-listing-sku=listing.sku data-default-value=listing.discount_percent value=listing.discount_percent)
+                                    div(class='checkbox_container')
+                                        if (listing.discount)
+                                            input(type='checkbox' id=`${listing.sku}_discount` name='discount' data-listing-sku=listing.sku data-default-value='true' checked)
+                                        else
+                                            input(type='checkbox' id=`${listing.sku}_discount` name='discount' data-listing-sku=listing.sku data-default-value='false')
+                                        label(for=`${listing.sku}_discount`)=langData.main.search_filter.on_sale[lang]
+                                    label(for=`${listing.sku}_price_discounted`)=langData.data_management.price_discounted[lang]
+                                    p(id=`${listing.sku}_price_discounted`)=listing.price_discounted
+                                    div(class='checkbox_container')
+                                        if (listing.publish)
+                                            input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-sku=listing.sku data-default-value='true' checked)
+                                        else
+                                            input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-sku=listing.sku data-default-value='false')
+                                        label(for=`${listing.sku}_published_listing`)=langData.main.search_filter.published_listing[lang]
+                                    div 
+                                        p IMAGE GALLERY                            
+        footer 
+        script(type='module' src='/src/client/pages/product_edit.js')
+//-
+    Product Example
+    [
+    {
+        _id: new ObjectId("6433208acaf8dfa0e45108a6"),
+        description: {
+        en: 'Lightweight carbon frame, aerodynamic design, and high-performance components make this bike perfect for racing.',
+        es: 'Cuadro de carbono ligero, diseño aerodinámico y componentes de alta gama hacen esta bici ideal para competir.'
+        },
+        reviews: [],
+        variation_type: {
+            en: ["color", "type"],
+            es: ["color", "tipo"]
+        },
+        listing: [
+            {
+                variation_option: {
+                    en: {
+                        color: "blue",
+                        type: "route"
+                    },
+                    es: {
+                        color: "azul",
+                        tipo: "ruta"
+                    }
+                }
+                price: 199.99,
+                discount: true,
+                discount_percent: 0.22,
+                images: [ 'bicycle-01.jpg' ],
+                sku: 'RM-001',
+                publish: true,
+                price_discounted: 155.99
+            }
+        ],
+        brand_id: 30,
+        category_id: 8,
+        document_publish: 1,
+        tag_id: [ 12, 28, 34 ],
+        featured: false,
+        product_name: { es: 'Bicicleta', en: 'Bicycle' },
+        listing_length: 1,
+        tag_length: 3,
+        category_name: { es: 'Deportes', en: 'Sports' },
+        brand_name: 'RideMaster',
+        tag_array: [
+        { tag_name: { es: 'Bicicleta', en: 'Bicycle' }, tag_id: 12 },
+        {
+        tag_name: { es: 'Ejercicio', en: 'Exercise' }, tag_id: 28 },
+        {	tag_name: { es: 'Equipo Deportivo', en: 'Sports equipment' }, tag_id: 34 }
+        ]
+    }
+    ]

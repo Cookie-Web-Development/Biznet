@@ -81,7 +81,7 @@ let apiRoute = function (app, db) {
     let Users = db.model('users', users_schema);
 
     //Product SKU uniqueness index
-    Products.collection.createIndex({ 'listing.sku': 1 }, { unique: true});
+    Products.collection.createIndex({ 'listing.sku': 1 }, { unique: true });
 
     //format currency in USD with two decimal places
     let formatOptions = {
@@ -184,8 +184,8 @@ let apiRoute = function (app, db) {
             };
             //URL PARAM /catalog?key=value <- ESTTO NO DEBE DE GUARDARSEE EN EEL SEARCH SESSION@!
             let lang = req.session.lang || 'es';
-            let tags = await Tags.aggregate(search_list.multi_lang(lang)),
-                categories = await Categories.aggregate(search_list.multi_lang(lang)),
+            let tags = await Tags.aggregate(search_list.multi_lang(lang, 'tag')),
+                categories = await Categories.aggregate(search_list.multi_lang(lang, 'category')),
                 brands = await Brands.aggregate(search_list.brand),
                 price_range = await Products.aggregate(search_list.price_range);
             // price_range returns [{max, min}]
@@ -468,21 +468,55 @@ let apiRoute = function (app, db) {
             return res.json({ url: '/profile/password' })
         })
 
-    app.route('/company/catalog_edit')
+    app.route('/company/catalog_edit/:product_id?')
         .get(async (req, res, next) => {
             /*
             main route: /company/catalog_edit/
-            product edit route: /company/product/:product_id
-            product create route: /company/product/new
+            product edit route: /company/catalog_edit/:product_id
+            product create route: /company/catalog_edit/new
             */
+            let lang = req.session.lang || 'es';
+            let user = { profile_name: 'testerino', account_settings: { role: 'company' } };
 
             let query = req.query || {};
+            let render_file;
+            let product_db;
+            let product_info;
 
-            let lang = req.session.lang || 'es';
+            if (req.params.product_id === 'new') {
+                //new
+                console.log('DEV_MODE: New_product')
+                render_file = 'data_management/product_new'
+            }
 
-            let user = { profile_name: 'testerino', account_settings: { role: 'company'}}
+            if (req.params.product_id && req.params.product_id !== 'new') {
+                //product_edit
+                console.log('DEV_MODE: product_id: ', req.params.product_id)
+                render_file = 'data_management/product_edit'
 
-            let product_db = await Products.aggregate(company_catalog_query(query))
+                try {
+                    product_info = {
+                        brands: await Brands.aggregate(search_list.brand),
+                        categories: await Categories.aggregate(search_list.multi_lang(lang, 'category')),
+                        tags: await Tags.aggregate(search_list.multi_lang(lang, 'tag'))
+                    }
+                    product_db = await Products.aggregate(company_catalog_query({ search: { _id: req.params.product_id } }))
+                } catch (err) {
+                    err.status = 404;
+                    next(err);
+                    return;
+                }
+
+                product_db = product_db[0]
+                //need to load all brands, categories, and tags
+            }
+
+            if (!req.params.product_id) {
+                //catalog_edit
+                render_file = 'data_management/catalog_edit'
+                product_db = await Products.aggregate(company_catalog_query(query))
+            }
+
 
             let flash_message = {
                 notification: req.flash('notification') || [],
@@ -490,10 +524,11 @@ let apiRoute = function (app, db) {
             }
 
             try {
-                res.render(`data_management/catalog_edit`, {lang, langData, user, flash_message, db_result: product_db})
+                res.render(render_file, { lang, langData, user, flash_message, db_result: product_db, product_info })
             } catch (err) {
-                err.status=404;
+                err.status = 404;
                 next(err);
+
             }
         })
 
@@ -509,7 +544,7 @@ let apiRoute = function (app, db) {
             let route_prefix = company_route.match(route_regex)
             let db_selector;
 
-            switch(route_prefix[0]){
+            switch (route_prefix[0]) {
                 case 'brand':
                     db_selector = Brands;
                     break;
@@ -524,7 +559,7 @@ let apiRoute = function (app, db) {
                 //     break;
                 default:
                     try { throw new Error('internal error') } catch (err) { next(err) }
-                    return; 
+                    return;
             }
 
             //param
@@ -549,7 +584,7 @@ let apiRoute = function (app, db) {
 
             try {
                 res.render(`data_management/${company_route}`, { lang, csrf, langData, user, flash_message, db_result: query_result })
-            } catch(err) {
+            } catch (err) {
                 err.status = 404;
                 next(err);
             }
@@ -565,12 +600,12 @@ let apiRoute = function (app, db) {
                 res.json({ url: `/company/${company_route}` }) //placeholder
                 return;
             }
-            
+
             let route_regex = /^[^_]+/
             let route_prefix = company_route.match(route_regex)
             let db_selector;
 
-            switch(route_prefix[0]){
+            switch (route_prefix[0]) {
                 case 'brand':
                     db_selector = Brands;
                     break;
@@ -585,7 +620,7 @@ let apiRoute = function (app, db) {
                     break;
                 default:
                     try { throw new Error('internal error') } catch (err) { next(err) }
-                    return; 
+                    return;
             }
 
             try {
@@ -616,7 +651,7 @@ let apiRoute = function (app, db) {
             let route_prefix = company_route.match(route_regex)
             let db_selector;
 
-            switch(route_prefix[0]){
+            switch (route_prefix[0]) {
                 case 'brand':
                     db_selector = Brands;
                     break;
@@ -631,7 +666,7 @@ let apiRoute = function (app, db) {
                     break;
                 default:
                     try { throw new Error('internal error') } catch (err) { next(err) }
-                    return; 
+                    return;
             }
 
             let update = await db_selector.findOneAndUpdate(

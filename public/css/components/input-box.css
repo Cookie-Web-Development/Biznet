@@ -2,6 +2,7 @@
     height: 2rem;
     border: solid 1px hsl(var(--color-p1));
     width: 100%;
+    padding-left: 5px;
 }
 
 .input_div {
