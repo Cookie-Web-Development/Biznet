@@ -28,7 +28,8 @@ html(lang=lang)
                 else 
                     - let notLang 
                     - if (lang == 'es') { notLang = 'en'} else { notLang = 'es' }
-                    form(class='company_form')
+                    form(class='company_form' action=`/catalog/company_edit/${db_result._id}` method='post')
+                        input(type='hidden' name='token' readonly value=csrf)
                         section(class='general_info')
                             section(class='general_name')
                                 p=langData.data_management.product_name[lang]
@@ -118,8 +119,16 @@ html(lang=lang)
                                                 input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-sku=listing.sku data-default-value='false')
                                             label(for=`${listing.sku}_published_listing`)=langData.main.search_filter.published_listing[lang]
                                     section(class='listing_images') 
-                                        div
-                                            p IMAGE GALLERY                            
+                                        p Image Gallery
+                                        div(class='image_thumbnail')
+                                            each image in listing.images
+                                                img(data-image=image src=`/public/img/products-images/${image}`)    
+                        section(class='btn_container')
+                            button(type='button' class='button' data-api-button='save')=langData.profile.save_changes[lang]
+                            a(href='/company/catalog_edit')
+                                button(type='button' class='button' data-api-button='cancel')=langData.profile.cancel[lang]
+        dialog(data-image-modal) 
+                img
         footer 
         script(type='module' src='/src/client/pages/product_edit.js')
 //-

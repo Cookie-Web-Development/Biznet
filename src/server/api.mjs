@@ -477,6 +477,10 @@ let apiRoute = function (app, db) {
             */
             let lang = req.session.lang || 'es';
             let user = { profile_name: 'testerino', account_settings: { role: 'company' } };
+            
+            let csrf_token = crypto.randomBytes(16).toString('hex');
+            let csrf = csrf_token;
+            req.session._csrf = csrf_token;
 
             let query = req.query || {};
             let render_file;
@@ -524,7 +528,7 @@ let apiRoute = function (app, db) {
             }
 
             try {
-                res.render(render_file, { lang, langData, user, flash_message, db_result: product_db, product_info })
+                res.render(render_file, { lang, langData, user, flash_message, csrf, db_result: product_db, product_info })
             } catch (err) {
                 err.status = 404;
                 next(err);

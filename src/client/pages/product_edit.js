@@ -130,3 +130,22 @@ function discount_calculator () {
     discount_result.textContent = formatStyle.format(discount_total)
     discount_result.classList.remove('grey_out');
 }
+
+/*### IMAGE GALLERY */
+let image_thumbnails = document.querySelectorAll('[data-image]')
+let image_modal = document.querySelector('[data-image-modal]')
+let image_modal_img = image_modal.querySelector('img');
+let image_local_route = '/public/img/products-images/'
+
+image_thumbnails.forEach(image => {
+    image.addEventListener('click', (e) => {
+        if(e.target.dataset.image) {
+            image_modal_img.setAttribute('src', image_local_route + e.target.dataset.image)
+            image_modal.showModal()
+        }
+    })
+})
+
+image_modal.addEventListener('click', () => {
+    image_modal.close()
+})

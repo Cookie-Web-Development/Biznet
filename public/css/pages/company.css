@@ -580,6 +580,32 @@ tbody .table_inline_btn:active>i {
     width: 50%;
 }
 
+.image_thumbnail {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.image_thumbnail img {
+    max-width: 70px;
+}
+
+.image_thumbnail img:hover {
+    border: solid 1px hsl(var(--color-p1));
+    cursor: pointer;
+}
+
+.btn_container {
+    margin: 0.5rem 0;
+    display:flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+[data-api-button='save'] {
+    background-color: hsl(var(--color-green));
+    color: hsl(var(--color-p2))
+}
 
 /*TAGS - overwrites whats in filter-and-results.css*/
 #tags_input_dropdown_container {
