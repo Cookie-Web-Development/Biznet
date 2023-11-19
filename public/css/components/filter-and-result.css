@@ -135,7 +135,7 @@ input[type="range"]::-o-range-thumb {
 }
 
 #tags_dropdown option:hover {
-  background-color: hsl(var(--color-p1-light));
+  background-color: hsl(var(--color-p1));
 }
 
 #selected_tags {

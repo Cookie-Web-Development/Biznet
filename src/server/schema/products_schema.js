@@ -68,10 +68,10 @@ let products_schema = mongoose.Schema({
         ref: "tags"
     },
     featured: Boolean,
-    variation_type: {
-        en: [String],
-        es: [String]
-    },
+    variation_type: [{
+        en: String,
+        es: String
+    }],
     listing: {
         type: [listing_schema],
         required: true

@@ -88,3 +88,45 @@ function selected_tags_creator(tag_arr) {
         tag_selected_container.appendChild(li_elem.getElement())
     })
 }
+
+
+/*------------------------------------------------------------------------*\
+++ LISTING CONTAINER
+\*------------------------------------------------------------------------*/
+
+/*### DISCOUNT CALCULATOR */
+let discount_result = document.querySelector('[data-discount-calc]');
+let discount_checkbox = document.querySelector('[data-discount-checkbox]')
+let discount_value = document.querySelector('[data-discount-input]')
+let price_value = document.querySelector('[data-listing-price]')
+let formatStyle = new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD'
+})
+// formatStyle.format(raw_input)
+
+
+discount_value.addEventListener('input', () => {
+    if (discount_value.value > 1) { discount_value.value = 1 }
+    if (discount_value.value < 0) { discount_value.value = 0 }
+    if(!discount_checkbox.checked) {return;}
+    discount_calculator()
+})
+
+discount_checkbox.addEventListener('change', () => {
+    discount_calculator()
+})
+
+discount_calculator()
+
+function discount_calculator () {
+    if(!discount_checkbox.checked) {
+        discount_result.textContent = formatStyle.format(price_value.value);
+        discount_result.classList.add('grey_out');
+        return;
+    }
+
+    let discount_total = price_value.value * (1 - discount_value.value)
+    discount_result.textContent = formatStyle.format(discount_total)
+    discount_result.classList.remove('grey_out');
+}

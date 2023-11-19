@@ -82,34 +82,44 @@ html(lang=lang)
                                     label(for='published_product')=langData.main.search_filter.published_product[lang]
                         //- Listings
                         section(class='listing_info')
-                            div()
-                                p LISTING TYPE CONTAINER 
+                            section(class='WIP')
+                                p Variation Types
+                                if(!db_result.variation_type)
+                                    p No variation type listed
+                                else 
+                                    p Some Variation type
                             p LISTING CONTAINER 
                             each listing in db_result.listing
-                                div 
-                                    p Listing variation placeholder 
-                                    label(for=`${listing.sky}_sku`) SKU
-                                    input(type='text' id=`${listing.sku}_sku` name='sku' data-listing-sku=listing.sku data-default-value=listing.sku value=listing.sku)
-                                    label(for=`${listing.sku}_price`)=langData.data_management.price[lang]
-                                    input(id=`${listing.sku}_price` name='price' type='text' data-listing-sku=listing.sku data-default-value=listing.price value=listing.price)
-                                    label(for=`${listing.sku}_discount_percent`)=langData.data_management.discount_percent[lang]
-                                    input(type='text' id=`${listing.sky}_discount_percent` name='discount_percent' data-listing-sku=listing.sku data-default-value=listing.discount_percent value=listing.discount_percent)
-                                    div(class='checkbox_container')
-                                        if (listing.discount)
-                                            input(type='checkbox' id=`${listing.sku}_discount` name='discount' data-listing-sku=listing.sku data-default-value='true' checked)
-                                        else
-                                            input(type='checkbox' id=`${listing.sku}_discount` name='discount' data-listing-sku=listing.sku data-default-value='false')
-                                        label(for=`${listing.sku}_discount`)=langData.main.search_filter.on_sale[lang]
-                                    label(for=`${listing.sku}_price_discounted`)=langData.data_management.price_discounted[lang]
-                                    p(id=`${listing.sku}_price_discounted`)=listing.price_discounted
-                                    div(class='checkbox_container')
-                                        if (listing.publish)
-                                            input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-sku=listing.sku data-default-value='true' checked)
-                                        else
-                                            input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-sku=listing.sku data-default-value='false')
-                                        label(for=`${listing.sku}_published_listing`)=langData.main.search_filter.published_listing[lang]
-                                    div 
-                                        p IMAGE GALLERY                            
+                                section(class='listing_index') 
+                                    section(class='listing_general')
+                                        p(class='WIP') Listing variation placeholder 
+                                        label(for=`${listing.sku}_sku`) SKU
+                                        input(class='input_box' type='text' id=`${listing.sku}_sku` name='sku' data-listing-sku=listing.sku data-default-value=listing.sku value=listing.sku)
+                                        label(for=`${listing.sku}_price`)=langData.data_management.price[lang]
+                                        input(class='input_box' id=`${listing.sku}_price` name='price' type='text' data-listing-sku=listing.sku data-default-value=listing.price data-listing-price value=listing.price)
+                                        div(class='listing_discount_div')
+                                            div(class='listing_discount_percent')
+                                                label(for=`${listing.sku}_discount_percent`)=langData.data_management.discount_percent[lang]
+                                                input(class='input_box' type='number' min='0' max='1' step='0.1' id=`${listing.sku}_discount_percent` name='discount_percent' data-listing-sku=listing.sku data-default-value=listing.discount_percent
+                                                data-discount-input value=listing.discount_percent)
+                                                div(class='checkbox_container')
+                                                    if (listing.discount)
+                                                        input(type='checkbox' id=`${listing.sku}_discount` name='discount' data-discount-checkbox data-listing-sku=listing.sku data-default-value='true' checked)
+                                                    else
+                                                        input(type='checkbox' id=`${listing.sku}_discount` name='discount' data-discount-checkbox data-listing-sku=listing.sku data-default-value='false')
+                                                    label(for=`${listing.sku}_discount`)=langData.main.search_filter.on_sale[lang]
+                                            div(class='listing_discount_calc')
+                                                p=langData.data_management.price_discounted[lang]
+                                                p(data-discount-calc)
+                                        div(class='checkbox_container')
+                                            if (listing.publish)
+                                                input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-sku=listing.sku data-default-value='true' checked)
+                                            else
+                                                input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-sku=listing.sku data-default-value='false')
+                                            label(for=`${listing.sku}_published_listing`)=langData.main.search_filter.published_listing[lang]
+                                    section(class='listing_images') 
+                                        div
+                                            p IMAGE GALLERY                            
         footer 
         script(type='module' src='/src/client/pages/product_edit.js')
 //-
@@ -122,10 +132,10 @@ html(lang=lang)
         es: 'Cuadro de carbono ligero, diseño aerodinámico y componentes de alta gama hacen esta bici ideal para competir.'
         },
         reviews: [],
-        variation_type: {
-            en: ["color", "type"],
-            es: ["color", "tipo"]
-        },
+        variation_type: [
+            { en: "Color", es: "Color" },
+            { en: "Type", es: "Tipo" }
+        ],
         listing: [
             {
                 variation_option: {

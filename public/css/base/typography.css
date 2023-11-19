@@ -90,6 +90,10 @@ span {
     color: hsl(var(--color-text-red));
 }
 
+.grey_out {
+    color: hsl(var(--color-grey-light));
+}
+
 .text_link {
     text-decoration: underline;
 }

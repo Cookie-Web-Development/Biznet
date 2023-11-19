@@ -464,10 +464,10 @@ tbody .table_inline_btn:active>i {
     flex-wrap: wrap;
     max-width: 75%;
     gap: 1rem;
-    /*DEV*/
-    border: 1px solid grey;
-    border-radius: 15px;
+    border: 1px solid hsl(var(--color-p1));
+    border-radius: 15px 15px 0 0;
     padding: 20px;
+    /*DEV*/
 }
 
 .general_info > section > *{
@@ -489,7 +489,7 @@ tbody .table_inline_btn:active>i {
 }
 
 .general_description {
-    order: 3;
+    order: 5;
     width: 100%;
 }
 
@@ -498,7 +498,7 @@ tbody .table_inline_btn:active>i {
 }
 
 .general_listing {
-    order: 4;
+    order: 5;
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -507,6 +507,7 @@ tbody .table_inline_btn:active>i {
 
 .checkbox_container {
     position: relative;
+    width: max-content;
 }
 
 .checkbox_container label {
@@ -540,6 +541,45 @@ tbody .table_inline_btn:active>i {
     content: '\002714';
     background-color: hsl(var(--color-p1));
 }
+
+.listing_info {
+    border: solid 1px hsl(var(--color-p1));
+    border-radius: 0 0 15px 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    width: 75%;
+    gap: 1rem;
+    padding: 20px;
+}
+
+.listing_index {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.listing_discount_div {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+/* .listing_discount_div > * {
+    max-width: 50%;
+} */
+
+.listing_general {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.listing_images {
+    width: 50%;
+}
+
 
 /*TAGS - overwrites whats in filter-and-results.css*/
 #tags_input_dropdown_container {
