@@ -69,21 +69,26 @@ tagListCreator()
 tags_text_filter.addEventListener('input', () => {
 let input = tags_text_filter.value.toLowerCase();
 let options = tags_dropdown.options;
+let size = 0;
 if (input != ''){
     for (let i = 0; i < options.length; i++) {
         let tag = options[i];
         let tagText = tag.text.toLowerCase();   
         if (tagText.includes(input)){
             tag.style.display = ''
+            size++
         } else {
             tag.style.display ='none'
         }
-    }                    
+    } 
+    if (size > 8) { size = 8};
+    tags_dropdown.size = size                   
 } else {
     for(let i = 0; i < options.length; i++) {
         let tag = options[i];
         tag.style.display = '';
     }
+    tags_dropdown.size = 8
 }
 })
 
@@ -104,6 +109,7 @@ tags_dropdown.addEventListener('click', (e) => { //adding tags
             elem.blur()
         });
         tags_text_filter.value = '';
+        tags_text_filter.dispatchEvent(new Event('input'))
     };
 
 });

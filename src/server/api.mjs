@@ -124,7 +124,7 @@ let apiRoute = function (app, db) {
     function check_role(req, res, next) {
         //Role hierarchy webmaster > company > user
         //user.account_settings.role
-        let route_regex = /\/[^\/]+$/
+        let route_regex = /^\/[^\/]+/
         let path = req.originalUrl;
         let route = path.match(route_regex)[0];
         // console.log('route from check_role', route)
@@ -137,10 +137,7 @@ let apiRoute = function (app, db) {
                 }
                 return next()
             //company
-            case "/product_edit":
-            case "/brand_edit":
-            case "/category_edit":
-            case "/tags_edit":
+            case "/company":
                 if (user_role !== 'webmaster' && user_role !== 'company') {
                     return res.status(401).send('Forbidden')
                 }
@@ -469,7 +466,7 @@ let apiRoute = function (app, db) {
         })
 
     app.route('/company/catalog_edit/:product_id?')
-        .get(async (req, res, next) => {
+        .get(/*check_auth('/login', true), check_role,*/async (req, res, next) => {
             /*
             main route: /company/catalog_edit/
             product edit route: /company/catalog_edit/:product_id
@@ -535,6 +532,57 @@ let apiRoute = function (app, db) {
 
             }
         })
+        .put(/*check_auth('/login', true), check_role,*/ async (req, res, next) => {
+            let route_id = req.params.product_id || undefined;
+
+            if (!route_id) {
+                res.json({ url: `/company/catalog_edit` })
+                return;
+            }
+            
+            let payload_content = { $set: req.body.payload }  || null
+            let payload_csrf = req.body.csrf || null;
+            let payload_id = req.body.match || null;
+            let payload_arrayFilters = req.body.arrayFilters || null;
+
+            //validate request
+            ////check csrf
+            if(!payload_csrf || payload_csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ url: `/company/catalog_edit/${route_id}` })
+                return;
+            }
+
+            let update;
+            if (payload_arrayFilters) {
+                console.log('ARRAY FILTER =D')
+                console.log(payload_content)
+                console.log(payload_arrayFilters)
+                update = await Products.findOneAndUpdate(
+                    payload_id,
+                    payload_content,
+                    { arrayFilters: payload_arrayFilters}
+                )
+            } else {
+                update = await Products.findOneAndUpdate(
+                    payload_id,
+                    payload_content
+                )
+
+            }
+        
+            if (update === null) {
+                req.flash('error', 'save_fail')
+                return res.json({ url: `/company/catalog_edit/${route_id}`})
+            }
+
+            //flash message
+            req.flash('notification', 'save_success')
+
+            return res.json({ url: `/company/catalog_edit/${route_id}`})
+
+        })
 
     app.route('/company/:main_route') //workbench
         .get(check_auth('/login', true), check_role, async (req, res, next) => {
@@ -558,9 +606,6 @@ let apiRoute = function (app, db) {
                 case 'tag':
                     db_selector = Tags;
                     break;
-                // case 'catalog': //DELETE
-                //     db_selector = Products;
-                //     break;
                 default:
                     try { throw new Error('internal error') } catch (err) { next(err) }
                     return;
@@ -618,9 +663,6 @@ let apiRoute = function (app, db) {
                     break;
                 case 'tag':
                     db_selector = Tags;
-                    break;
-                case 'catalog':
-                    db_selector = Products;
                     break;
                 default:
                     try { throw new Error('internal error') } catch (err) { next(err) }

@@ -250,13 +250,6 @@ function modal_form_creator(form_elem) {
 
 let noti_container = document.querySelector('[data-noti-container]');
 
-noti_container.addEventListener('click', (e) => {
-    //remove notifications on click
-    if(Array.from(noti_container.children).length > 0) {
-        noti_container.removeChild(e.target)
-    }
-})
-
 function notification_display(type, message) {
     //creates a notification without reload. Only accepts one notification per call
 
