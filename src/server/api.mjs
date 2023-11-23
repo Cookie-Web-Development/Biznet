@@ -482,7 +482,11 @@ let apiRoute = function (app, db) {
             let query = req.query || {};
             let render_file;
             let product_db;
-            let product_info;
+            let product_info = {
+                brands: await Brands.aggregate(search_list.brand),
+                categories: await Categories.aggregate(search_list.multi_lang(lang, 'category')),
+                tags: await Tags.aggregate(search_list.multi_lang(lang, 'tag'))
+            };
 
             if (req.params.product_id === 'new') {
                 //new
@@ -496,11 +500,6 @@ let apiRoute = function (app, db) {
                 render_file = 'data_management/product_edit'
 
                 try {
-                    product_info = {
-                        brands: await Brands.aggregate(search_list.brand),
-                        categories: await Categories.aggregate(search_list.multi_lang(lang, 'category')),
-                        tags: await Tags.aggregate(search_list.multi_lang(lang, 'tag'))
-                    }
                     product_db = await Products.aggregate(company_catalog_query({ search: { _id: req.params.product_id } }))
                 } catch (err) {
                     err.status = 404;

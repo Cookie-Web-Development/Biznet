@@ -92,7 +92,7 @@ html(lang=lang)
                                     p Some Variation type
                             p LISTING CONTAINER 
                             each listing, index in db_result.listing
-                                section(class='listing_index') 
+                                section(class='listing_index' data-product-listing data-listing-filter=`i${index}`) 
                                     section(class='listing_general')
                                         p(class='WIP') Listing variation placeholder 
                                         label(for=`${listing.sku}_sku`) SKU
@@ -112,7 +112,7 @@ html(lang=lang)
                                                     label(for=`${listing.sku}_discount`)=langData.main.search_filter.on_sale[lang]
                                             div(class='listing_discount_calc')
                                                 p=langData.data_management.price_discounted[lang]
-                                                p(data-discount-calc)
+                                                p(data-listing-filter=`i${index}` data-discount-calc)
                                         div(class='checkbox_container')
                                             if (listing.publish)
                                                 input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-filter=`i${index}` data-listing-sku=listing.sku data-type='checkbox' data-default-value='true' data-form-input=`listing.$[i${index}].publish` checked)
@@ -133,56 +133,3 @@ html(lang=lang)
         footer 
         script(type='module' src='/src/client/components/notification_bar.js' defer)
         script(type='module' src='/src/client/pages/product_edit.js')
-//-
-    Product Example
-    [
-    {
-        _id: new ObjectId("6433208acaf8dfa0e45108a6"),
-        description: {
-        en: 'Lightweight carbon frame, aerodynamic design, and high-performance components make this bike perfect for racing.',
-        es: 'Cuadro de carbono ligero, diseño aerodinámico y componentes de alta gama hacen esta bici ideal para competir.'
-        },
-        reviews: [],
-        variation_type: [
-            { en: "Color", es: "Color" },
-            { en: "Type", es: "Tipo" }
-        ],
-        listing: [
-            {
-                variation_option: {
-                    en: {
-                        color: "blue",
-                        type: "route"
-                    },
-                    es: {
-                        color: "azul",
-                        tipo: "ruta"
-                    }
-                }
-                price: 199.99,
-                discount: true,
-                discount_percent: 0.22,
-                images: [ 'bicycle-01.jpg' ],
-                sku: 'RM-001',
-                publish: true,
-                price_discounted: 155.99
-            }
-        ],
-        brand_id: 30,
-        category_id: 8,
-        document_publish: 1,
-        tag_id: [ 12, 28, 34 ],
-        featured: false,
-        product_name: { es: 'Bicicleta', en: 'Bicycle' },
-        listing_length: 1,
-        tag_length: 3,
-        category_name: { es: 'Deportes', en: 'Sports' },
-        brand_name: 'RideMaster',
-        tag_array: [
-        { tag_name: { es: 'Bicicleta', en: 'Bicycle' }, tag_id: 12 },
-        {
-        tag_name: { es: 'Ejercicio', en: 'Exercise' }, tag_id: 28 },
-        {	tag_name: { es: 'Equipo Deportivo', en: 'Sports equipment' }, tag_id: 34 }
-        ]
-    }
-    ]

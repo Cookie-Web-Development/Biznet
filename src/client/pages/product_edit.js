@@ -11,7 +11,13 @@ let tag_list = document.querySelector('[data-tag-list]');
 let tag_selected_container = document.querySelector('[data-tag-selected]');
 let tag_search = document.querySelector('[data-tag-search]');
 
-let selected_tags = Array.from(JSON.parse(tag_selected_container.dataset.defaultValue)) || []
+let selected_tags;
+
+try {
+   selected_tags = Array.from(JSON.parse(tag_selected_container.dataset.defaultValue))
+} catch(err) {
+    selected_tags = []
+}
 
 /*### Initial Tags load */
 if (selected_tags.length > 0) {
@@ -21,7 +27,6 @@ if (selected_tags.length > 0) {
 /*### Event Listeners */
 tag_list.addEventListener('click', (e) => {
     selected_tags.push(+e.target.value);
-    // selected_tags.sort((a, b) => a - b); //DELETE TO AVOID REDUNDANCY
     selected_tags_creator(selected_tags);
     tag_search.value = ''
     tag_search.dispatchEvent(new Event('input'))
@@ -101,45 +106,64 @@ function selected_tags_creator(tag_arr) {
 \*------------------------------------------------------------------------*/
 
 /*### DISCOUNT CALCULATOR */
-let discount_result = document.querySelector('[data-discount-calc]');
-let discount_checkbox = document.querySelector('[data-discount-checkbox]')
-let discount_value = document.querySelector('[data-discount-input]')
-let price_value = document.querySelector('[data-listing-price]')
+let product_listing = document.querySelectorAll('[data-product-listing]');
+let discount_checkbox = document.querySelectorAll('[data-discount-checkbox]');
+let discount_value = document.querySelectorAll('[data-discount-input]');
+let price_value = document.querySelectorAll('[data-listing-price]');
 let formatStyle = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD'
 })
 // formatStyle.format(raw_input)
 
-
-discount_value.addEventListener('input', () => {
-    if (discount_value.value > 1) { discount_value.value = 1 }
-    if (discount_value.value < 0) { discount_value.value = 0 }
-    if (!discount_checkbox.checked) { return; }
-    discount_calculator()
+discount_value.forEach(elem => {
+    elem.addEventListener('input', () => {
+        if (elem.value > 1) { elem.value = 1 }
+        if (elem.value < 0) { elem.value = 0 }
+        let checkbox = document.querySelector(`[data-listing-filter=${listing_filter}][data-discount-checkbox]`);
+        if (!checkbox.checked) { return; }
+        discount_calculator(elem)
+    })
 })
 
-price_value.addEventListener('input', () => {
-    if (!discount_checkbox.checked) { return; }
-    discount_calculator();
+price_value.forEach(elem => {
+    elem.addEventListener('input', () => {
+        let checkbox = document.querySelector(`[data-listing-filter=${listing_filter}][data-discount-checkbox]`);
+        if (!checkbox.checked) { return; }
+        discount_calculator(elem);
+    })
+
 })
 
-discount_checkbox.addEventListener('change', () => {
-    discount_calculator()
+discount_checkbox.forEach(elem => {
+    elem.addEventListener('change', () => {
+        discount_calculator(elem)
+    })
 })
 
-discount_calculator()
+if(Array.from(product_listing).length > 0) {
+    console.log(Array.from(product_listing).length)
+    product_listing.forEach(elem => {
+        discount_calculator(elem)
+    })
+}
 
-function discount_calculator() {
-    if (!discount_checkbox.checked) {
-        discount_result.textContent = formatStyle.format(price_value.value);
-        discount_result.classList.add('grey_out');
+function discount_calculator(elem) {
+    let listing_filter = elem.dataset.listingFilter
+    let listing_discount_checkbox = document.querySelector(`[data-listing-filter=${listing_filter}][data-discount-checkbox]`);
+    let listing_price_value = document.querySelector(`[data-listing-filter=${listing_filter}][data-listing-price]`)
+    let listing_discount_result = document.querySelector(`[data-listing-filter=${listing_filter}][data-discount-calc]`);
+    let listing_discount_percent = document.querySelector(`[data-listing-filter=${listing_filter}][data-discount-input]`)
+
+    if (!listing_discount_checkbox.checked) {
+        listing_discount_result.textContent = formatStyle.format(+listing_price_value.value);
+        listing_discount_result.classList.add('grey_out');
         return;
     }
 
-    let discount_total = price_value.value * (1 - discount_value.value)
-    discount_result.textContent = formatStyle.format(discount_total)
-    discount_result.classList.remove('grey_out');
+    let discount_total = listing_price_value.value * (1 - listing_discount_percent.value)
+    listing_discount_result.textContent = formatStyle.format(discount_total)
+    listing_discount_result.classList.remove('grey_out');
 }
 
 /*### IMAGE GALLERY */
