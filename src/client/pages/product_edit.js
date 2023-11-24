@@ -215,8 +215,8 @@ function payload_constructor() {
 
     let arrayFilters = new Set()
 
-    data.csrf = token_input.value || null;
-    data.match = { _id: _id_input.value } || null;
+    data.csrf = token_input.value || undefined;
+    if(_id_input) { data.match = { _id: _id_input.value || undefined };}
 
     /*
     DEVNOTE: The following loop is a mess and reaaally redundant. Specially the 'switch case list' part where its parsing and stringifying multiple times. Need to optimize it in the future...
@@ -249,11 +249,11 @@ function payload_constructor() {
 
         switch (input.dataset.type) {
             case 'list':
-                default_value = JSON.stringify(Array.from(JSON.parse(input.dataset.defaultValue)).sort((a, b) => { return a - b }))
+                (input.dataset.defaultValue) ? default_value = JSON.stringify(Array.from(JSON.parse(input.dataset.defaultValue)).sort((a, b) => { return a - b })) : undefined;
                 current_value = JSON.stringify(Array.from(input.querySelectorAll('[data-tag]')).map(tag => { return +tag.dataset.tag }).sort((a, b) => { return a - b }));
                 break;
             case 'checkbox':
-                default_value = JSON.parse(input.dataset.defaultValue)
+                (input.dataset.defaultValue) ? default_value = JSON.parse(input.dataset.defaultValue) : undefined
                 current_value = input.checked
                 break;
             case 'number':
@@ -269,7 +269,6 @@ function payload_constructor() {
 
         if (input.dataset.type == 'list') {
             current_value = JSON.parse(current_value)
-            console.log(current_value)
         }
 
         data.payload[input.dataset.formInput] = current_value
@@ -304,8 +303,7 @@ function payload_constructor() {
     }
 
     //send to API
-    console.log('Sending API')
-    // send_to_api(data)
+    send_to_api(data)
 }
 
 /*### Notificiation creator*/

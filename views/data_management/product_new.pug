@@ -44,15 +44,19 @@ html(lang=lang)
                             div
                                 label()=langData.data_management.brand_name[lang]
                                 select(class='input_box' name='brand_id' data-brand-input data-type='number' data-form-input='brand_id')
-                                    option(value='' disabled selected)=langData.main.search_filter.by_brand.select[lang]
                                     each brand in product_info.brands
-                                        option(value=brand.brand_id)=brand.brand_name
+                                        if (brand.brand_id == 0)
+                                            option(value=brand.brand_id selected)=brand.brand_name
+                                        else 
+                                            option(value=brand.brand_id)=brand.brand_name
                             div
                                 label()=langData.data_management.category_name[lang]
                                 select(class='input_box' name='category' data-type='number' data-form-input='category_id')
-                                    option(value='' disabled selected)=langData.main.search_filter.by_category.select[lang]
                                     each category in product_info.categories 
-                                        option(value=category.category_id)=category.category_name[lang]
+                                        if (category.category_id == 0)
+                                            option(value=category.category_id selected)=category.category_name[lang]
+                                        else 
+                                            option(value=category.category_id)=category.category_name[lang]
                             div
                                 label(for='tags_filter_input')=langData.data_management.tag[lang]
                                 div#tags_input_dropdown_container
