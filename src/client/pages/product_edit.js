@@ -1,6 +1,7 @@
 'use strict';
 
 import { HTML_ELEM } from '../modules/moduleHTMLElemMaker.js';
+import langData from '../../lang/lang.json' assert { type: 'json'};
 let lang = document.documentElement.getAttribute('lang');
 
 /*------------------------------------------------------------------------*\
@@ -14,8 +15,8 @@ let tag_search = document.querySelector('[data-tag-search]');
 let selected_tags;
 
 try {
-   selected_tags = Array.from(JSON.parse(tag_selected_container.dataset.defaultValue))
-} catch(err) {
+    selected_tags = Array.from(JSON.parse(tag_selected_container.dataset.defaultValue))
+} catch (err) {
     selected_tags = []
 }
 
@@ -58,7 +59,7 @@ tag_search.addEventListener('input', () => {
                 tag.style.display = 'none'
             }
         }
-        if (size > 8) { size = 8};
+        if (size > 8) { size = 8 };
         tag_list.size = size
     } else {
         for (let i = 0; i < unselected_options.length; i++) {
@@ -117,6 +118,7 @@ let formatStyle = new Intl.NumberFormat('en-US', {
 // formatStyle.format(raw_input)
 
 discount_value.forEach(elem => {
+    let listing_filter = elem.dataset.listingFilter;
     elem.addEventListener('input', () => {
         if (elem.value > 1) { elem.value = 1 }
         if (elem.value < 0) { elem.value = 0 }
@@ -127,6 +129,7 @@ discount_value.forEach(elem => {
 })
 
 price_value.forEach(elem => {
+    let listing_filter = elem.dataset.listingFilter;
     elem.addEventListener('input', () => {
         let checkbox = document.querySelector(`[data-listing-filter=${listing_filter}][data-discount-checkbox]`);
         if (!checkbox.checked) { return; }
@@ -141,8 +144,7 @@ discount_checkbox.forEach(elem => {
     })
 })
 
-if(Array.from(product_listing).length > 0) {
-    console.log(Array.from(product_listing).length)
+if (Array.from(product_listing).length > 0) {
     product_listing.forEach(elem => {
         discount_calculator(elem)
     })
@@ -214,7 +216,7 @@ function payload_constructor() {
     let arrayFilters = new Set()
 
     data.csrf = token_input.value || null;
-    data.match = { _id: _id_input.value} || null;
+    data.match = { _id: _id_input.value } || null;
 
     /*
     DEVNOTE: The following loop is a mess and reaaally redundant. Specially the 'switch case list' part where its parsing and stringifying multiple times. Need to optimize it in the future...
@@ -225,10 +227,25 @@ function payload_constructor() {
     ## current_value: Since the input is an actual <ul>, the data comes from an array of [data-tags] that has not been declared yet. Right now, its declaring the array of inputs, sorting it, stringifying it, and in case of a difference, sending it as a string, and parsing it in server for DB storage.
 
     */
+
+    let noti_count = 0 //to check for emtpy input fields. Used for stopping request sending to API
+
     Array.from(payload_array).forEach(input => {
         //check for changed value. If true, run the following:
         let default_value;
         let current_value;
+
+
+        //empty field check
+        try {
+            if (input.value === '') {
+                throw new Error()
+            }
+        } catch (err) {
+            noti_count++
+            let label = document.querySelector(`label[for=${input.id}]`);
+            label.style.color = 'red'
+        }
 
         switch (input.dataset.type) {
             case 'list':
@@ -250,8 +267,9 @@ function payload_constructor() {
 
         if (current_value == default_value) { return; }
 
-        if(input.dataset.type == 'list') {
+        if (input.dataset.type == 'list') {
             current_value = JSON.parse(current_value)
+            console.log(current_value)
         }
 
         data.payload[input.dataset.formInput] = current_value
@@ -261,7 +279,7 @@ function payload_constructor() {
             let sku = input.dataset.listingSku;
             let index = input.dataset.listingFilter;
             arrayFilters.add(`{"${index}.sku": "${sku}"}`)
-        } 
+        }
     })
 
     //create data.arrayFilters if necessary
@@ -272,12 +290,39 @@ function payload_constructor() {
     console.log('check data')
     console.log(data)
 
-    //send to API
-    if (Object.keys(data.payload).length == 0) { 
-        console.log('nothing to update')
-        return; 
+
+    //Stop request send if any notification or no change
+    if (Object.keys(data.payload).length == 0 || noti_count > 0) {
+
+        if (Object.keys(data.payload).length == 0 && noti_count == 0) {
+            notification_creator(langData.error.no_change[lang])
+        } else {
+            notification_creator(langData.error.empty_field[lang])
+        }
+
+        return;
     }
-    send_to_api(data)
+
+    //send to API
+    console.log('Sending API')
+    // send_to_api(data)
+}
+
+/*### Notificiation creator*/
+function notification_creator(err_msg) {
+    let noti_container = document.querySelector('[data-noti-container]');
+    let noti_msg = new HTML_ELEM('p');
+
+    noti_msg.addClass('orange');
+
+    let noti_i = noti_msg.addElement('i');
+    noti_i.addClass('fa-solid');
+    noti_i.addClass('fa-triangle-exclamation');
+
+    let noti_text = noti_msg.addElement('span');
+    noti_text.addText(` ${err_msg}`);
+
+    noti_container.appendChild(noti_msg.getElement());
 }
 
 /*### send to API*/

@@ -64,7 +64,7 @@ html(lang=lang)
                                 div
                                     label(for='tags_filter_input')=langData.data_management.tag[lang]
                                     div#tags_input_dropdown_container
-                                        input(type='text' id='tags_filter_input' class='input_box' data-tag-search)
+                                        input(id='tags_filter_input' type='text' class='input_box' data-tag-search)
                                         select(id='tags_dropdown' size='8' data-tag-list)    
                                             each tag in product_info.tags
                                                 option(value=tag.tag_id data-tag=tag.tag_id data-selected='false')=tag.tag_name[lang]
