@@ -508,13 +508,6 @@ let apiRoute = function (app, db) {
                 }
 
                 product_db = product_db[0]
-
-                /*DEV: Listing test*/
-                // let testerino = await Products.aggregate([
-                //     { $match: {'listing.sku': 'KCPRO003'}},
-                //     { $project: { _id: 1}}
-                // ])
-                // console.log(testerino)
             }
 
             if (!req.params.product_id) {
@@ -565,7 +558,6 @@ let apiRoute = function (app, db) {
                 return;
             }
 
-            //sku validation
             if( req.body.validate_sku ) {
                 let sku_check = await Products.aggregate([
                     { $match: {
@@ -579,7 +571,7 @@ let apiRoute = function (app, db) {
                     return;
                 }
             }
-//$regex: new RegExp("desiredValue", "i")
+
             let update;
             if (payload_arrayFilters) {
                 console.log('ARRAY FILTER =D')
@@ -646,8 +638,6 @@ let apiRoute = function (app, db) {
                 req.flash('error', 'unexpected_error')
                 return res.redirect('/login')
             }
-            // let user = { profile_name: 'longASSnameJUSTcus', account_settings: {role: "webmaster"}}
-
 
             let flash_message = {
                 notification: req.flash('notification') || [],
@@ -796,34 +786,6 @@ let apiRoute = function (app, db) {
 
             user_update.target._id = req.session.passport.user;
             req.session.lang = user_update.update['user_preferences.lang']
-
-            // switch (main_dir) {
-            //     case 'profile':
-            //         db_selector = Users;
-            //         break;
-            //     case 'products':
-            //         db_selector = Products
-            //         break;
-            //     case 'brands':
-            //         db_selector = Brands
-            //         break;
-            //     case 'tags':
-            //         db_selector = Tags
-            //         break;
-            //     case 'categories':
-            //         db_selector = Categories
-            //         break;
-            //     // case '':
-            //     //     db_selector = 
-            //     //     break;
-            //     // case '':
-            //     //     db_selector = 
-            //     //     break;
-            //     default:
-            //         try { throw new Error('internal error') } catch (err) { next(err) }
-            //         return;
-            // }
-
 
             await Users.findOneAndUpdate(
                 user_update.target,
