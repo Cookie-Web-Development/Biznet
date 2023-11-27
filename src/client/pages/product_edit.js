@@ -188,7 +188,7 @@ image_modal.addEventListener('click', () => {
 })
 
 /*------------------------------------------------------------------------*\
-++ API ENDPOINT
+++ MAIN PAYLOAD: General product edit
 \*------------------------------------------------------------------------*/
 
 let form = document.querySelector('[data-api-form]');
@@ -199,7 +199,7 @@ form.addEventListener('submit', (e) => {
     return;
 })
 
-/*### payload constructor*/
+/*### PAYLOAD: UPDATE PRODUCT*/
 let send_btn = document.querySelector('[data-api-button="save"]');
 let data = { payload: {} };
 
@@ -210,13 +210,11 @@ send_btn.addEventListener('click', () => {
 
 function payload_constructor() {
     let payload_array = document.querySelectorAll('[data-type]');
-    let token_input = document.querySelector('[data-form-input="token"]');
-    let _id_input = document.querySelector('[data-form-input="_id"]');
-
     let arrayFilters = new Set()
 
+    //csrf Token
+    let token_input = document.querySelector('[data-form-input="token"]');
     data.csrf = token_input.value || undefined;
-    if(_id_input) { data.match = { _id: _id_input.value || undefined };}
 
     /*
     DEVNOTE: The following loop is a mess and reaaally redundant. Specially the 'switch case list' part where its parsing and stringifying multiple times. Need to optimize it in the future...
@@ -281,14 +279,21 @@ function payload_constructor() {
         }
     })
 
+    //set match and $set if updating product
+    let _id_input = document.querySelector('[data-form-input="_id"]');
+    if (_id_input) {
+        data.match = { _id: _id_input.value || undefined };
+        let $set = data.payload;
+
+        delete data.payload
+
+        data.payload = { $set: $set }
+    }
+
     //create data.arrayFilters if necessary
     if (arrayFilters.size > 0) {
         data.arrayFilters = Array.from(arrayFilters).map(entry => { return JSON.parse(entry) })
     }
-
-    console.log('check data')
-    console.log(data)
-
 
     //Stop request send if any notification or no change
     if (Object.keys(data.payload).length == 0 || noti_count > 0) {
@@ -306,22 +311,93 @@ function payload_constructor() {
     send_to_api(data)
 }
 
-/*### Notificiation creator*/
-function notification_creator(err_msg) {
-    let noti_container = document.querySelector('[data-noti-container]');
-    let noti_msg = new HTML_ELEM('p');
+/*------------------------------------------------------------------------*\
+++ LISTING PAYLOAD: Listing management
+\*------------------------------------------------------------------------*/
 
-    noti_msg.addClass('orange');
+//### Open and Close modal
+let add_listing_btn = document.querySelector('[data-api-button="listing_create"]');
+let delete_listing_btn = document.querySelectorAll('[data-api-button="listing_delete"]');
+let close_modal_btn = document.querySelectorAll('[data-modal-close]')
 
-    let noti_i = noti_msg.addElement('i');
-    noti_i.addClass('fa-solid');
-    noti_i.addClass('fa-triangle-exclamation');
+add_listing_btn.addEventListener('click', () => {
+    let target = document.querySelector(`[data-listing-modal=${add_listing_btn.dataset.apiButton}]`)
 
-    let noti_text = noti_msg.addElement('span');
-    noti_text.addText(` ${err_msg}`);
+    target.showModal()
+})
 
-    noti_container.appendChild(noti_msg.getElement());
+delete_listing_btn.forEach(btn => {
+    btn.addEventListener('click', () => {
+        let target = document.querySelector(`[data-listing-modal=${btn.dataset.apiButton}]`);
+        let sku_field_update = target.querySelector('input[name="sku"]')
+
+        sku_field_update.value = btn.dataset.sku
+
+        target.showModal()
+    })
+})
+
+close_modal_btn.forEach(btn => {
+    btn.addEventListener('click', () => {
+        let target = document.querySelector(`[data-listing-modal=${btn.dataset.modalClose}]`)
+
+        target.close()
+    })
+})
+
+/*### form submit*/
+let listing_form = document.querySelectorAll('[data-listing-form]')
+
+////disable default form submit
+listing_form.forEach(form => {
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        return;
+    })
+})
+
+/*### form process */
+let listing_form_submit_btn = document.querySelectorAll('[data-modal-send]');
+
+listing_form_submit_btn.forEach(btn => {
+    btn.addEventListener('click', () => {
+        let target_form = document.querySelector(`[data-listing-form=${btn.dataset.modalSend}]`);
+        listing_request(target_form)
+    })
+})
+
+function listing_request(form_node) {
+    let input_arr = form_node.querySelectorAll('input');
+    let listing_data = {};
+
+    let payload_template = {
+        token: (input) => {
+            listing_data.csrf = input.value
+        },
+        _id: (input) => {
+            listing_data.match = { [input.name]: input.value }
+        },
+        listing_create: (input) => {
+            listing_data.payload = {
+                $push: { listing: { [input.name]: input.value } }
+            };
+            listing_data.validate_sku = input.value
+        },
+        listing_delete: (input) => {
+            listing_data.payload = { $pull: { listing: { [input.name]: input.value } } }
+        }
+    }
+
+    Array.from(input_arr).forEach(input => {
+        payload_template[input.dataset.formInput](input)
+    })
+
+    send_to_api(listing_data)
 }
+
+/*------------------------------------------------------------------------*\
+++ API ENDPOINT
+\*------------------------------------------------------------------------*/
 
 /*### send to API*/
 let endpoint = form.getAttribute('action')
@@ -340,4 +416,25 @@ function send_to_api(data) {
             window.location.href = response.url
         })
         .catch(err => { })
+}
+
+/*------------------------------------------------------------------------*\
+++ NOTIFICATIONS
+\*------------------------------------------------------------------------*/
+
+/*### Notificiation creator*/
+function notification_creator(err_msg) {
+    let noti_container = document.querySelector('[data-noti-container]');
+    let noti_msg = new HTML_ELEM('p');
+
+    noti_msg.addClass('orange');
+
+    let noti_i = noti_msg.addElement('i');
+    noti_i.addClass('fa-solid');
+    noti_i.addClass('fa-triangle-exclamation');
+
+    let noti_text = noti_msg.addElement('span');
+    noti_text.addText(` ${err_msg}`);
+
+    noti_container.appendChild(noti_msg.getElement());
 }

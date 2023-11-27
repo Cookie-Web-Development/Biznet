@@ -3,6 +3,7 @@ html(lang=lang)
     head 
         include ../partials/_head.pug
         link(rel="stylesheet", href="/public/css/components/filter-and-result.css")
+        link(rel="stylesheet", href="/public/css/components/modals.css")
         link(rel="stylesheet", href="/public/css/pages/company.css")
     body.company_body.catalog_edit_body 
         include include/_company_header.pug
@@ -90,7 +91,10 @@ html(lang=lang)
                                     p No variation type listed
                                 else 
                                     p Some Variation type
-                            p LISTING CONTAINER 
+                            h3=langData.data_management.listing_variant[lang]
+                            section(class='listing_btn_container')
+                                button(type='button' class='' data-api-button='listing_create' title=langData.data_management.listing_creation.toolbar[lang])
+                                    i(class='fa-solid fa-plus') 
                             each listing, index in db_result.listing
                                 section(class='listing_index' data-product-listing data-listing-filter=`i${index}`) 
                                     section(class='listing_general')
@@ -113,23 +117,51 @@ html(lang=lang)
                                             div(class='listing_discount_calc')
                                                 p=langData.data_management.price_discounted[lang]
                                                 p(data-listing-filter=`i${index}` data-discount-calc)
-                                        div(class='checkbox_container')
-                                            if (listing.publish)
-                                                input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-filter=`i${index}` data-listing-sku=listing.sku data-type='checkbox' data-default-value='true' data-form-input=`listing.$[i${index}].publish` checked)
-                                            else
-                                                input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-filter=`i${index}` data-listing-sku=listing.sku data-type='checkbox' data-default-value='false' data-form-input=`listing.$[i${index}].publish`)
-                                            label(for=`${listing.sku}_published_listing`)=langData.main.search_filter.published_listing[lang]
+                                        div(class='listing_setting')
+                                            div(class='checkbox_container')
+                                                if (listing.publish)
+                                                    input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-filter=`i${index}` data-listing-sku=listing.sku data-type='checkbox' data-default-value='true' data-form-input=`listing.$[i${index}].publish` checked)
+                                                else
+                                                    input(type='checkbox' id=`${listing.sku}_published_listing` name='publish' data-listing-filter=`i${index}` data-listing-sku=listing.sku data-type='checkbox' data-default-value='false' data-form-input=`listing.$[i${index}].publish`)
+                                                label(for=`${listing.sku}_published_listing`)=langData.main.search_filter.published_listing[lang]
+                                            button(type='button' class='' data-api-button='listing_delete' data-sku=listing.sku title=langData.data_management.listing_delete.toolbar[lang])
+                                                i(class='fa-solid fa-trash-can') 
                                     section(class='listing_images') 
-                                        p Image Gallery
+                                        p=langData.data_management.image_gallery[lang]
                                         div(class='image_thumbnail')
-                                            each image in listing.images
-                                                img(data-image=image src=`/public/img/products-images/${image}`)    
+                                            if listing.images.length < 1
+                                                p=langData.data_management.image_gallery.no_images[lang]
+                                            else
+                                                each image in listing.images
+                                                    img(data-image=image src=`/public/img/products-images/${image}`)    
                         section(class='btn_container')
                             button(type='button' class='button' data-api-button='save')=langData.profile.save_changes[lang]
                             a(href='/company/catalog_edit')
                                 button(type='button' class='button' data-api-button='cancel')=langData.profile.cancel[lang]
         dialog(data-image-modal) 
-                img
+            img
+        dialog(class='api_modal' data-listing-modal='listing_create')
+            h2=langData.data_management.listing_creation[lang]
+            form(action=`/company/catalog_edit/${db_result._id}` method='PUT' class='api_modal_form' data-listing-form='listing_create')
+                input(type='hidden' name='token' data-form-input='token' value=csrf readonly)
+                input(type='hidden' name='_id' data-form-input='_id' value=db_result._id readonly)
+                label(for="new_sku") SKU
+                input(type='text' name='sku' data-form-input='listing_create' id='new_sku') 
+            div(class='modal_btn_container')
+                button(type='button' class='button' data-modal-send='listing_create')=langData.data_management.save[lang]
+                button(type='button' class='button' data-modal-close='listing_create')=langData.data_management.cancel[lang]
+        //- SUPER_ADMIN ONLY
+        dialog(class='api_modal' data-listing-modal='listing_delete')
+            h2=langData.data_management.listing_delete[lang]
+            form(action=`/company/catalog_edit/${db_result._id}` method='PUT' class='api_modal_form' data-listing-form='listing_delete')
+                input(type='hidden' name='token' data-form-input='token' value=csrf readonly)
+                input(type='hidden' name='_id' data-form-input='_id' value=db_result._id readonly)
+                p=langData.data_management.listing_delete.message[lang]
+                label(for="sku") SKU
+                input(type='text' name='sku' data-form-input='listing_delete' id='sku' readonly) 
+            div(class='modal_btn_container')
+                button(type='button' class='button' data-modal-send='listing_delete')=langData.data_management.delete[lang]
+                button(type='button' class='button' data-modal-close='listing_delete')=langData.data_management.cancel[lang]
         footer 
         script(type='module' src='/src/client/components/notification_bar.js' defer)
         script(type='module' src='/src/client/pages/product_edit.js')

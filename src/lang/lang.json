@@ -443,9 +443,33 @@
             "en": "# tags",
             "es": "# etiquetas"
         },
+        "listing_variant": {
+            "en": "Variants Listing",
+            "es": "Listado de variantes"
+        },
+        "listing_creation": {
+            "en": "Product Variant Creation",
+            "es": "Creación de variante de producto",
+            "toolbar": {
+                "en": "Create a new product variant",
+                "es": "Crear una nueva variante de producto"
+            }
+        },
+        "listing_delete": {
+            "en": "Product Variant Delete",
+            "es": "Borrar variante de producto",
+            "toolbar": {
+                "en": "Delete product variant",
+                "es": "Borrar variante de producto"
+            },
+            "message": {
+                "en": "The following product variant will be deleted. Do you wish to continue?",
+                "es": "La siguiente variante de producto será eliminado. ¿Seguro que desea continuar?"
+            }
+        },
         "listing_length": {
-            "en": "# listing",
-            "es": "# listado"
+            "en": "# variants",
+            "es": "# variantes"
         },
         "product_name": {
             "en": "Product Name",
@@ -458,6 +482,14 @@
         "price": {
             "en": "Price",
             "es": "Precio"
+        },
+        "image_gallery": {
+            "en": "Image Gallery",
+            "es": "Galería de imágenes",
+            "no_images": {
+                "en": "No images",
+                "es": "Sin imágenes"
+            }
         },
         "price_discounted": {
             "en": "Discounted Price",
@@ -544,6 +576,10 @@
         "empty_field": {
             "en": "Empty required field.",
             "es": "Campo requerido vacío."
+        },
+        "sku_duplicate": {
+            "en": "SKU already exists",
+            "es": "SKU ingresado ya existe"
         }
     },
     "notification": {

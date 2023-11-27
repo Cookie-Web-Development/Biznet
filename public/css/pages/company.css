@@ -566,14 +566,17 @@ tbody .table_inline_btn:active>i {
     gap: 10px;
 }
 
-/* .listing_discount_div > * {
-    max-width: 50%;
-} */
-
 .listing_general {
     display: flex;
     flex-direction: column;
     gap: 5px;
+}
+
+.listing_setting {
+    display: flex;
+    flex-direction: row;
+    align-items: center ;
+    gap: 15px;
 }
 
 .listing_images {

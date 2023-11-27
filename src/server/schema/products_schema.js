@@ -9,7 +9,7 @@ let listing_schema = mongoose.Schema({
     },
     price: {
         type: Number, 
-        required: true
+        default: 0
     },
     discount: {
         type: Boolean, 
@@ -73,8 +73,38 @@ let products_schema = mongoose.Schema({
         es: String
     }],
     listing: {
-        type: [listing_schema],
-        required: true
+        type: [{
+            variation_options: {
+                en: Object,
+                es: Object
+            },
+            price: {
+                type: Number, 
+                default: 0
+            },
+            discount: {
+                type: Boolean, 
+                default: false
+            },
+            discount_percent: {
+                type: Number, 
+                default: 0
+            },
+            featured: {
+                type: Boolean, 
+                default: false
+            },
+            images: [String],
+            sku: {
+                type: String, 
+                required: true
+            },
+            publish: {
+                type: Boolean,
+                default: false
+            }
+        }],
+        default: []
     },
     document_publish: {
         type: Boolean,
@@ -82,4 +112,4 @@ let products_schema = mongoose.Schema({
     }
 });
 
-export { products_schema, listing_schema}
+export { products_schema }

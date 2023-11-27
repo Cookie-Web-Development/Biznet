@@ -508,7 +508,13 @@ let apiRoute = function (app, db) {
                 }
 
                 product_db = product_db[0]
-                //need to load all brands, categories, and tags
+
+                /*DEV: Listing test*/
+                // let testerino = await Products.aggregate([
+                //     { $match: {'listing.sku': 'KCPRO003'}},
+                //     { $project: { _id: 1}}
+                // ])
+                // console.log(testerino)
             }
 
             if (!req.params.product_id) {
@@ -531,19 +537,25 @@ let apiRoute = function (app, db) {
 
             }
         })
+        .post(/*check_auth('/login', true), check_role,*/ async (req, res, next) => {
+            let payload_content = { $set: req.body.payload }  || null;
+            let payload_csrf = req.body.csrf || null;
+            let payload_arrayFilters = req.body.arrayFilters || null;
+            
+        })
         .put(/*check_auth('/login', true), check_role,*/ async (req, res, next) => {
             let route_id = req.params.product_id || undefined;
 
-            if (!route_id) {
+            let payload_content = req.body.payload  || null
+            let payload_csrf = req.body.csrf || null;
+            let payload_id = req.body.match || null;
+            let payload_arrayFilters = req.body.arrayFilters || null;
+            
+            if (!route_id || route_id !== payload_id._id) {
                 res.json({ url: `/company/catalog_edit` })
                 return;
             }
             
-            let payload_content = { $set: req.body.payload }  || null
-            let payload_csrf = req.body.csrf || null;
-            let payload_id = req.body.match || null;
-            let payload_arrayFilters = req.body.arrayFilters || null;
-
             //validate request
             ////check csrf
             if(!payload_csrf || payload_csrf !== req.session._csrf) {
@@ -553,6 +565,21 @@ let apiRoute = function (app, db) {
                 return;
             }
 
+            //sku validation
+            if( req.body.validate_sku ) {
+                let sku_check = await Products.aggregate([
+                    { $match: {
+                        'listing.sku': { $regex: new RegExp(req.body.validate_sku, "i")}
+                    }}
+                ]);
+
+                if(sku_check.length > 0) {
+                    req.flash('error', 'sku_duplicate');
+                    res.json({url: `/company/catalog_edit/${route_id}`});
+                    return;
+                }
+            }
+//$regex: new RegExp("desiredValue", "i")
             let update;
             if (payload_arrayFilters) {
                 console.log('ARRAY FILTER =D')
@@ -566,9 +593,9 @@ let apiRoute = function (app, db) {
             } else {
                 update = await Products.findOneAndUpdate(
                     payload_id,
-                    payload_content
+                    payload_content,
+                    { new: true}
                 )
-
             }
         
             if (update === null) {
