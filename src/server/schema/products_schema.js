@@ -94,10 +94,13 @@ let products_schema = mongoose.Schema({
                 type: Boolean, 
                 default: false
             },
-            images: [String],
+            images: {
+                type: [String],
+                default: ['no-image.webp']
+            },
             sku: {
                 type: String, 
-                required: true
+                default: ''
             },
             publish: {
                 type: Boolean,

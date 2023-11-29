@@ -39,16 +39,10 @@ html(lang=lang)
                                 input(class='input_box' id=`product_name_${lang}` name=`product_name.${lang}` type='text' data-default-value=db_result.product_name[lang] data-form-input=`product_name.${lang}` data-type='text' value=db_result.product_name[lang])
                                 label(for=`product_name_${notLang}`)=langData.profile.language_sel[notLang]
                                 input(class='input_box' id=`product_name_${notLang}` name=`product_name.${notLang}` type='text' data-type='text' data-default-value=db_result.product_name[notLang] data-form-input=`product_name.${notLang}` value=db_result.product_name[notLang])
-                            section(class='general_description')
-                                p=langData.data_management.product_description[lang]
-                                label(for=`product_description_${lang}`)=langData.profile.language_sel[lang]
-                                textarea(class='input_box' id=`product_description_${lang}` name=`description.${lang}` cols='20' rows='3' type='text' data-type='text' data-default-value=db_result.description[lang] data-form-input=`description.${lang}`)=db_result.description[lang]
-                                label(for=`product_description_${notLang}`)=langData.profile.language_sel[notLang]
-                                textarea(class='input_box' id=`product_description_${notLang}` name=`description.${notLang}` cols='20' rows='3' type='text' data-type='text' data-default-value=db_result.description[notLang] data-form-input=`description.${notLang}`)=db_result.description[notLang]
                             section(class='general_search')
                                 div
-                                    label()=langData.data_management.brand_name[lang]
-                                    select(class='input_box' name='brand_id' data-brand-input data-type='number' data-default-value=db_result.brand_id data-form-input='brand_id')
+                                    label(for='brand_id')=langData.data_management.brand_name[lang]
+                                    select(class='input_box' id='brand_id' name='brand_id' data-brand-input data-type='number' data-default-value=db_result.brand_id data-form-input='brand_id')
                                         each brand in product_info.brands
                                             if (brand.brand_id === db_result.brand_id)
                                                 option(value=brand.brand_id selected)=brand.brand_name
@@ -70,6 +64,12 @@ html(lang=lang)
                                             each tag in product_info.tags
                                                 option(value=tag.tag_id data-tag=tag.tag_id data-selected='false')=tag.tag_name[lang]
                                     ul(data-default-value=db_result.tag_id data-type='list' data-form-input='tag_id' data-tag-selected id='selected_tags')
+                            section(class='general_description')
+                                p=langData.data_management.product_description[lang]
+                                label(for=`product_description_${lang}`)=langData.profile.language_sel[lang]
+                                textarea(class='input_box' id=`product_description_${lang}` name=`description.${lang}` cols='20' rows='3' type='text' data-type='text' data-default-value=db_result.description[lang] data-form-input=`description.${lang}`)=db_result.description[lang]
+                                label(for=`product_description_${notLang}`)=langData.profile.language_sel[notLang]
+                                textarea(class='input_box' id=`product_description_${notLang}` name=`description.${notLang}` cols='20' rows='3' type='text' data-type='text' data-default-value=db_result.description[notLang] data-form-input=`description.${notLang}`)=db_result.description[notLang]
                             section(class='general_listing')
                                 div(class='checkbox_container')
                                     if (db_result.featured)
@@ -138,6 +138,8 @@ html(lang=lang)
                             button(type='button' class='button' data-api-button='save')=langData.profile.save_changes[lang]
                             a(href='/company/catalog_edit')
                                 button(type='button' class='button' data-api-button='cancel')=langData.profile.cancel[lang]
+                            //- SUPER ADMIN ONLY
+                            button(type='button' class='button' data-api-button='product_delete')=langData.data_management.delete[lang]
         dialog(data-image-modal) 
             img
         dialog(class='api_modal' data-listing-modal='listing_create')
@@ -148,8 +150,8 @@ html(lang=lang)
                 label(for="new_sku") SKU
                 input(type='text' name='sku' data-form-input='listing_create' id='new_sku') 
             div(class='modal_btn_container')
-                button(type='button' class='button' data-modal-send='listing_create')=langData.data_management.save[lang]
-                button(type='button' class='button' data-modal-close='listing_create')=langData.data_management.cancel[lang]
+                button(type='button' class='button' data-listing-modal-send='listing_create')=langData.data_management.save[lang]
+                button(type='button' class='button' data-listing-modal-close='listing_create')=langData.data_management.cancel[lang]
         //- SUPER_ADMIN ONLY
         dialog(class='api_modal' data-listing-modal='listing_delete')
             h2=langData.data_management.listing_delete[lang]
@@ -160,8 +162,19 @@ html(lang=lang)
                 label(for="sku") SKU
                 input(type='text' name='sku' data-form-input='listing_delete' id='sku' readonly) 
             div(class='modal_btn_container')
-                button(type='button' class='button' data-modal-send='listing_delete')=langData.data_management.delete[lang]
-                button(type='button' class='button' data-modal-close='listing_delete')=langData.data_management.cancel[lang]
+                button(type='button' class='button' data-listing-modal-send='listing_delete')=langData.data_management.delete[lang]
+                button(type='button' class='button' data-listing-modal-close='listing_delete')=langData.data_management.cancel[lang]
+        dialog(class='api_modal' data-product-modal='product_delete')
+            h2=langData.data_management.delete[lang] 
+            form(action=`/company/catalog_edit/${db_result._id}` method='DELETE' class='api_modal_form' data-modal-form='product_delete')
+                input(type='hidden' name='token' data-form-input='token' value=csrf readonly)
+                input(type='hidden' name='_id' data-form-input='_id' value=db_result._id readonly)
+                p(style="margin-bottom: 1rem")=langData.data_management.delete.message[lang]
+                    |  
+                    span=db_result.product_name[lang]
+            div(class='modal_btn_container')
+                button(type='button' class='button' data-modal-send='product_delete')=langData.data_management.delete[lang] 
+                button(type='button' class='button' data-modal-close='product_delete')=langData.data_management.cancel[lang]
         footer 
         script(type='module' src='/src/client/components/notification_bar.js' defer)
         script(type='module' src='/src/client/pages/product_edit.js')

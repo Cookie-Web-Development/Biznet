@@ -373,7 +373,11 @@
         },
         "delete": {
             "en": "Delete",
-            "es": "Eliminar"
+            "es": "Eliminar",
+            "message": {
+                "en": "The following product will be deleted:",
+                "es": "Éste producto será eliminado:"
+            }
         },
         "delete_confirm": {
             "en": "Are you sure you want to delete this entry?",

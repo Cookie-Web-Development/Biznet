@@ -34,25 +34,19 @@ html(lang=lang)
                             input(class='input_box' id=`product_name_${lang}` name=`product_name.${lang}` type='text' data-form-input=`product_name.${lang}` data-type='text')
                             label(for=`product_name_${notLang}`)=langData.profile.language_sel[notLang]
                             input(class='input_box' id=`product_name_${notLang}` name=`product_name.${notLang}` type='text' data-type='text' data-form-input=`product_name.${notLang}`)
-                        section(class='general_description')
-                            p=langData.data_management.product_description[lang]
-                            label(for=`product_description_${lang}`)=langData.profile.language_sel[lang]
-                            textarea(class='input_box' id=`product_description_${lang}` name=`description.${lang}` cols='20' rows='3' type='text' data-type='text' data-form-input=`description.${lang}`)
-                            label(for=`product_description_${notLang}`)=langData.profile.language_sel[notLang]
-                            textarea(class='input_box' id=`product_description_${notLang}` name=`description.${notLang}` cols='20' rows='3' type='text' data-type='text' data-form-input=`description.${notLang}`)
                         section(class='general_search')
                             div
-                                label()=langData.data_management.brand_name[lang]
-                                select(class='input_box' name='brand_id' data-brand-input data-type='number' data-form-input='brand_id')
+                                label(for='brand')=langData.data_management.brand_name[lang]
+                                select(class='input_box' id='brand' name='brand_id' data-brand-input data-type='number' data-form-input='brand_id')
                                     each brand in product_info.brands
                                         if (brand.brand_id == 0)
                                             option(value=brand.brand_id selected)=brand.brand_name
-                                        else 
+                                        else
                                             option(value=brand.brand_id)=brand.brand_name
                             div
-                                label()=langData.data_management.category_name[lang]
-                                select(class='input_box' name='category' data-type='number' data-form-input='category_id')
-                                    each category in product_info.categories 
+                                label(for='category')=langData.data_management.category_name[lang]
+                                select(class='input_box' id='category' name='category' data-type='number' data-form-input='category_id')
+                                    each category in product_info.categories
                                         if (category.category_id == 0)
                                             option(value=category.category_id selected)=category.category_name[lang]
                                         else 
@@ -60,11 +54,17 @@ html(lang=lang)
                             div
                                 label(for='tags_filter_input')=langData.data_management.tag[lang]
                                 div#tags_input_dropdown_container
-                                    input(type='text' id='tags_filter_input' class='input_box' data-tag-search)
+                                    input(id='tags_filter_input' type='text' class='input_box' data-tag-search)
                                     select(id='tags_dropdown' size='8' data-tag-list)    
                                         each tag in product_info.tags
                                             option(value=tag.tag_id data-tag=tag.tag_id data-selected='false')=tag.tag_name[lang]
                                 ul(data-type='list' data-form-input='tag_id' data-tag-selected id='selected_tags')
+                        section(class='general_description')
+                            p=langData.data_management.product_description[lang]
+                            label(for=`product_description_${lang}`)=langData.profile.language_sel[lang]
+                            textarea(class='input_box' id=`product_description_${lang}` name=`description.${lang}` cols='20' rows='3' type='text' data-type='text' data-form-input=`description.${lang}`)
+                            label(for=`product_description_${notLang}`)=langData.profile.language_sel[notLang]
+                            textarea(class='input_box' id=`product_description_${notLang}` name=`description.${notLang}` cols='20' rows='3' type='text' data-type='text' data-form-input=`description.${notLang}`)
                         section(class='general_listing')
                             div(class='checkbox_container')
                                 input(class='product_checkbox' type='checkbox' data-type='checkbox' id='product_featured' data-form-input='featured' name='featured')
@@ -72,18 +72,10 @@ html(lang=lang)
                             div(class='checkbox_container')
                                 input(type='checkbox' id='published_product' name='document_publish' data-type='checkbox' data-form-input='document_publish')
                                 label(for='published_product')=langData.main.search_filter.published_product[lang]
-                    //- Listings
-                    section(class='listing_info')
-                        section(class='WIP')
-                            p Some Variation type
-                        p LISTING CONTAINER 
-                        p Add more listing function    
                     section(class='btn_container')
                         button(type='button' class='button' data-api-button='save')=langData.profile.save_changes[lang]
                         a(href='/company/catalog_edit')
                             button(type='button' class='button' data-api-button='cancel')=langData.profile.cancel[lang]
-        dialog(data-image-modal) 
-                img
         footer 
         script(type='module' src='/src/client/components/notification_bar.js' defer)
         script(type='module' src='/src/client/pages/product_edit.js')

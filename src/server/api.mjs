@@ -80,9 +80,6 @@ let apiRoute = function (app, db) {
     let Sessions = db.model('sessions', session_schema);
     let Users = db.model('users', users_schema);
 
-    //Product SKU uniqueness index
-    Products.collection.createIndex({ 'listing.sku': 1 }, { unique: true });
-
     //format currency in USD with two decimal places
     let formatOptions = {
         style: 'currency',
@@ -466,7 +463,7 @@ let apiRoute = function (app, db) {
         })
 
     app.route('/company/catalog_edit/:product_id?')
-        .get(/*check_auth('/login', true), check_role,*/async (req, res, next) => {
+        .get(check_auth('/login', true), check_role, async (req, res, next) => {
             /*
             main route: /company/catalog_edit/
             product edit route: /company/catalog_edit/:product_id
@@ -490,13 +487,11 @@ let apiRoute = function (app, db) {
 
             if (req.params.product_id === 'new') {
                 //new
-                console.log('DEV_MODE: New_product')
                 render_file = 'data_management/product_new'
             }
 
             if (req.params.product_id && req.params.product_id !== 'new') {
                 //product_edit
-                console.log('DEV_MODE: product_id: ', req.params.product_id)
                 render_file = 'data_management/product_edit'
 
                 try {
@@ -530,13 +525,43 @@ let apiRoute = function (app, db) {
 
             }
         })
-        .post(/*check_auth('/login', true), check_role,*/ async (req, res, next) => {
-            let payload_content = { $set: req.body.payload }  || null;
+        ///company/catalog_edit/:product_id?
+        .post(check_auth('/login', true), check_role, async (req, res) => {
+            let payload_content =  req.body.payload  || null;
             let payload_csrf = req.body.csrf || null;
-            let payload_arrayFilters = req.body.arrayFilters || null;
-            
+
+            //validate token
+            if(!payload_csrf || payload_csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ redirect_url: `/company/catalog_edit/new` })
+                return;
+            }
+
+            //validate required fields
+            if(
+                !payload_content['product_name.es'] ||
+                !payload_content['product_name.en'] ||
+                payload_content['product_name.es'] === '' ||
+                payload_content['product_name.en'] === ''
+            ){
+                req.flash('error', 'empty_field')
+                res.json({ redirect_url: `/company/catalog_edit/new`})
+                return;
+            }
+
+
+            let new_entry = await Products.create(payload_content)
+            let new_id = await new_entry._id.toHexString()
+
+            //flash message
+            req.flash('notification', 'save_success')
+
+            res.json({redirect_url: `/company/catalog_edit/${new_id}`})
+            return 
         })
-        .put(/*check_auth('/login', true), check_role,*/ async (req, res, next) => {
+        ///company/catalog_edit/:product_id?
+        .put(check_auth('/login', true), check_role, async (req, res, next) => {
             let route_id = req.params.product_id || undefined;
 
             let payload_content = req.body.payload  || null
@@ -574,9 +599,6 @@ let apiRoute = function (app, db) {
 
             let update;
             if (payload_arrayFilters) {
-                console.log('ARRAY FILTER =D')
-                console.log(payload_content)
-                console.log(payload_arrayFilters)
                 update = await Products.findOneAndUpdate(
                     payload_id,
                     payload_content,
@@ -598,8 +620,41 @@ let apiRoute = function (app, db) {
             //flash message
             req.flash('notification', 'save_success')
 
-            return res.json({ url: `/company/catalog_edit/${route_id}`})
+            return res.json({ redirect_url: `/company/catalog_edit/${route_id}`})
 
+        })
+        ///company/catalog_edit/:product_id?
+        .delete(check_auth('/login', true), check_role, async (req, res, next) => {
+            let route_id = req.params.product_id || null;
+            let payload_csrf = req.body.csrf || null;
+            let payload_id = req.body._id || null;
+
+            //validation
+            if (!route_id || !payload_id || route_id !== payload_id) {
+                res.json( { redirect_url : `/company/catalog_edit`})
+                return;
+            }
+
+            if (!payload_csrf || payload_csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ redirect_url: `/company/catalog_edit/${route_id}` })
+                return;
+            }
+
+            let data_delete = await Products.deleteOne({ _id: payload_id })
+
+            if( data_delete.deletedCount == 0 ) {
+                req.flash('error', 'no_change')
+                res.json({ redirect_url: `/company/catalog_edit/${route_id}`})
+                return;
+            }
+
+            //flash message
+            req.flash('notification', 'save_success');
+
+            res.json({ redirect_url: `/company/catalog_edit`})
+            return;
         })
 
     app.route('/company/:main_route') //workbench

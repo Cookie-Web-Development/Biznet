@@ -3,6 +3,8 @@
 import { HTML_ELEM } from '../modules/moduleHTMLElemMaker.js';
 import langData from '../../lang/lang.json' assert { type: 'json'};
 let lang = document.documentElement.getAttribute('lang');
+let debounce_delay = 500; //ms
+let eventDispatcherCheck = false; //helps debounce when events are fired multiple times
 
 /*------------------------------------------------------------------------*\
 ++ TAGS LIST
@@ -170,31 +172,34 @@ function discount_calculator(elem) {
 
 /*### IMAGE GALLERY */
 let image_thumbnails = document.querySelectorAll('[data-image]')
-let image_modal = document.querySelector('[data-image-modal]')
-let image_modal_img = image_modal.querySelector('img');
-let image_local_route = '/public/img/products-images/'
 
-image_thumbnails.forEach(image => {
-    image.addEventListener('click', (e) => {
-        if (e.target.dataset.image) {
-            image_modal_img.setAttribute('src', image_local_route + e.target.dataset.image)
-            image_modal.showModal()
-        }
+if (image_thumbnails.length > 0) {
+    let image_modal = document.querySelector('[data-image-modal]')
+    let image_modal_img = image_modal.querySelector('img')
+    let image_local_route = '/public/img/products-images/'
+    image_thumbnails.forEach(image => {
+        image.addEventListener('click', (e) => {
+            if (e.target.dataset.image) {
+                image_modal_img.setAttribute('src', image_local_route + e.target.dataset.image)
+                image_modal.showModal()
+            }
+        })
     })
-})
 
-image_modal.addEventListener('click', () => {
-    image_modal.close()
-})
+    image_modal.addEventListener('click', () => {
+        image_modal.close()
+    })
+}
+
 
 /*------------------------------------------------------------------------*\
 ++ MAIN PAYLOAD: General product edit
 \*------------------------------------------------------------------------*/
 
-let form = document.querySelector('[data-api-form]');
+let edit_form = document.querySelector('[data-api-form]');
 
 //preven raw form submit
-form.addEventListener('submit', (e) => {
+edit_form.addEventListener('submit', (e) => {
     e.preventDefault();
     return;
 })
@@ -204,7 +209,6 @@ let send_btn = document.querySelector('[data-api-button="save"]');
 let data = { payload: {} };
 
 send_btn.addEventListener('click', () => {
-    console.log('payload constructor');
     payload_constructor()
 })
 
@@ -308,9 +312,57 @@ function payload_constructor() {
     }
 
     //send to API
-    send_to_api(data)
+    if (eventDispatcherCheck) {return}
+    eventDispatcherCheck = true;
+    debounce(send_to_api(edit_form, data), debounce_delay)
 }
 
+
+/*------------------------------------------------------------------------*\
+++ MAIN PAYLOAD: product delete
+\*------------------------------------------------------------------------*/
+
+let delete_product_btn = document.querySelector('[data-api-button="product_delete"]')
+
+if (delete_product_btn) {
+
+    let modal = document.querySelector(`[data-product-modal='${delete_product_btn.dataset.apiButton}']`)
+
+    delete_product_btn.addEventListener('click', () => {
+        modal.showModal()
+    })
+
+    let close_modal_btn = modal.querySelector('[data-modal-close]') 
+
+    close_modal_btn.addEventListener('click', () => {
+        modal.close()
+    })
+
+    let send_modal_btn = modal.querySelector('[data-modal-send]')
+
+    send_modal_btn.addEventListener('click', () => {
+        let form = modal.querySelector('[data-modal-form]')
+        delete_request(form)
+    })
+    
+}
+
+function delete_request(form) {
+    let token = form.querySelector('input[name="token"]');
+    let _id = form.querySelector('input[name="_id"]')
+    let delete_data = {
+        csrf: token.value,
+        _id: _id.value
+    };
+
+    console.log('FROM client')
+    console.log(delete_data)
+    //send to API
+    if (eventDispatcherCheck) {return}
+    eventDispatcherCheck = true;
+    debounce(send_to_api(form, delete_data), debounce_delay)
+
+}
 /*------------------------------------------------------------------------*\
 ++ LISTING PAYLOAD: Listing management
 \*------------------------------------------------------------------------*/
@@ -318,13 +370,16 @@ function payload_constructor() {
 //### Open and Close modal
 let add_listing_btn = document.querySelector('[data-api-button="listing_create"]');
 let delete_listing_btn = document.querySelectorAll('[data-api-button="listing_delete"]');
-let close_modal_btn = document.querySelectorAll('[data-modal-close]')
+let close_listing_modal_btn = document.querySelectorAll('[data-listing-modal-close]')
 
-add_listing_btn.addEventListener('click', () => {
-    let target = document.querySelector(`[data-listing-modal=${add_listing_btn.dataset.apiButton}]`)
+if (add_listing_btn) {
+    add_listing_btn.addEventListener('click', () => {
+        let target = document.querySelector(`[data-listing-modal=${add_listing_btn.dataset.apiButton}]`)
 
-    target.showModal()
-})
+        target.showModal()
+    })
+
+}
 
 delete_listing_btn.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -337,9 +392,9 @@ delete_listing_btn.forEach(btn => {
     })
 })
 
-close_modal_btn.forEach(btn => {
+close_listing_modal_btn.forEach(btn => {
     btn.addEventListener('click', () => {
-        let target = document.querySelector(`[data-listing-modal=${btn.dataset.modalClose}]`)
+        let target = document.querySelector(`[data-listing-modal=${btn.dataset.listingModalClose}]`)
 
         target.close()
     })
@@ -357,11 +412,11 @@ listing_form.forEach(form => {
 })
 
 /*### form process */
-let listing_form_submit_btn = document.querySelectorAll('[data-modal-send]');
+let listing_form_submit_btn = document.querySelectorAll('[data-listing-modal-send]');
 
 listing_form_submit_btn.forEach(btn => {
     btn.addEventListener('click', () => {
-        let target_form = document.querySelector(`[data-listing-form=${btn.dataset.modalSend}]`);
+        let target_form = document.querySelector(`[data-listing-form=${btn.dataset.listingModalSend}]`);
         listing_request(target_form)
     })
 })
@@ -392,7 +447,10 @@ function listing_request(form_node) {
         payload_template[input.dataset.formInput](input)
     })
 
-    send_to_api(listing_data)
+    //send to API
+    if (eventDispatcherCheck) {return}
+    eventDispatcherCheck = true;
+    debounce(send_to_api(form_node, listing_data), debounce_delay)
 }
 
 /*------------------------------------------------------------------------*\
@@ -400,23 +458,40 @@ function listing_request(form_node) {
 \*------------------------------------------------------------------------*/
 
 /*### send to API*/
-let endpoint = form.getAttribute('action')
-let method = form.getAttribute('method')
+function send_to_api(form, data) {
+    let xhr = new XMLHttpRequest();
+    let endpoint = form.getAttribute('action');
+    let method = form.getAttribute('method');
+    console.log('endpoint', endpoint, 'method', method)
 
-console.log('endpoint', endpoint, 'method', method)
-function send_to_api(data) {
-    fetch(endpoint, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json; charset=utf-8'
-        },
-        body: JSON.stringify(data),
-    })
-        .then(response => {
-            window.location.href = response.url
-        })
-        .catch(err => { })
-}
+    xhr.open(method, endpoint);
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    xhr.onload = () => {
+        if (xhr.status === 200 ) {
+            let response = JSON.parse(xhr.responseText)
+            if (response.redirect_url) {
+                window.location.href = response.redirect_url
+            }
+        }
+    }
+    xhr.onerror = () => {
+        console.error(xhr.statusText);
+    };
+    xhr.send(JSON.stringify(data));
+};
+
+
+function debounce (func, delay) {
+    let timeout;
+ 
+    return (...args) => {
+        clearTimeout(timeout);
+        timeout = setTimeout(() => {
+            func(...args); 
+            eventDispatcherCheck = false;
+        }, delay);
+    };
+};
 
 /*------------------------------------------------------------------------*\
 ++ NOTIFICATIONS

@@ -610,6 +610,12 @@ tbody .table_inline_btn:active>i {
     color: hsl(var(--color-p2))
 }
 
+[data-api-button='product_delete'],
+[data-modal-send='product_delete'] {
+    background-color: hsl(var(--color-red));
+    color: hsl(var(--color-p2));
+}
+
 /*TAGS - overwrites whats in filter-and-results.css*/
 #tags_input_dropdown_container {
     max-width: 30ch;
