@@ -17,6 +17,7 @@ import { search_list } from './pipeline/search_list.js';
 import search_query from './pipeline/search_query.js';
 import { INPUT_CHECK } from './modules/moduleInputCheck.js';
 import company_query from './pipeline/company_query.js';
+import company_catalog_query from './pipeline/company_catalog.js'
 
 
 let apiRoute = function (app, db) {
@@ -71,14 +72,13 @@ let apiRoute = function (app, db) {
     MODELS
     ######*/
     let Products = db.model('products', products_schema),
-        //Product_Variations = productsDB.model('variations', product_variations_schema),
+        //Product_Variations = productsDB.model('variations', product_variations_schema), ##FLAGGED FOR DELETION##
         Brands = db.model('brands', brands_schema),
         Categories = db.model('categories', categories_schema),
         Reviews = db.model('reviews', reviews_schema),
         Tags = db.model('tags', tags_schema);
     let Sessions = db.model('sessions', session_schema);
     let Users = db.model('users', users_schema);
-
 
     //format currency in USD with two decimal places
     let formatOptions = {
@@ -121,7 +121,7 @@ let apiRoute = function (app, db) {
     function check_role(req, res, next) {
         //Role hierarchy webmaster > company > user
         //user.account_settings.role
-        let route_regex = /\/[^\/]+$/
+        let route_regex = /^\/[^\/]+/
         let path = req.originalUrl;
         let route = path.match(route_regex)[0];
         // console.log('route from check_role', route)
@@ -134,10 +134,7 @@ let apiRoute = function (app, db) {
                 }
                 return next()
             //company
-            case "/product_edit":
-            case "/brand_edit":
-            case "/category_edit":
-            case "/tags_edit":
+            case "/company":
                 if (user_role !== 'webmaster' && user_role !== 'company') {
                     return res.status(401).send('Forbidden')
                 }
@@ -181,8 +178,8 @@ let apiRoute = function (app, db) {
             };
             //URL PARAM /catalog?key=value <- ESTTO NO DEBE DE GUARDARSEE EN EEL SEARCH SESSION@!
             let lang = req.session.lang || 'es';
-            let tags = await Tags.aggregate(search_list.multi_lang(lang)),
-                categories = await Categories.aggregate(search_list.multi_lang(lang)),
+            let tags = await Tags.aggregate(search_list.multi_lang(lang, 'tag')),
+                categories = await Categories.aggregate(search_list.multi_lang(lang, 'category')),
                 brands = await Brands.aggregate(search_list.brand),
                 price_range = await Products.aggregate(search_list.price_range);
             // price_range returns [{max, min}]
@@ -465,6 +462,201 @@ let apiRoute = function (app, db) {
             return res.json({ url: '/profile/password' })
         })
 
+    app.route('/company/catalog_edit/:product_id?')
+        .get(check_auth('/login', true), check_role, async (req, res, next) => {
+            /*
+            main route: /company/catalog_edit/
+            product edit route: /company/catalog_edit/:product_id
+            product create route: /company/catalog_edit/new
+            */
+            let lang = req.session.lang || 'es';
+            let user = { profile_name: 'testerino', account_settings: { role: 'company' } };
+            
+            let csrf_token = crypto.randomBytes(16).toString('hex');
+            let csrf = csrf_token;
+            req.session._csrf = csrf_token;
+
+            let query = req.query || {};
+            let render_file;
+            let product_db;
+            let product_info = {
+                brands: await Brands.aggregate(search_list.brand),
+                categories: await Categories.aggregate(search_list.multi_lang(lang, 'category')),
+                tags: await Tags.aggregate(search_list.multi_lang(lang, 'tag'))
+            };
+
+            if (req.params.product_id === 'new') {
+                //new
+                render_file = 'data_management/product_new'
+            }
+
+            if (req.params.product_id && req.params.product_id !== 'new') {
+                //product_edit
+                render_file = 'data_management/product_edit'
+
+                try {
+                    product_db = await Products.aggregate(company_catalog_query({ search: { _id: req.params.product_id } }))
+                } catch (err) {
+                    err.status = 404;
+                    next(err);
+                    return;
+                }
+
+                product_db = product_db[0]
+            }
+
+            if (!req.params.product_id) {
+                //catalog_edit
+                render_file = 'data_management/catalog_edit'
+                product_db = await Products.aggregate(company_catalog_query(query))
+            }
+
+
+            let flash_message = {
+                notification: req.flash('notification') || [],
+                error: req.flash('error') || []
+            }
+
+            try {
+                res.render(render_file, { lang, langData, user, flash_message, csrf, db_result: product_db, product_info })
+            } catch (err) {
+                err.status = 404;
+                next(err);
+
+            }
+        })
+        ///company/catalog_edit/:product_id?
+        .post(check_auth('/login', true), check_role, async (req, res) => {
+            let payload_content =  req.body.payload  || null;
+            let payload_csrf = req.body.csrf || null;
+
+            //validate token
+            if(!payload_csrf || payload_csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ redirect_url: `/company/catalog_edit/new` })
+                return;
+            }
+
+            //validate required fields
+            if(
+                !payload_content['product_name.es'] ||
+                !payload_content['product_name.en'] ||
+                payload_content['product_name.es'] === '' ||
+                payload_content['product_name.en'] === ''
+            ){
+                req.flash('error', 'empty_field')
+                res.json({ redirect_url: `/company/catalog_edit/new`})
+                return;
+            }
+
+
+            let new_entry = await Products.create(payload_content)
+            let new_id = await new_entry._id.toHexString()
+
+            //flash message
+            req.flash('notification', 'save_success')
+
+            res.json({redirect_url: `/company/catalog_edit/${new_id}`})
+            return 
+        })
+        ///company/catalog_edit/:product_id?
+        .put(check_auth('/login', true), check_role, async (req, res, next) => {
+            let route_id = req.params.product_id || undefined;
+
+            let payload_content = req.body.payload  || null
+            let payload_csrf = req.body.csrf || null;
+            let payload_id = req.body.match || null;
+            let payload_arrayFilters = req.body.arrayFilters || null;
+            
+            if (!route_id || route_id !== payload_id._id) {
+                res.json({ url: `/company/catalog_edit` })
+                return;
+            }
+            
+            //validate request
+            ////check csrf
+            if(!payload_csrf || payload_csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ url: `/company/catalog_edit/${route_id}` })
+                return;
+            }
+
+            if( req.body.validate_sku ) {
+                let sku_check = await Products.aggregate([
+                    { $match: {
+                        'listing.sku': { $regex: new RegExp(req.body.validate_sku, "i")}
+                    }}
+                ]);
+
+                if(sku_check.length > 0) {
+                    req.flash('error', 'sku_duplicate');
+                    res.json({url: `/company/catalog_edit/${route_id}`});
+                    return;
+                }
+            }
+
+            let update;
+            if (payload_arrayFilters) {
+                update = await Products.findOneAndUpdate(
+                    payload_id,
+                    payload_content,
+                    { arrayFilters: payload_arrayFilters}
+                )
+            } else {
+                update = await Products.findOneAndUpdate(
+                    payload_id,
+                    payload_content,
+                    { new: true}
+                )
+            }
+        
+            if (update === null) {
+                req.flash('error', 'save_fail')
+                return res.json({ url: `/company/catalog_edit/${route_id}`})
+            }
+
+            //flash message
+            req.flash('notification', 'save_success')
+
+            return res.json({ redirect_url: `/company/catalog_edit/${route_id}`})
+
+        })
+        ///company/catalog_edit/:product_id?
+        .delete(check_auth('/login', true), check_role, async (req, res, next) => {
+            let route_id = req.params.product_id || null;
+            let payload_csrf = req.body.csrf || null;
+            let payload_id = req.body._id || null;
+
+            //validation
+            if (!route_id || !payload_id || route_id !== payload_id) {
+                res.json( { redirect_url : `/company/catalog_edit`})
+                return;
+            }
+
+            if (!payload_csrf || payload_csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ redirect_url: `/company/catalog_edit/${route_id}` })
+                return;
+            }
+
+            let data_delete = await Products.deleteOne({ _id: payload_id })
+
+            if( data_delete.deletedCount == 0 ) {
+                req.flash('error', 'no_change')
+                res.json({ redirect_url: `/company/catalog_edit/${route_id}`})
+                return;
+            }
+
+            //flash message
+            req.flash('notification', 'save_success');
+
+            res.json({ redirect_url: `/company/catalog_edit`})
+            return;
+        })
+
     app.route('/company/:main_route') //workbench
         .get(check_auth('/login', true), check_role, async (req, res, next) => {
             let company_route = req.params.main_route
@@ -477,7 +669,7 @@ let apiRoute = function (app, db) {
             let route_prefix = company_route.match(route_regex)
             let db_selector;
 
-            switch(route_prefix[0]){
+            switch (route_prefix[0]) {
                 case 'brand':
                     db_selector = Brands;
                     break;
@@ -487,12 +679,9 @@ let apiRoute = function (app, db) {
                 case 'tag':
                     db_selector = Tags;
                     break;
-                case 'catalog':
-                    db_selector = Products;
-                    break;
                 default:
                     try { throw new Error('internal error') } catch (err) { next(err) }
-                    return; 
+                    return;
             }
 
             //param
@@ -504,8 +693,6 @@ let apiRoute = function (app, db) {
                 req.flash('error', 'unexpected_error')
                 return res.redirect('/login')
             }
-            // let user = { profile_name: 'longASSnameJUSTcus', account_settings: {role: "webmaster"}}
-
 
             let flash_message = {
                 notification: req.flash('notification') || [],
@@ -517,7 +704,7 @@ let apiRoute = function (app, db) {
 
             try {
                 res.render(`data_management/${company_route}`, { lang, csrf, langData, user, flash_message, db_result: query_result })
-            } catch(err) {
+            } catch (err) {
                 err.status = 404;
                 next(err);
             }
@@ -533,12 +720,12 @@ let apiRoute = function (app, db) {
                 res.json({ url: `/company/${company_route}` }) //placeholder
                 return;
             }
-            
+
             let route_regex = /^[^_]+/
             let route_prefix = company_route.match(route_regex)
             let db_selector;
 
-            switch(route_prefix[0]){
+            switch (route_prefix[0]) {
                 case 'brand':
                     db_selector = Brands;
                     break;
@@ -548,12 +735,9 @@ let apiRoute = function (app, db) {
                 case 'tag':
                     db_selector = Tags;
                     break;
-                case 'catalog':
-                    db_selector = Products;
-                    break;
                 default:
                     try { throw new Error('internal error') } catch (err) { next(err) }
-                    return; 
+                    return;
             }
 
             try {
@@ -584,7 +768,7 @@ let apiRoute = function (app, db) {
             let route_prefix = company_route.match(route_regex)
             let db_selector;
 
-            switch(route_prefix[0]){
+            switch (route_prefix[0]) {
                 case 'brand':
                     db_selector = Brands;
                     break;
@@ -599,7 +783,7 @@ let apiRoute = function (app, db) {
                     break;
                 default:
                     try { throw new Error('internal error') } catch (err) { next(err) }
-                    return; 
+                    return;
             }
 
             let update = await db_selector.findOneAndUpdate(
@@ -657,34 +841,6 @@ let apiRoute = function (app, db) {
 
             user_update.target._id = req.session.passport.user;
             req.session.lang = user_update.update['user_preferences.lang']
-
-            // switch (main_dir) {
-            //     case 'profile':
-            //         db_selector = Users;
-            //         break;
-            //     case 'products':
-            //         db_selector = Products
-            //         break;
-            //     case 'brands':
-            //         db_selector = Brands
-            //         break;
-            //     case 'tags':
-            //         db_selector = Tags
-            //         break;
-            //     case 'categories':
-            //         db_selector = Categories
-            //         break;
-            //     // case '':
-            //     //     db_selector = 
-            //     //     break;
-            //     // case '':
-            //     //     db_selector = 
-            //     //     break;
-            //     default:
-            //         try { throw new Error('internal error') } catch (err) { next(err) }
-            //         return;
-            // }
-
 
             await Users.findOneAndUpdate(
                 user_update.target,

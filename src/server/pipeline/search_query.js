@@ -180,7 +180,6 @@ export default function search_query(query_input, option = undefined) {
                 }
             }
         },
-        { $match: queryObj },
         {
             $lookup: {
                 from: "categories",
@@ -236,6 +235,7 @@ export default function search_query(query_input, option = undefined) {
                 }
             }
         },
+        { $match: queryObj },
         { $sort: sort }
     ];
 
