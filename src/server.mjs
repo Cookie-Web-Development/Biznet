@@ -93,12 +93,12 @@ DB.on('error', (err) => {
 
 
 //** DEV HELMET
-app.use(helmet({
-  hsts: false,
-  referrerPolicy: { policy: 'same-origin' },
-  hidePoweredBy: false,
-  contentSecurityPolicy: false
-}));
+// app.use(helmet({
+//   hsts: false,
+//   referrerPolicy: { policy: 'same-origin' },
+//   hidePoweredBy: false,
+//   contentSecurityPolicy: false
+// }));
 
 //** PRODUCTION HELMET
 app.use(helmet({

@@ -16,7 +16,7 @@ function company_query(query_obj, route) {
       { search: { key : value }, sort: { key: value } }
     anything outside this format must show empty list
     all values will be in string so values like _ids must be changed back to interger
-    search query for products will be using the search_query.js pipeline
+    search query for products will be using the commpany_catalog.js pipeline
   */
 
   var query_match = query_obj.search || {};
@@ -25,7 +25,7 @@ function company_query(query_obj, route) {
     var regex_id = /_?id$/;
     var regex_name = /_?name/;
     if (regex_id.test(key)) {
-      return query_match[key] = parseInt(query_match[key]) || query_match[key];
+      return query_match[key] = +query_match[key] || query_match[key];
     }
     if (regex_name.test(key)) {
       return query_match[key] = {
@@ -39,7 +39,7 @@ function company_query(query_obj, route) {
     if (query_sort[key] != 1 && query_sort[key] != -1) {
       return query_sort[key] = 1;
     }
-    return query_sort[key] = parseInt(query_sort[key]);
+    return query_sort[key] = +query_sort[key];
   });
 
   /*

@@ -3,7 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.products_schema = exports.listing_schema = void 0;
+exports.products_schema = void 0;
 var _mongoose = _interopRequireDefault(require("mongoose"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 var listing_schema = _mongoose["default"].Schema({
@@ -13,7 +13,7 @@ var listing_schema = _mongoose["default"].Schema({
   },
   price: {
     type: Number,
-    required: true
+    "default": 0
   },
   discount: {
     type: Boolean,
@@ -31,9 +31,12 @@ var listing_schema = _mongoose["default"].Schema({
   sku: {
     type: String,
     required: true
+  },
+  publish: {
+    type: Boolean,
+    "default": false
   }
 });
-exports.listing_schema = listing_schema;
 var products_schema = _mongoose["default"].Schema({
   product_name: {
     es: {
@@ -68,13 +71,60 @@ var products_schema = _mongoose["default"].Schema({
     ref: "tags"
   },
   featured: Boolean,
-  variation_type: {
-    en: [String],
-    es: [String]
-  },
+  variation_type: [{
+    en: String,
+    es: String
+  }],
   listing: {
-    type: [listing_schema],
-    required: true
+    type: [{
+      variation_options: {
+        en: Object,
+        es: Object
+      },
+      price: {
+        type: Number,
+        "default": 0
+      },
+      discount: {
+        type: Boolean,
+        "default": false
+      },
+      discount_percent: {
+        type: Number,
+        "default": 0
+      },
+      featured: {
+        type: Boolean,
+        "default": false
+      },
+      images: {
+        type: [String],
+        "default": ['no-image.webp']
+      },
+      sku: {
+        type: String,
+        "default": ''
+      },
+      publish: {
+        type: Boolean,
+        "default": false
+      }
+    }],
+    "default": []
+  },
+  document_publish: {
+    type: Boolean,
+    "default": false
+  },
+  demo: {
+    type: Boolean,
+    "default": false
+  },
+  ttl: {
+    type: Number,
+    "default": null
   }
+}, {
+  timestamps: true
 });
 exports.products_schema = products_schema;

@@ -20,6 +20,16 @@ var tags_schema = _mongoose["default"].Schema({
   tag_id: {
     type: Number,
     unique: true
+  },
+  demo: {
+    type: Boolean,
+    "default": false
+  },
+  ttl: {
+    type: Number,
+    "default": null
   }
+}, {
+  timestamps: true
 });
 exports.tags_schema = tags_schema;

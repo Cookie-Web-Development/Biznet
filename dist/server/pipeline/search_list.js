@@ -9,8 +9,8 @@ function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key i
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var search_list = {
-  multi_lang: function multi_lang(lang) {
-    var sort_lang = "name.".concat(lang);
+  multi_lang: function multi_lang(lang, prefix) {
+    var sort_lang = "".concat(prefix, "_name.").concat(lang);
     return [{
       $project: {
         _id: 0,
@@ -24,6 +24,10 @@ var search_list = {
     $project: {
       _id: 0,
       __v: 0
+    }
+  }, {
+    $sort: {
+      brand_name: 1
     }
   }],
   price_range: [{

@@ -20,6 +20,16 @@ var categories_schema = _mongoose["default"].Schema({
   category_id: {
     type: Number,
     unique: true
+  },
+  demo: {
+    type: Boolean,
+    "default": false
+  },
+  ttl: {
+    type: Number,
+    "default": null
   }
+}, {
+  timestamps: true
 });
 exports.categories_schema = categories_schema;

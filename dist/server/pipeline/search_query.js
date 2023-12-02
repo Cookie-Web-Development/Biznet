@@ -229,8 +229,6 @@ function search_query(query_input) {
       }
     }
   }, {
-    $match: queryObj
-  }, {
     $lookup: {
       from: "categories",
       localField: "category_id",
@@ -268,6 +266,7 @@ function search_query(query_input) {
       category_name: "$category.category_name",
       brand_name: "$brand.brand_name",
       tag_id: 1,
+      document_publish: 1,
       tag_array: {
         $map: {
           input: "$tag_collection",
@@ -276,6 +275,17 @@ function search_query(query_input) {
             tag_name: "$$tag.tag_name",
             tag_id: "$$tag.tag_id"
           }
+        }
+      }
+    }
+  }, {
+    $match: queryObj
+  }, {
+    $match: {
+      document_publish: true,
+      listing: {
+        $elemMatch: {
+          publish: true
         }
       }
     }

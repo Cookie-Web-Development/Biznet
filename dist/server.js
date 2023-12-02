@@ -281,7 +281,7 @@ app.use(session_middleware);
 //placeholder error middleware
 app.use(function (err, req, res, next) {
   console.error('Error', err);
-  var errorStatus = err.status || '500';
+  var errorStatus = err.status || 500;
   res.status(errorStatus).json({
     error: {
       message: err.message || "Internal Server Error"

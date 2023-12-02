@@ -14,6 +14,16 @@ var brands_schema = _mongoose["default"].Schema({
   brand_id: {
     type: Number,
     unique: true
+  },
+  demo: {
+    type: Boolean,
+    "default": false
+  },
+  ttl: {
+    type: Number,
+    "default": null
   }
+}, {
+  timestamps: true
 });
 exports.brands_schema = brands_schema;
