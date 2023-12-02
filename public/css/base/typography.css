@@ -13,6 +13,7 @@
     --fs-h3: 1.4rem;
     --fs-price-main: 1.2rem;
     --fs-p: 1rem;
+    --fs-input: 0.9rem;
     --fs-subtext: 0.8rem;
     /*TEXT COLORS*/
     /*## dark blue ##*/
@@ -62,7 +63,7 @@ button {
 }
 
 select {
-    font-size: var(--fs-subtext)
+    font-size: var(--fs-input);
 }
 
 span {
@@ -87,6 +88,10 @@ span {
 
 .warning_red {
     color: hsl(var(--color-text-red));
+}
+
+.grey_out {
+    color: hsl(var(--color-grey-light));
 }
 
 .text_link {

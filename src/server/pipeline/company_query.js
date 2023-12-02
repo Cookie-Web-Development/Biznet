@@ -10,7 +10,7 @@ export default function company_query(query_obj, route) {
 
     all values will be in string so values like _ids must be changed back to interger
 
-    search query for products will be using the search_query.js pipeline
+    search query for products will be using the commpany_catalog.js pipeline
     */
 
     let query_match = query_obj.search || {};
@@ -20,7 +20,7 @@ export default function company_query(query_obj, route) {
         let regex_id = /_?id$/;
         let regex_name = /_?name/;
         if (regex_id.test(key)) {
-            return query_match[key] = parseInt(query_match[key]) || query_match[key];
+            return query_match[key] = +query_match[key] || query_match[key];
         }
         if (regex_name.test(key)) {
             return query_match[key] = { $regex: query_match[key], $options: 'i'};
@@ -32,7 +32,7 @@ export default function company_query(query_obj, route) {
         if (query_sort[key] != 1 && query_sort[key] != -1) {
             return query_sort[key] =  1 
         } 
-        return query_sort[key] = parseInt(query_sort[key])
+        return query_sort[key] = +query_sort[key]
     })
 
     /*

@@ -180,7 +180,6 @@ export default function search_query(query_input, option = undefined) {
                 }
             }
         },
-        { $match: queryObj },
         {
             $lookup: {
                 from: "categories",
@@ -224,6 +223,7 @@ export default function search_query(query_input, option = undefined) {
                 category_name: "$category.category_name",
                 brand_name: "$brand.brand_name",
                 tag_id: 1,
+                document_publish: 1,
                 tag_array: {
                     $map: {
                         input: "$tag_collection",
@@ -236,6 +236,15 @@ export default function search_query(query_input, option = undefined) {
                 }
             }
         },
+        { $match: queryObj },
+        { $match: {
+            document_publish: true,
+            listing: {
+                $elemMatch: {
+                    publish: true
+                }
+            }
+        }},
         { $sort: sort }
     ];
 

@@ -93,12 +93,12 @@ DB.on('error', (err) => {
 
 
 //** DEV HELMET
-// app.use(helmet({
-//   hsts: false,
-//   referrerPolicy: { policy: 'same-origin' },
-//   hidePoweredBy: false,
-//   contentSecurityPolicy: false
-// }));
+app.use(helmet({
+  hsts: false,
+  referrerPolicy: { policy: 'same-origin' },
+  hidePoweredBy: false,
+  contentSecurityPolicy: false
+}));
 
 //** PRODUCTION HELMET
 app.use(helmet({
@@ -198,7 +198,7 @@ auth(app, DB);
 app.use((err, req, res, next) => {
   console.error('Error', err);
 
-  let errorStatus = err.status || '500'
+  let errorStatus = err.status || 500
 
   res.status(errorStatus).json({
     error: {

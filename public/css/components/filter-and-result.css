@@ -134,6 +134,11 @@ input[type="range"]::-o-range-thumb {
   pointer-events: auto;
 }
 
+#tags_dropdown option:hover {
+  background-color: hsl(var(--color-p1));
+  color: hsl(var(--color-p2));
+}
+
 #selected_tags {
   display: flex;
   flex-direction: row;

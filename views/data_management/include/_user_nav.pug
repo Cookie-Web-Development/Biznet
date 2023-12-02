@@ -8,12 +8,12 @@ nav.profile_nav
                 a(href='/profile')=langData.profile.edit[lang]
             li
                 a(href='/logout' style='width: 100%;')=langData.profile.logout[lang]
-    if (user.account_settings.role == 'company')
+    if (user.account_settings.role == 'company' || user.account_settings.role == 'demo')
         section.profile_menu 
             h2=langData.data_management.business[lang]
             ul
                 li(data-profile-active='/catalog_edit')
-                    a(class='disabled' href='/company/catalog_edit')=langData.data_management.catalog_edit[lang]
+                    a(href='/company/catalog_edit')=langData.data_management.catalog_edit[lang]
                 li(data-profile-active='/category_edit')
                     a(href='/company/category_edit')=langData.data_management.category_edit[lang]
                 li(data-profile-active='/brand_edit')

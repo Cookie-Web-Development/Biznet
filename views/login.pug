@@ -7,6 +7,15 @@ html(lang=lang)
         include partials/_header.pug
         main 
             h1(class='login_text' class='user_form_title')=langData.profile.login[lang]
+            div(class='universal_notification' style='max-width: 1020px' data-universal-alert)
+                p(class='green')
+                    span(style='font-size: 1.2rem; line-height: 2;')=langData.notification.demo_account[lang]
+                    br
+                    span(style='line-height: 1.5; padding-left: 3rem')=`${langData.profile.username[lang]}: ${langData.notification.demo_account.account_info.username}`
+                    br
+                    span(style='line-height: 1.5; padding-left: 3rem')=`${langData.profile.password[lang]}: ${langData.notification.demo_account.account_info.password}`
+                    br
+                    span(style='line-height: 1;')=langData.notification.demo_account.restriction[lang]
             section#form_section
                 form(method='post' action='/login' class='user_form' id='login_form')
                     if error_login

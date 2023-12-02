@@ -1,8 +1,8 @@
 "use strict";
 
 export let search_list = {
-    multi_lang: (lang) => {
-        let sort_lang = `name.${lang}`;
+    multi_lang: (lang, prefix) => {
+        let sort_lang = `${prefix}_name.${lang}`;
 
         return [
             {
@@ -19,7 +19,8 @@ export let search_list = {
         ]
     },
     brand: [
-        { $project: { _id: 0, __v: 0 } }
+        { $project: { _id: 0, __v: 0 } }, 
+        { $sort: { brand_name: 1}}
     ],
     price_range: [
         {
