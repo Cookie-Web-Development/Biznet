@@ -101,15 +101,15 @@ DB.on('error', (err) => {
 // }));
 
 //** PRODUCTION HELMET
-app.use(helmet({
-  referrerPolicy: { policy: 'same-origin' },
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'nonce-random123'"]
-    }
-  }
-}))
+// app.use(helmet({
+//   referrerPolicy: { policy: 'same-origin' },
+//   contentSecurityPolicy: {
+//     directives: {
+//       defaultSrc: ["'self'"],
+//       scriptSrc: ["'self'", "'nonce-random123'"]
+//     }
+//   }
+// }))
 
 
 /*######
@@ -121,7 +121,7 @@ app.use(session({ //from ChatGPT
   resave: false,
   saveUninitialized: false,
   cookie: {
-    sameSite: 'none',
+    sameSite: 'lax',
     httpOnly: true, //Prevent client-side scripting
     secure: true, //Sends cookies only HTTPS. true for Production. false for dev
     maxAge: 300000 //5min FOR DEV ONLY!

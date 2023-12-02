@@ -90,17 +90,15 @@ DB.on('error', function (err) {
 // }));
 
 //** PRODUCTION HELMET
-app.use((0, _helmet["default"])({
-  referrerPolicy: {
-    policy: 'same-origin'
-  },
-  contentSecurityPolicy: {
-    directives: {
-      defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'nonce-random123'"]
-    }
-  }
-}));
+// app.use(helmet({
+//   referrerPolicy: { policy: 'same-origin' },
+//   contentSecurityPolicy: {
+//     directives: {
+//       defaultSrc: ["'self'"],
+//       scriptSrc: ["'self'", "'nonce-random123'"]
+//     }
+//   }
+// }))
 
 /*######
 SESSIONS
@@ -112,7 +110,7 @@ app.use((0, _expressSession["default"])({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    sameSite: 'none',
+    sameSite: 'lax',
     httpOnly: true,
     //Prevent client-side scripting
     secure: true,
