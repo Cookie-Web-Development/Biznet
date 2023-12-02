@@ -115,7 +115,7 @@ app.use((0, _expressSession["default"])({
     sameSite: 'lax',
     httpOnly: true,
     //Prevent client-side scripting
-    secure: true,
+    secure: false,
     //Sends cookies only HTTPS. true for Production. false for dev
     maxAge: 300000 //5min FOR DEV ONLY!
   },
