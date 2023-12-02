@@ -97,7 +97,7 @@ app.use((0, _helmet["default"])({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", "'unsafe-inline'"]
+      scriptSrc: ["'self'", "'nonce-random123'"]
     }
   }
 }));
@@ -112,7 +112,7 @@ app.use((0, _expressSession["default"])({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    sameSite: 'lax',
+    sameSite: 'none',
     httpOnly: true,
     //Prevent client-side scripting
     secure: true,
