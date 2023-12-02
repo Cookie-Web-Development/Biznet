@@ -16,5 +16,15 @@ export let categories_schema = mongoose.Schema({
     category_id: {
         type: Number,
         unique: true,
+    },
+    demo: {
+        type: Boolean,
+        default: false
+    },
+    ttl: {
+        type: Number,
+        default: null
     }
+}, {
+    timestamps: true
 })

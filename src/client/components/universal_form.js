@@ -81,6 +81,7 @@ function formCheck() {
             body: JSON.stringify(submit_data),
         })
             .then(response => {
+                // console.log(response)
                 window.location.href = response.url
             })
             .catch(err => {})

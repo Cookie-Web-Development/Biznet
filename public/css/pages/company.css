@@ -42,7 +42,7 @@
     justify-content: center;
 }
 
-.company_header_logo>svg {
+.company_header_logo svg {
     max-width: 165px;
 }
 
@@ -69,7 +69,6 @@
     padding: 0.5rem;
     border-radius: 10px;
     border: 1px solid hsl(var(--color-p2));
-    max-width: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -77,7 +76,6 @@
 
 .company_header_greeting>p {
     color: hsl(var(--color-text-contrast));
-    height: 100%;
     overflow: hidden;
     text-overflow: ellipsis;
 }
@@ -792,7 +790,7 @@ tbody .table_inline_btn:active>i {
         width: 125px;
     }
 
-    .company_header_logo>svg {
+    .company_header_logo svg {
         max-width: 115px;
     }
 

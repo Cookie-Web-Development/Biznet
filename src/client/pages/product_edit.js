@@ -80,12 +80,14 @@ function selected_tags_creator(tag_arr) {
     //selected_tag remove from list and map
     let selected_tags_map = tag_arr.map(tag => {
         let match = Array.from(tag_list).filter(list => list.value == tag)
+        if(!match[0]) {return;} //filters out invalid value | tags
         match[0].setAttribute('data-selected', 'true')
         return [match[0].value, match[0].innerText]
     })
 
     /* Tag create */
     selected_tags_map.forEach(tag => {
+        if(!tag) {return} //filters out invalid value | tags
         let li_elem = new HTML_ELEM('li');
         li_elem.addClass('selected_tag');
 
@@ -355,8 +357,6 @@ function delete_request(form) {
         _id: _id.value
     };
 
-    console.log('FROM client')
-    console.log(delete_data)
     //send to API
     if (eventDispatcherCheck) {return}
     eventDispatcherCheck = true;
@@ -462,7 +462,6 @@ function send_to_api(form, data) {
     let xhr = new XMLHttpRequest();
     let endpoint = form.getAttribute('action');
     let method = form.getAttribute('method');
-    console.log('endpoint', endpoint, 'method', method)
 
     xhr.open(method, endpoint);
     xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");

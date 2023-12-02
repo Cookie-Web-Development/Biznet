@@ -61,7 +61,8 @@ LOGO START
 ##########*/
 .logo_svg {
     stroke: black;
-    width: 350px;
+    max-width: 350px;
+    width: 100%;
 }
 
 .logo_main {
@@ -125,7 +126,7 @@ HEADER_BOT START
     width: var(--rwd-navbar-decor);
     position: absolute;
     border-right: var(--rwd-navbar-decor) solid transparent;
-    border-top: 50px solid hsl(var(--color-grey));
+    border-top: 3.2rem solid hsl(var(--color-grey));
     left: 0;
     top: 0;
 }
@@ -134,7 +135,7 @@ HEADER_BOT START
     content: '';
     width: var(--rwd-navbar-decor);
     position: absolute;
-    border-top: 50px solid transparent;
+    border-top: 3.2rem solid transparent;
     border-right: var(--rwd-navbar-decor) solid hsl(var(--color-grey));
     right: 0;
 }
@@ -159,7 +160,7 @@ RESPONSIVE WEB DESIGN
         display: flex;
         flex-direction: row;
         justify-content: center;
-        width: 100%;
+        max-width: 100%;
         order: 1;
     }
 

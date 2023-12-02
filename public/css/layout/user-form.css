@@ -117,6 +117,11 @@
     background-color: hsla(var(--color-orange-light), var(--color-opacity-high));
 }
 
+.universal_alert>p.green {
+    border: 2px solid hsl(var(--color-green));
+    background-color: hsla(var(--color-green-light), var(--color-opacity-high));
+}
+
 .input_checklist {
     border: 1px solid hsl(var(--color-p1));
     border-radius: 15px;

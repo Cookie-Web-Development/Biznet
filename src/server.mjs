@@ -198,7 +198,7 @@ auth(app, DB);
 app.use((err, req, res, next) => {
   console.error('Error', err);
 
-  let errorStatus = err.status || '500'
+  let errorStatus = err.status || 500
 
   res.status(errorStatus).json({
     error: {
