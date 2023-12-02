@@ -46,7 +46,7 @@ html(lang=lang)
                             i(class='fa-solid fa-eraser')
                         button(class='table_search_button' type='button' data-table-search-add)
                             i(class='fa-solid fa-square-plus')
-                h1 Catalog edit 
+                h1=langData.data_management.catalog_edit[lang] 
                 if (db_result.lenght = 0)
                     p nothin here bro
                 else 

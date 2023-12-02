@@ -6,7 +6,6 @@ import crypto from 'crypto';
 import passport from 'passport';
 import flash from 'express-flash';
 import { products_schema } from './schema/products_schema.js';
-//import { product_variations_schema } from './schema/product_variations_schema.js';
 import { brands_schema } from './schema/brands_schema.js';
 import { categories_schema } from './schema/categories_schema.js';
 import { reviews_schema } from './schema/reviews_schema.js';
@@ -72,7 +71,6 @@ let apiRoute = function (app, db) {
     MODELS
     ######*/
     let Products = db.model('products', products_schema),
-        //Product_Variations = productsDB.model('variations', product_variations_schema), ##FLAGGED FOR DELETION##
         Brands = db.model('brands', brands_schema),
         Categories = db.model('categories', categories_schema),
         Reviews = db.model('reviews', reviews_schema),
@@ -119,7 +117,7 @@ let apiRoute = function (app, db) {
     }
 
     function check_role(req, res, next) {
-        //Role hierarchy webmaster > company > user
+        //Role hierarchy webmaster > company > demo > user
         //user.account_settings.role
         let route_regex = /^\/[^\/]+/
         let path = req.originalUrl;
@@ -135,7 +133,7 @@ let apiRoute = function (app, db) {
                 return next()
             //company
             case "/company":
-                if (user_role !== 'webmaster' && user_role !== 'company') {
+                if (user_role !== 'webmaster' && user_role !== 'company' && user_role !== 'demo') {
                     return res.status(401).send('Forbidden')
                 }
                 return next();
@@ -168,7 +166,7 @@ let apiRoute = function (app, db) {
         });
 
     app.route('/catalog')
-        .get(async (req, res) => {
+        .get(async (req, res) => { /* => /catalog  */
             //user object
             let user = req.user || null;
             //if there is a URL param for quiick search, include iit in the reender section...
@@ -193,7 +191,7 @@ let apiRoute = function (app, db) {
             res.render('catalog', { search_fields, lang, langData, quick_query, user });
             //res.json(search_fields)
         })
-        .post(async (req, res) => {
+        .post(async (req, res) => { /* => /catalog  */
             let active_page = +req.body.active_page || 1;
             let items_per_page = +req.body.items_per_page || 12;
             let results = await Products.aggregate(search_query(req.body, { skip: [active_page, items_per_page] }));
@@ -203,7 +201,7 @@ let apiRoute = function (app, db) {
         })
 
     app.route('/product/:id')
-        .get(async (req, res) => {
+        .get(async (req, res) => { /* => /product/:id  */
             //user object
             let user = req.user || null;
             let lang = req.session.lang || 'es';
@@ -267,7 +265,7 @@ let apiRoute = function (app, db) {
         })
 
     app.route('/register')
-        .get(check_auth('/profile', false), (req, res) => {
+        .get(check_auth('/profile', false), (req, res) => { /* => /register  */
             const flash_messages = req.flash('flash')[0] || [];
             let csrf_token = crypto.randomBytes(16).toString('hex');
             let csrf = csrf_token;
@@ -276,10 +274,10 @@ let apiRoute = function (app, db) {
             let loginCheck = true;
             res.render('register', { lang, langData, loginCheck, csrf, notification: flash_messages })
         })
-        .post(async (req, res) => {
+        .post(async (req, res) => { /* => /register  */
             let user_credentials = req.body;
 
-            //check data integrity
+            // check data integrity
             try {
                 for (let key in user_credentials) {
                     let value = new INPUT_CHECK(user_credentials[key])
@@ -375,7 +373,7 @@ let apiRoute = function (app, db) {
             return res.redirect('/profile_overview')
         })
 
-    app.route('/profile_overview') //missing check role
+    app.route('/profile_overview')
         .get(check_auth('/login', true), async (req, res) => {
             //user object
             let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
@@ -390,7 +388,7 @@ let apiRoute = function (app, db) {
         })
 
     app.route('/profile/password')
-        .get(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
+        .get(check_auth('/login', true), async (req, res) => { /* => /profile/password  */
             let flash_message = req.flash() || {};
             let csrf_token = crypto.randomBytes(16).toString('hex');
             let csrf = csrf_token;
@@ -408,7 +406,7 @@ let apiRoute = function (app, db) {
 
             return res.render(`data_management/password`, { lang, langData, loginCheck, user, csrf, flash_message })
         })
-        .post(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
+        .post(check_auth('/login', true), async (req, res) => { /* => /profile/password  */
             let user_update = req.body;
 
             //validate csrf
@@ -416,6 +414,16 @@ let apiRoute = function (app, db) {
                 req.flash('error', 'save_fail')
                 console.log('invalid token')
                 res.json({ url: `/profile/password` })
+                return;
+            }
+
+            //user object
+            let user = await Users.findOne({ _id: req.user._id }) || null;
+
+            // DEMO USER
+            if (user.account_settings.role == 'demo') {
+                req.flash('error', 'demo_user_update');
+                res.json({ url: `/profile/password ` });
                 return;
             }
 
@@ -434,8 +442,6 @@ let apiRoute = function (app, db) {
                 return;
             }
 
-            //user object
-            let user = await Users.findOne({ _id: req.user._id }) || null;
 
             //validate current password
             if (!bcrypt.compareSync(user_update.validate.password, user.password)) {
@@ -462,16 +468,81 @@ let apiRoute = function (app, db) {
             return res.json({ url: '/profile/password' })
         })
 
+    app.route('/profile') //THIS IS /PROFILE
+        .get(check_auth('/login', true), check_role, async (req, res, next) => { /* => /profile */
+            let csrf_token = crypto.randomBytes(16).toString('hex');
+            let csrf = csrf_token;
+            req.session._csrf = csrf_token;
+
+            //flash message
+            let flash_message = {};
+            flash_message.notification = req.flash('notification') || undefined;
+            flash_message.error = req.flash('error') || undefined;
+
+            //user object
+            let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
+            }
+
+            let lang = req.session.lang || 'es';
+            let loginCheck = true;
+            try {
+                return res.render(`data_management/profile`, { lang, langData, loginCheck, user, csrf, flash_message })
+            } catch (err) {
+                err.status = 404;
+                next(err);
+            }
+        })
+        .post(check_auth('/login', true), async (req, res) => { /* => /profile */
+            let user_update = req.body;
+
+            //validate
+            if (user_update.validate._csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail')
+                console.log('invalid token')
+                res.json({ url: `/profile` })
+                return;
+            }
+
+            // Validate User !== demo
+            let user = await Users.findOne({ _id: req.user._id });
+
+            if (user.account_settings.role == 'demo') {
+                req.flash('error', 'demo_user_update');
+                res.json({ url: `/profile` });
+                return;
+            }
+
+            user_update.target._id = req.session.passport.user;
+            req.session.lang = user_update.update['user_preferences.lang']
+
+            await Users.findOneAndUpdate(
+                user_update.target,
+                user_update.update,
+            )
+
+            req.flash('notification', 'save_success')
+            return res.json({ url: `/profile` })
+        })
+
     app.route('/company/catalog_edit/:product_id?')
-        .get(check_auth('/login', true), check_role, async (req, res, next) => {
+        .get(check_auth('/login', true), check_role, async (req, res, next) => { /* => /company/catalog_edit/:product_id?  */
             /*
             main route: /company/catalog_edit/
             product edit route: /company/catalog_edit/:product_id
             product create route: /company/catalog_edit/new
             */
             let lang = req.session.lang || 'es';
-            let user = { profile_name: 'testerino', account_settings: { role: 'company' } };
-            
+
+            // Validate User 
+            let user = await Users.findOne({ _id: req.user._id }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
+            }
+
             let csrf_token = crypto.randomBytes(16).toString('hex');
             let csrf = csrf_token;
             req.session._csrf = csrf_token;
@@ -494,11 +565,11 @@ let apiRoute = function (app, db) {
                 //product_edit
                 render_file = 'data_management/product_edit'
 
-                try {
-                    product_db = await Products.aggregate(company_catalog_query({ search: { _id: req.params.product_id } }))
-                } catch (err) {
-                    err.status = 404;
-                    next(err);
+                product_db = await Products.aggregate(company_catalog_query({ search: { _id: req.params.product_id } }))
+
+                if (product_db.length == 0) {
+                    req.flash('error', 'no_db_entry')
+                    res.redirect('/company/catalog_edit')
                     return;
                 }
 
@@ -510,7 +581,6 @@ let apiRoute = function (app, db) {
                 render_file = 'data_management/catalog_edit'
                 product_db = await Products.aggregate(company_catalog_query(query))
             }
-
 
             let flash_message = {
                 notification: req.flash('notification') || [],
@@ -525,28 +595,39 @@ let apiRoute = function (app, db) {
 
             }
         })
-        ///company/catalog_edit/:product_id?
-        .post(check_auth('/login', true), check_role, async (req, res) => {
-            let payload_content =  req.body.payload  || null;
+        .post(check_auth('/login', true), check_role, async (req, res) => { /* => /company/catalog_edit/new  */
+            let payload_content = req.body.payload || null;
             let payload_csrf = req.body.csrf || null;
 
             //validate token
-            if(!payload_csrf || payload_csrf !== req.session._csrf) {
+            if (!payload_csrf || payload_csrf !== req.session._csrf) {
                 req.flash('error', 'save_fail');
                 console.log('invalid token');
                 res.json({ redirect_url: `/company/catalog_edit/new` })
                 return;
             }
 
+            // Validate User 
+            let user = await Users.findOne({ _id: req.user._id }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
+            }
+
+            if (user.account_settings.role == 'demo') {
+                payload_content.demo = true;
+                payload_content.ttl = 300
+            }
+
             //validate required fields
-            if(
+            if (
                 !payload_content['product_name.es'] ||
                 !payload_content['product_name.en'] ||
                 payload_content['product_name.es'] === '' ||
                 payload_content['product_name.en'] === ''
-            ){
+            ) {
                 req.flash('error', 'empty_field')
-                res.json({ redirect_url: `/company/catalog_edit/new`})
+                res.json({ redirect_url: `/company/catalog_edit/new` })
                 return;
             }
 
@@ -557,42 +638,66 @@ let apiRoute = function (app, db) {
             //flash message
             req.flash('notification', 'save_success')
 
-            res.json({redirect_url: `/company/catalog_edit/${new_id}`})
-            return 
+            res.json({ redirect_url: `/company/catalog_edit/${new_id}` })
+            return
         })
-        ///company/catalog_edit/:product_id?
-        .put(check_auth('/login', true), check_role, async (req, res, next) => {
+        .put(check_auth('/login', true), check_role, async (req, res, next) => { /* => /company/catalog_edit/:product_id?  */
             let route_id = req.params.product_id || undefined;
-
-            let payload_content = req.body.payload  || null
+            let payload_content = req.body.payload || null;
             let payload_csrf = req.body.csrf || null;
             let payload_id = req.body.match || null;
             let payload_arrayFilters = req.body.arrayFilters || null;
-            
-            if (!route_id || route_id !== payload_id._id) {
-                res.json({ url: `/company/catalog_edit` })
+
+            //validate request
+
+            ////check product in db
+            let product_check = await Products.findOne(
+                { _id: payload_id._id }
+            )
+
+            if (!route_id || !product_check._id || route_id !== product_check._id.toHexString()) {
+                req.flash('error', 'no_db_entry')
+                res.json({ redirect_url: `/company/catalog_edit` })
                 return;
             }
-            
-            //validate request
+
+            ////Check demo users. DEMO USERS CAN ONLY UPDATE [DEMO: TRUE] PRODUCTS
+            let user = await Users.findOne({ _id: req.user._id }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                res.json({ redirect_url: '/login' })
+                return;
+            }
+
+            if (user.account_settings.role == 'demo') {
+                if (!product_check.demo) {
+                    req.flash('error', 'demo_update_error')
+                    res.json({ redirect_url: `/company/catalog_edit/${route_id}` })
+                    return;
+                }
+            }
+
             ////check csrf
-            if(!payload_csrf || payload_csrf !== req.session._csrf) {
+            if (!payload_csrf || payload_csrf !== req.session._csrf) {
                 req.flash('error', 'save_fail');
                 console.log('invalid token');
-                res.json({ url: `/company/catalog_edit/${route_id}` })
+                res.json({ redirect_url: `/company/catalog_edit/${route_id}` })
                 return;
             }
 
-            if( req.body.validate_sku ) {
+            ////check sku
+            if (req.body.validate_sku) {
                 let sku_check = await Products.aggregate([
-                    { $match: {
-                        'listing.sku': { $regex: new RegExp(req.body.validate_sku, "i")}
-                    }}
+                    {
+                        $match: {
+                            'listing.sku': { $regex: new RegExp(req.body.validate_sku, "i") }
+                        }
+                    }
                 ]);
 
-                if(sku_check.length > 0) {
+                if (sku_check.length > 0) {
                     req.flash('error', 'sku_duplicate');
-                    res.json({url: `/company/catalog_edit/${route_id}`});
+                    res.json({ redirect_url: `/company/catalog_edit/${route_id}` });
                     return;
                 }
             }
@@ -602,36 +707,41 @@ let apiRoute = function (app, db) {
                 update = await Products.findOneAndUpdate(
                     payload_id,
                     payload_content,
-                    { arrayFilters: payload_arrayFilters}
+                    { arrayFilters: payload_arrayFilters }
                 )
             } else {
                 update = await Products.findOneAndUpdate(
                     payload_id,
                     payload_content,
-                    { new: true}
+                    { new: true }
                 )
             }
-        
+
             if (update === null) {
                 req.flash('error', 'save_fail')
-                return res.json({ url: `/company/catalog_edit/${route_id}`})
+                return res.json({ redirect_url: `/company/catalog_edit/${route_id}` })
             }
 
             //flash message
             req.flash('notification', 'save_success')
 
-            return res.json({ redirect_url: `/company/catalog_edit/${route_id}`})
+            return res.json({ redirect_url: `/company/catalog_edit/${route_id}` })
 
         })
-        ///company/catalog_edit/:product_id?
-        .delete(check_auth('/login', true), check_role, async (req, res, next) => {
+        .delete(check_auth('/login', true), check_role, async (req, res, next) => { /* => /company/catalog_edit/:product_id?  */
             let route_id = req.params.product_id || null;
             let payload_csrf = req.body.csrf || null;
             let payload_id = req.body._id || null;
 
             //validation
-            if (!route_id || !payload_id || route_id !== payload_id) {
-                res.json( { redirect_url : `/company/catalog_edit`})
+            ////check product in db
+            let product_check = await Products.findOne(
+                { _id: payload_id }
+            )
+
+            if (!route_id || !product_check._id || route_id !== product_check._id.toHexString()) {
+                req.flash('error', 'no_db_entry')
+                res.json({ redirect_url: `/company/catalog_edit` })
                 return;
             }
 
@@ -642,23 +752,38 @@ let apiRoute = function (app, db) {
                 return;
             }
 
+            //// Validate User 
+            let user = await Users.findOne({ _id: req.user._id }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
+            }
+
+            if (user.account_settings.role == 'demo') {
+                if (!product_check.demo) {
+                    req.flash('error', 'demo_update_error')
+                    res.json({ redirect_url: `/company/catalog_edit/${route_id}` })
+                    return;
+                }
+            }
+
             let data_delete = await Products.deleteOne({ _id: payload_id })
 
-            if( data_delete.deletedCount == 0 ) {
+            if (data_delete.deletedCount == 0) {
                 req.flash('error', 'no_change')
-                res.json({ redirect_url: `/company/catalog_edit/${route_id}`})
+                res.json({ redirect_url: `/company/catalog_edit/${route_id}` })
                 return;
             }
 
             //flash message
             req.flash('notification', 'save_success');
 
-            res.json({ redirect_url: `/company/catalog_edit`})
+            res.json({ redirect_url: `/company/catalog_edit` })
             return;
         })
 
-    app.route('/company/:main_route') //workbench
-        .get(check_auth('/login', true), check_role, async (req, res, next) => {
+    app.route('/company/:main_route')
+        .get(check_auth('/login', true), check_role, async (req, res, next) => { /* => /company/:main_route [ brands | categories | tags ]  */
             let company_route = req.params.main_route
             let lang = req.session.lang || 'es'
             let csrf_token = crypto.randomBytes(16).toString('hex');
@@ -699,7 +824,6 @@ let apiRoute = function (app, db) {
                 error: req.flash('error') || []
             }
 
-            // let brand_db = await Brands.aggregate(company_query(query))
             let query_result = await db_selector.aggregate(company_query(query, route_prefix[0]))
 
             try {
@@ -709,16 +833,29 @@ let apiRoute = function (app, db) {
                 next(err);
             }
         })
-        .post(check_auth('/login', true), check_role, async (req, res) => {
+        .post(check_auth('/login', true), check_role, async (req, res) => { /* => /company/:main_route [ brands | categories | tags ]  */
             let company_route = req.params.main_route
             let payload_csrf = req.body.validate;
             let payload_content = req.body.payload_content;
 
+            //validate
             if (payload_csrf._csrf !== req.session._csrf) {
                 req.flash('error', 'save_fail');
                 console.log('invalid token');
                 res.json({ url: `/company/${company_route}` }) //placeholder
                 return;
+            }
+
+            // Validate User 
+            let user = await Users.findOne({ _id: req.user._id }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                return res.redirect('/login')
+            }
+
+            if (user.account_settings.role == 'demo') {
+                payload_content.demo = true;
+                payload_content.ttl = 300
             }
 
             let route_regex = /^[^_]+/
@@ -751,19 +888,13 @@ let apiRoute = function (app, db) {
             req.flash('notification', 'save_success');
             return res.json({ url: `/company/${company_route}` })
         })
-        .put(check_auth('/login', true), check_role, async (req, res) => {
+        .put(check_auth('/login', true), check_role, async (req, res) => { /* => /company/:main_route [ brands | categories | tags ]  */
             let company_route = req.params.main_route
             let payload_csrf = req.body.validate;
             let payload_id = req.body.payload_id;
             let payload_content = req.body.payload_content;
 
-            if (payload_csrf._csrf !== req.session._csrf) {
-                req.flash('error', 'save_fail');
-                console.log('invalid token');
-                res.json({ url: `/company/${company_route}` })
-                return;
-            };
-
+            //db_selector
             let route_regex = /^[^_]+/
             let route_prefix = company_route.match(route_regex)
             let db_selector;
@@ -786,6 +917,34 @@ let apiRoute = function (app, db) {
                     return;
             }
 
+            //validate
+            //// CSRF
+            if (payload_csrf._csrf !== req.session._csrf) {
+                req.flash('error', 'save_fail');
+                console.log('invalid token');
+                res.json({ url: `/company/${company_route}` })
+                return;
+            };
+
+            //// WIP: CHECK DEMO USER. DEMO USER CAN ONLY UPDATE [ DEMO: TRUE ] ENTRIES
+            let entry_check = await db_selector.findOne(
+                payload_id
+            )
+
+            ////Check demo users. DEMO USERS CAN ONLY UPDATE [DEMO: TRUE]
+            let user = await Users.findOne({ _id: req.user._id }) || null;
+            if (!user) { //fallback incase user is not found for some reason
+                req.flash('error', 'unexpected_error')
+                res.json({ redirect_url: '/login' })
+                return;
+            }
+
+            if (user.account_settings.role == 'demo' && !entry_check.demo) {
+                req.flash('error', 'demo_update_error')
+                res.json({ url: `/company/${company_route}` })
+                return;
+            }
+
             let update = await db_selector.findOneAndUpdate(
                 payload_id,
                 payload_content
@@ -799,57 +958,6 @@ let apiRoute = function (app, db) {
             req.flash('notification', 'save_success');
             return res.json({ url: `/company/${company_route}` })
         });
-
-    app.route('/:main') //universal route
-        .get(check_auth('/login', true), check_role, async (req, res, next) => {
-            let main_dir = req.params.main;
-            let csrf_token = crypto.randomBytes(16).toString('hex');
-            let csrf = csrf_token;
-            req.session._csrf = csrf_token;
-
-            //flash message
-            let flash_message = {};
-            flash_message.notification = req.flash('notification') || undefined;
-            flash_message.error = req.flash('error') || undefined;
-
-            //user object
-            let user = await Users.findOne({ _id: req.user._id }, { password: 0, __v: 0 }) || null;
-            if (!user) { //fallback incase user is not found for some reason
-                req.flash('error', 'unexpected_error')
-                return res.redirect('/login')
-            }
-
-            let lang = req.session.lang || 'es';
-            let loginCheck = true;
-            try {
-                return res.render(`data_management/${main_dir}`, { lang, langData, loginCheck, user, csrf, flash_message })
-            } catch (err) {
-                err.status = 404;
-                next(err);
-            }
-        })
-        .post(check_auth('/login', true)/*, check_role()*/, async (req, res) => {
-            let main_dir = req.params.main;
-            let db_selector, user_update = req.body;
-
-            if (user_update.validate._csrf !== req.session._csrf) {
-                req.flash('error', 'save_fail')
-                console.log('invalid token')
-                res.json({ url: `/${main_dir}` })
-                return;
-            }
-
-            user_update.target._id = req.session.passport.user;
-            req.session.lang = user_update.update['user_preferences.lang']
-
-            await Users.findOneAndUpdate(
-                user_update.target,
-                user_update.update,
-            )
-
-            req.flash('notification', 'save_success')
-            return res.json({ url: `/${main_dir}` })
-        })
 
     //non-existant routes handler
     app.route('/*').get((req, res) => {

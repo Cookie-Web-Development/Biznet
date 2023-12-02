@@ -2,6 +2,7 @@
 
 import langData from '../../lang/lang.json' assert { type: 'json' }
 import { HTML_ELEM } from '../modules/moduleHTMLElemMaker.js'
+let eventDispatch = false;
 
 /*--------------------------------------------------------------------------*\
 ++ Create New Entry Modal
@@ -100,7 +101,13 @@ function API_FORM(form_node, form_action) {
         method: form_node.dataset.method,
     })
 
-    API_SEND(form_data)
+
+    if(eventDispatch) {
+        return;
+    } else {
+        eventDispatch = true;
+        API_SEND(form_data)
+    }
 };
 
 /*

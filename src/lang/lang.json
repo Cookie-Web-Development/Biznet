@@ -584,6 +584,26 @@
         "sku_duplicate": {
             "en": "SKU already exists",
             "es": "SKU ingresado ya existe"
+        },
+        "demo_user_update": {
+            "en": "Demo user can't be edited",
+            "es": "La cuenta Demo no puede ser modificada"
+        },
+        "demo_data_update": {
+            "en": "To ensure database integrity, Demo users can only edit entries created by Demo accounts.",
+            "es": "Para mantener integridad en la base de datos, los usuarios Demo solo podrán editar entradas creadas por cuentas Demo."
+        },
+        "demo_unauthorized": {
+            "en": "Unauthoried",
+            "es": "Sin autorización"
+        },
+        "demo_update_error": {
+            "en": "Unauthorized Access: Demo accounts can't modify this entry.",
+            "es": "Acceso no autorizado: Cuentas demo no pueden modificar esta entrada."
+        },
+        "no_db_entry": {
+            "en": "Submitted entry does not exits.",
+            "es": "El registro ingresado no existe."
         }
     },
     "notification": {
@@ -602,6 +622,18 @@
         "account_disclaimer_suffix": {
             "en": "credentials that you are already using on other websites or platforms.",
             "es": "información que usted esté utilizando actualmente en otras plataformas o sitios web."
+        },
+        "demo_account": {
+            "en": "Try our Demo account!",
+            "es": "¡Prueba nuestra cuenta Demo!",
+            "account_info": {
+                "username": "biznet-demo",
+                "password":"demo"
+            },
+            "restriction": {
+                "en": "To keep database integrity, Demo accounts will not be able to change or modify any existing entries. New entries made through the Demo account will be reverted after 5 minutes. Other restrictions may be applied.",
+                "es": "Para mantener la integridad de la base de datos, la cuenta Demo no podrá realizar cambios ni modificaciones a las entradas existentes. Nuevas entradas realizadas por la cuenta Demo será revertidas en 5 minutos. Otras restricciones pueden estar activas."
+            }
         }
     }
 }

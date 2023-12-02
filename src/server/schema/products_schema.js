@@ -112,7 +112,17 @@ let products_schema = mongoose.Schema({
     document_publish: {
         type: Boolean,
         default: false
+    },
+    demo: {
+        type: Boolean,
+        default: false
+    },
+    ttl: {
+        type: Number,
+        default: null
     }
+}, {
+    timestamps: true
 });
 
 export { products_schema }
