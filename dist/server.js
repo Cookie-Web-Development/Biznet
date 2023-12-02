@@ -110,7 +110,7 @@ app.use((0, _expressSession["default"])({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    sameSite: 'lax',
+    sameSite: 'none',
     httpOnly: true,
     //Prevent client-side scripting
     secure: true,
