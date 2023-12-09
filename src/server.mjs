@@ -123,7 +123,7 @@ app.use(session({ //from ChatGPT
   cookie: {
     sameSite: 'lax',
     httpOnly: true, //Prevent client-side scripting
-    secure: true, //Sends cookies only HTTPS. true for Production. false for dev
+    secure: false, //Sends cookies only HTTPS. true for Production. false for dev
     maxAge: 300000 //5min FOR DEV ONLY!
   },
   store: store
