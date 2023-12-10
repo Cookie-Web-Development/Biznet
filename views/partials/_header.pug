@@ -48,6 +48,10 @@ header.header
 if (!loginCheck && !user)
     dialog(id='login_modal')
         h2.login_text=langData.profile.login[lang]
+        div(class='universal_notification' data-universal-notification)
+            p(class='green' style="text-align: center; text-decoration: underline;")
+                a(href='/login')
+                    span=langData.notification.demo_account[lang]
         form(method="post" action='/login' id='modal_form')
             label(for="username")=langData.profile.username[lang]
             input(class='input_box' id='username' name='username' type='text' autocomplete="off")
