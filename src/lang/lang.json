@@ -632,7 +632,7 @@
             },
             "restriction": {
                 "en": "To keep database integrity, Demo accounts will not be able to change or modify any existing entries. New entries made through the Demo account will be reverted after 5 minutes. Other restrictions may be applied.",
-                "es": "Para mantener la integridad de la base de datos, la cuenta Demo no podrá realizar cambios ni modificaciones a las entradas existentes. Nuevas entradas realizadas por la cuenta Demo será revertidas en 5 minutos. Otras restricciones pueden estar activas."
+                "es": "Para mantener la integridad de la base de datos, la cuenta Demo no podrá realizar cambios ni modificaciones a las entradas existentes. Nuevas entradas realizadas por la cuenta Demo serán revertidas en 5 minutos. Otras restricciones pueden estar activas."
             }
         }
     }
