@@ -10,7 +10,7 @@ html(lang=lang)
         include partials/_header.pug
         main 
             h1=langData.header.navbar.catalog[lang] 
-            section#product_search_section
+            section(id='product_search_section' data-search-fields=search_fields data-quick-query=quick_query)
                 include include/search_fields.pug
                 div.product_display_container
                     div(id='product_result')
@@ -18,10 +18,5 @@ html(lang=lang)
         footer 
         - let disclaimer_lang = lang
         include include/disclaimer.pug
-
-        script.
-            let search_fields = !{JSON.stringify(search_fields)};
-            let quick_query = !{JSON.stringify(quick_query)};
-            let search_query;
         script(type='module', src='/src/client/pages/catalog_api.js' defer)
         script(src='/src/client/components/search_fields.js' defer)

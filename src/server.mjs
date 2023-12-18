@@ -106,7 +106,11 @@ app.use(helmet({
   contentSecurityPolicy: {
     directives: {
       defaultSrc: ["'self'"],
+<<<<<<< HEAD
       scriptSrc: ["'self'", "'nonce-random123'"]
+=======
+      scriptSrc: ["'self'", "'unsafe-inline'"]
+>>>>>>> main
     }
   }
 }))

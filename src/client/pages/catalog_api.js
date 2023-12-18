@@ -6,6 +6,11 @@ import { display_pagination } from '../modules/moduleDisplayPagination.js';
 //Session_variables: this is to save current session values such as language, search values, pagination page, etc
 
 let save_session = true; //save_session es para evitar guardar quick_querry en search_session storage
+let search_fields_section = document.querySelector('[data-search-fields]');
+let search_fields = JSON.parse(search_fields_section.dataset.searchFields)
+let quick_query = JSON.parse(search_fields_section.dataset.quickQuery)
+let search_query = {}
+
 
 //Checks if applying either quick_query or search_session
 if (Object.keys(quick_query).length >= 1) {
