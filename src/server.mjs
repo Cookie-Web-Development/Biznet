@@ -93,23 +93,23 @@ DB.on('disconnect', () => {
 
 
 //** DEV HELMET
-app.use(helmet({
-  hsts: false,
-  referrerPolicy: { policy: 'same-origin' },
-  hidePoweredBy: false,
-  contentSecurityPolicy: false
-}));
+// app.use(helmet({
+//   hsts: false,
+//   referrerPolicy: { policy: 'same-origin' },
+//   hidePoweredBy: false,
+//   contentSecurityPolicy: false
+// }));
 
 //** PRODUCTION HELMET
-// app.use(helmet({
-//   referrerPolicy: { policy: 'same-origin' },
-//   contentSecurityPolicy: {
-//     directives: {
-//       defaultSrc: ["'self'"],
-//       scriptSrc: ["'self'", "'unsafe-inline'"]
-//     }
-//   }
-// }))
+app.use(helmet({
+  referrerPolicy: { policy: 'same-origin' },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"]
+    }
+  }
+}))
 
 
 /*######

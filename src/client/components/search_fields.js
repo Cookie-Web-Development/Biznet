@@ -1,7 +1,10 @@
 //(from api) 
 let search_fields_lang = document.documentElement.getAttribute('lang');
-// search_fields = !{JSON.stringify(search_fields)}
-// quick_query = !{JSON.stringify(quick_query)}
+let search_fields_section = document.querySelector('[data-search-fields]');
+let search_fields = JSON.parse(search_fields_section.dataset.searchFields)
+let quick_query = JSON.parse(search_fields_section.dataset.quickQuery)
+let search_query = {};
+//search_query is declared in /pages/catalog_api.js
 
 //### PRICE RANGE ###
 let min_slider = document.getElementById('min_range_slider');
