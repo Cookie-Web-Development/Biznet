@@ -25,9 +25,6 @@ const server = http.createServer(app);
 dotenv.config({ path: './.env' });
 
 /*Directory Traversal Prevent*/
-let forbidden_url = [
-  '..', '\\src\\server'
-]
 app.use((req, res, next) => {
   // Get the requested URL path
   const urlPath = req.url;
