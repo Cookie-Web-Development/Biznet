@@ -509,6 +509,10 @@
         }
     },
     "error": {
+        "404": {
+            "en": "Not Found",
+            "es": " Sin encontrar"
+        },
         "required_field": {
             "en": "This field is required.",
             "es": "Este campo es obligatorio."

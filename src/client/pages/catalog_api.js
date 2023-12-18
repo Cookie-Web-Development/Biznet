@@ -33,7 +33,7 @@ if (Object.keys(quick_query).length >= 1) {
 for (let key in search_query) {
     if (search_query.hasOwnProperty(key)) {
         switch (key){
-            case 'name': 
+            case 'product_name': 
                 document.querySelector(`input[name='${key}']`).value = search_query[key]
                 break;
             case 'sort_option':
@@ -120,7 +120,7 @@ function sendToServer ( set_active_page = undefined ) {
     };
     
     data.items_per_page = items_per_page;
-    
+    console.log(data)
     if(typeof set_active_page == 'number') {
         active_page = set_active_page
         data.active_page = set_active_page;

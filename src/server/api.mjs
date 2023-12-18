@@ -195,7 +195,6 @@ let apiRoute = function (app, db) {
             let active_page = +req.body.active_page || 1;
             let items_per_page = +req.body.items_per_page || 12;
             let results = await Products.aggregate(search_query(req.body, { skip: [active_page, items_per_page] }));
-
             priceFormatter(results[0].results_arr);
             res.json({ api_results: results })
         })
@@ -228,10 +227,15 @@ let apiRoute = function (app, db) {
                 }
 
                 res.render('product', { api_results: result[0], similar, lang, langData, user })
-
             } catch (err) {
                 console.log(err)
-                res.render('product', { api_results: null, lang, langData })
+                let similar = {
+                    more_products: await Products.aggregate(search_query({ more_product: {} }, { sample: 10 })),
+                    by_brand: [],
+                    by_other: []
+                }
+                priceFormatter(similar.more_products)
+                res.render('product', { api_results: null, lang, similar, user, langData })
             }
         })
 
@@ -962,7 +966,9 @@ let apiRoute = function (app, db) {
     //non-existant routes handler
     app.route('/*').get((req, res) => {
         console.log('Non-existance route')
-        return res.redirect('/')
+        let user = req.user || null;
+        let lang = req.session.lang || "es"
+        res.render('404', { lang, user, langData })
     })
 
     app.use((req, res, next) => {

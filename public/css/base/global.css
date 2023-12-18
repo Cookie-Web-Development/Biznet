@@ -108,6 +108,19 @@ footer {
     border-radius: 50%;
 }
 
+.not_found_div {
+    padding: 1rem 0
+}
+
+.not_found_div img {
+    width: min(85%, 500px);
+}
+
+.not_found_div p {
+    font-size: var(--fs-h1);
+    line-height: 5rem;
+}
+
 
 /*-----------------------------------------------*\
 ++ RESPONSIVE WEB DESIGN
