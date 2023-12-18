@@ -391,7 +391,7 @@ var apiRoute = function apiRoute(app, db) {
   }());
   app.route('/product/:id').get( /*#__PURE__*/function () {
     var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
-      var user, lang, product_id, result, similar;
+      var user, lang, product_id, result, similar, _similar;
       return _regeneratorRuntime().wrap(function _callee7$(_context7) {
         while (1) switch (_context7.prev = _context7.next) {
           case 0:
@@ -455,18 +455,36 @@ var apiRoute = function apiRoute(app, db) {
               langData: _lang["default"],
               user: user
             });
-            _context7.next = 29;
+            _context7.next = 36;
             break;
           case 25:
             _context7.prev = 25;
             _context7.t2 = _context7["catch"](2);
             console.log(_context7.t2);
+            _context7.next = 30;
+            return Products.aggregate((0, _search_query["default"])({
+              more_product: {}
+            }, {
+              sample: 10
+            }));
+          case 30:
+            _context7.t3 = _context7.sent;
+            _context7.t4 = [];
+            _context7.t5 = [];
+            _similar = {
+              more_products: _context7.t3,
+              by_brand: _context7.t4,
+              by_other: _context7.t5
+            };
+            priceFormatter(_similar.more_products);
             res.render('product', {
               api_results: null,
               lang: lang,
+              similar: _similar,
+              user: user,
               langData: _lang["default"]
             });
-          case 29:
+          case 36:
           case "end":
             return _context7.stop();
         }
@@ -1790,7 +1808,13 @@ var apiRoute = function apiRoute(app, db) {
   //non-existant routes handler
   app.route('/*').get(function (req, res) {
     console.log('Non-existance route');
-    return res.redirect('/');
+    var user = req.user || null;
+    var lang = req.session.lang || "es";
+    res.render('404', {
+      lang: lang,
+      user: user,
+      langData: _lang["default"]
+    });
   });
   app.use(function (req, res, next) {
     var err = new Error('Not Found');

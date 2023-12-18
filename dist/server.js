@@ -29,7 +29,6 @@ _dotenv["default"].config({
 });
 
 /*Directory Traversal Prevent*/
-var forbidden_url = ['..', '\\src\\server'];
 app.use(function (req, res, next) {
   // Get the requested URL path
   var urlPath = req.url;
