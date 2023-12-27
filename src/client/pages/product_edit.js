@@ -29,12 +29,14 @@ if (selected_tags.length > 0) {
 
 /*### Event Listeners */
 tag_list.addEventListener('click', (e) => {
-    selected_tags.push(+e.target.value);
+    selected_tags.push(+e.target.dataset.tag);
     selected_tags_creator(selected_tags);
     tag_search.value = ''
     tag_search.dispatchEvent(new Event('input'))
     //hides select list
-    tag_list.blur();
+    Array.from(tag_list.children).forEach(child => {
+        child.blur()
+    })
 })
 
 tag_selected_container.addEventListener('click', (e) => {
@@ -49,40 +51,56 @@ tag_selected_container.addEventListener('click', (e) => {
 tag_search.addEventListener('input', () => {
     let input = tag_search.value.toLowerCase();
     let unselected_options = tag_list.querySelectorAll('[data-selected="false"]')
-    let size = 0;
+
     if (input != '') {
-        for (let i = 0; i < unselected_options.length; i++) {
-            let tag = unselected_options[i];
-            let tagText = tag.text.toLowerCase();
-            if (tagText.includes(input)) {
-                tag.style.display = ''
-                size++
+        //delete not found message
+        let not_found_elem = document.querySelector('[data-filter]')
+        if(not_found_elem) {
+            not_found_elem.remove()
+        }
+        let result_index = 0;
+
+        unselected_options.forEach(child => {
+            let child_name_en = child.dataset.tagName_en.toLowerCase();
+            let child_name_es = child.dataset.tagName_es.toLowerCase();
+
+            if(!child_name_en.includes(input) && !child_name_es.includes(input)) {
+                child.classList.add('hide')
             } else {
-                tag.style.display = 'none'
+                child.classList.remove('hide')
+                result_index++
             }
+        })
+        
+        //not found message creator
+        if (result_index == 0) {
+            let not_found_msg = langData.error['404'][lang];
+            let not_found = new HTML_ELEM('li');
+            not_found.addText(not_found_msg);
+            not_found.addAttribute('data-filter');
+
+            tag_list.appendChild(not_found.getElement())
         }
-        if (size > 8) { size = 8 };
-        tag_list.size = size
+
     } else {
-        for (let i = 0; i < unselected_options.length; i++) {
-            let tag = unselected_options[i];
-            tag.style.display = '';
-        }
-        tag_list.size = 8
+        //show all list
+        unselected_options.forEach(child => {
+            child.classList.remove('hide')
+        })
     }
 })
 
 function selected_tags_creator(tag_arr) {
     //tags Reset
-    Array.from(tag_list).forEach(child => child.dataset.selected = 'false')
+    Array.from(tag_list.children).forEach(child => child.dataset.selected = 'false')
     Array.from(tag_selected_container.children).forEach(child => child.remove());
 
     //selected_tag remove from list and map
     let selected_tags_map = tag_arr.map(tag => {
-        let match = Array.from(tag_list).filter(list => list.value == tag)
-        if(!match[0]) {return;} //filters out invalid value | tags
-        match[0].setAttribute('data-selected', 'true')
-        return [match[0].value, match[0].innerText]
+        let match = Array.from(tag_list.children).find(list => list.dataset.tag == +tag)
+        if(!match) {return;} //filters out invalid value | tags
+        match.setAttribute('data-selected', 'true')
+        return [match.dataset.tag, match.innerText]
     })
 
     /* Tag create */
