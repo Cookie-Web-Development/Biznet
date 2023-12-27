@@ -54,7 +54,7 @@ for (let key in search_query) {
 //### API ENDPOINT ##
 let lang = document.documentElement.getAttribute('lang');
 let search_form = document.getElementById('catalog_search_form');
-let input_fields = Array.from(search_form.querySelectorAll('input[name], select'));
+let input_fields = Array.from(search_form.querySelectorAll('input[name], select, [data-tags-dropdown]'));
 let product_results_container = document.getElementById('product_result');
 let pagination_container = document.getElementById('pagination');
 let debounce_delay = 500; //ms
@@ -120,7 +120,7 @@ function sendToServer ( set_active_page = undefined ) {
     };
     
     data.items_per_page = items_per_page;
-    console.log(data)
+
     if(typeof set_active_page == 'number') {
         active_page = set_active_page
         data.active_page = set_active_page;
