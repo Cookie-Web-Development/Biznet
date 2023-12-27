@@ -60,9 +60,9 @@ html(lang=lang)
                                     label(for='tags_filter_input')=langData.data_management.tag[lang]
                                     div#tags_input_dropdown_container
                                         input(id='tags_filter_input' type='text' class='input_box' data-tag-search)
-                                        select(id='tags_dropdown' size='8' data-tag-list)    
+                                        ul(id='tags_dropdown' data-tag-list)    
                                             each tag in product_info.tags
-                                                option(value=tag.tag_id data-tag=tag.tag_id data-selected='false')=tag.tag_name[lang]
+                                                li(class='tag_option' data-tag=tag.tag_id data-tag-name_es=tag.tag_name.es data-tag-name_en=tag.tag_name.en  data-selected='false' tabindex='0')=tag.tag_name[lang]
                                     ul(data-default-value=db_result.tag_id data-type='list' data-form-input='tag_id' data-tag-selected id='selected_tags')
                             section(class='general_description')
                                 p=langData.data_management.product_description[lang]

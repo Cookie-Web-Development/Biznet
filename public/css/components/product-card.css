@@ -107,14 +107,17 @@
     content: '-';
 }
 
+.product_display_description,
+.product_card_description {
+    flex-grow: 1;
+}
+
 .product_card_description {
     font-size: var(--fs-subtext);
 }
 
 .product_card_tags {
     font-size: var(--fs-subtext);
-    position: absolute;
-    bottom: 0;
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;

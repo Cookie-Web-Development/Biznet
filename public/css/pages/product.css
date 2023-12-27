@@ -69,7 +69,8 @@
 \*-----------------------------------------------*/
 
 .text_display {
-    position: relative;
+    display: flex;
+    flex-direction: column;
     height: 100%;
     min-height: 300px;
     line-height: 2rem;
