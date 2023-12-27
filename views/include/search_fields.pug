@@ -38,8 +38,12 @@ div.product_filter_container
             label(for='tags_filter_input')
                 p.search_container_title=langData.main.search_filter.by_tags[lang]
             div#tags_input_dropdown_container
-                input(type='text', class='input_box', id='tags_filter_input', data-reset='text') 
-                select(id='tags_dropdown' size='8') 
+                input(type='text', class='input_box', id='tags_filter_input', data-reset='text')
+                //- WORKBENCH
+                ul(id='tags_dropdown' data-tags-dropdown)
+                    each tag in search_fields.tags
+                        li(class='tag_option' data-tag-id=tag.tag_id data-tag-name_es=tag.tag_name.es data-tag-name_en=tag.tag_name.en tabindex="0")=tag.tag_name[lang]  
+                //- select(id='tags_dropdown' size='8') 
             ul#selected_tags
         div.search_container.single_option
             label(for='discount_checkbox') 
