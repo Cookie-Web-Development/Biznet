@@ -141,6 +141,10 @@
     --fs-subtext: 0.7rem;
 }
 
+[data-product-card='small'] .product_card_price_tag {
+    flex-grow: 1;
+}
+
 [data-product-card='small'] .product_card_description {
     display: none;
 }
